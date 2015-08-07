@@ -1,0 +1,58 @@
+{# Dywee\OfferBundle\Resources\View\Offer\mail_form.html.twig #}
+
+{%  extends "DyweeOrderBundle::admin.html.twig" %}
+
+{% block title %}
+    Envoi de l'offre {{ parent() }}
+{% endblock %}
+
+{% block body %}
+
+    <div class="title-heading">
+        <a href="{{ path('dywee_offer_table') }}" class="btn btn-default pull-right"><i class="fa fa-angle-left"></i> Retour à la liste des offres</a>
+    <h1>Envoi de l'offre par email</h1>
+    </div>
+
+    <div class="row">
+        <div class="col-md-5">
+            {{ form_start(form, {"attr": {"class": "form"}}) }}
+
+            {{ form_errors(form) }}
+
+            <div class="form-group">
+                {{ form_label(form.subject) }}
+                {{ form_errors(form.subject) }}
+                {{ form_widget(form.subject, {attr: {class: "form-control"}}) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.from) }}
+                {{ form_errors(form.from) }}
+                {{ form_widget(form.from, {attr: {class: "form-control"}}) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.to) }}
+                {{ form_errors(form.to) }}
+                {{ form_widget(form.to, {attr: {class: "form-control"}}) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.body) }}
+                {{ form_errors(form.body) }}
+                {{ form_widget(form.body, {attr: {class: "form-control ckeditor"}}) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_widget(form.send, {attr: {class: "btn btn-success btn-block"}, label: "Envoyer"}) }}
+            </div>
+
+            {{ form_rest(form) }}
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+
+    <script src="{{ asset('bundles/dyweeckeditor/ckeditor/ckeditor.js') }}"></script>
+
+{% endblock %}

@@ -1,0 +1,22 @@
+<html>
+    <head>
+        <link href="http://www.labelgiqueunefois.com/bundles/dyweecore/css/bootstrap.min.css" rel="stylesheet" type="text/css" media="all" />
+    </head>
+    <body>
+    <div class="container">
+        <h1>Monsieur, Madame,</h1>
+
+        <p>Concernant votre commande {{ order.reference }} du {{ order.creationDate|date('d/m/Y') }} ,
+            nous vous confirmons que le colis a bien été réceptionné par {{ order.shippingAddress.firstName }} {{ order.shippingAddress.lastName }},
+            le destinataire que vous nous aviez désigné.
+
+        <p>En vous remerciant de votre confiance,</p>
+
+
+        <p>Cordialement,</p>
+
+        <img src="http://www.labelgiqueunefois.com/bundles/dyweecore/images/logo.png" alt="La Belgique Une Fois" />
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,201 @@
+{# Dywee\OrderBundle\Resources\View\Basket\basket.html.twig #}
+
+{%  extends "DyweeOrderBundle::layout.html.twig" %}
+
+{% block title %}
+    {{ 'Votre panier'|trans }} {{ parent() }}
+{% endblock %}
+
+{% block translationLinks %}
+    <a href="{{ path('dywee_basket_view', {_locale: 'fr'}) }}"><img src="{{ asset('bundles/dyweecore/images/flags/48/fr.png') }}" alt="Version francophone" width="28" /></a>
+    {#<a href="{{ path('dywee_basket_view', {_locale: 'nl'}) }}">
+    <img src="{{ asset('bundles/dyweecore/images/flags/48/nl.png') }}" alt="Nederlandse Versie" width="28" />
+</a>
+    <a href="{{ path('dywee_basket_view', {_locale: 'en'}) }}">
+        <img src="{{ asset('bundles/dyweecore/images/flags/48/en.png') }}" alt="English Version" width="28" />
+    </a>
+    #}
+{% endblock %}
+
+{% block bodyContent %}
+    <div class="spacer"></div>
+    <div class="fuelux hidden-xs">
+        <div id="MyWizard" class="wizard">
+            <ul class="steps">
+                <li data-step="1"class="active"><a href="#"><span class="badge">1</span>Panier<span class="chevron"></span></a></li>
+                <li data-step="2"><a href="#"><span class="badge">2</span>Facturation<span class="chevron"></span></a></li>
+                <li data-step="3"><a href="#"><span class="badge">3</span>Livraison<span class="chevron"></span></a></li>
+                <li data-step="5"><a href="#"><span class="badge">4</span>Récapitualtif<span class="chevron"></span></a></li>
+            </ul>
+        </div>
+    </div>
+
+<h1>{{ 'Récapitulatif de la commande'|trans }}</h1>
+    {% if order is defined %}
+    <p>{{ 'Votre panier contient'|trans }} {{ order.countProducts }} produit(s)</p>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>{{ 'Produits'|trans }}</th>
+                <th>{{ 'Prix unitaire'|trans }}</th>
+                <th>{{ 'Quantité'|trans }}</th>
+                <th>{{ 'Total'|trans }}</th>
+                <th>{{ 'Action'|trans }}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for orderElement in order.orderElements %}
+                <tr>
+                    <td>
+                        <div class="row">
+                            <div class="col-xs-3">
+                                {% set image = orderElement.product.images|first %}
+                                <img src="{{ image.src }}" alt="{{ image.alt }}" class="img-responsive" />
+                            </div>
+                            <div class="col-xs-9">
+                                {{ orderElement.product.name }}
+                            </div>
+                        </div>
+                    </td>
+                    <td>{{ orderElement.unitPrice|number_format(2) }}€</td>
+                    <td>{{ orderElement.quantity }}
+                        <div class="well well-xs pull-right">
+                            <a href="{{ path('dywee_basket_remove_product', {idProduct: orderElement.product.id}) }}">-</a> /
+                            <a href="{{ path('dywee_basket_add_product', {idProduct: orderElement.product.id}) }}">+</a>
+                        </div>
+                    </td>
+                    <td>{{ orderElement.totalPrice|number_format(2) }}€</td>
+                    <td><a href="{{ path('dywee_basket_delete_product', {idProduct: orderElement.product.id}) }}">{{ 'Supprimer'|trans }}</a></td>
+                </tr>
+            {% endfor %}
+            <tr class="info">
+                <td colspan="3">{{ 'Prix TTC'|trans }} </td>
+                <td colspan="2">{{ order.PriceVatIncl|number_format(2) }}€</td>
+            </tr>
+            <tr>
+                <td colspan="3">{{ 'Frais de transport'|trans }}</p>
+                    {% if form is defined %}
+                        {{ form_widget(form.country, {"attr":{"class": "form-control"}}) }}
+                    {% endif %}
+                    <p id="shippingChoices"><i class="fa fa-spinner fa-spin"></i> </p>
+                </td>
+                <td colspan="2" id="shippingCost">
+                </td>
+            </tr>
+            <tr class="success">
+                <td colspan="3">{{ 'Total TTC'|trans }}</td>
+                <td colspan="2" id="totalprice">{{ order.priceVatIncl|number_format(2) }}€</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+        {% if form is defined %}
+
+            {% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+            {{ form_start(form) }}
+
+            {{ form_errors(form) }}
+
+            <div class="col-md-3 pull-right">
+                {{ form_widget(form.Suivant, {"attr":{"class":"btn btn-success btn-lg btn-block"}}) }}
+            </div>
+            <div class="col-md-6">
+                {{ form_row(form.eighteenConfirmation) }}
+
+                {{ form_widget(form.cuConfirmation, {label: 'J\'accepte les conditions d\'utilisation'}) }}
+
+                <p><a href="{{ path('dywee_cms_view', {data: 'conditions-generales'}) }}" target="_blank">>
+                        {{ 'Les conditions d\'utilisation'|trans }}
+                    </a></p>
+                <div class="col-md-3">
+                    <a type="button" href="{{ path('dywee_cms_homepage') }}" class="btn btn-default">{{ 'Continuer mes achats'|trans }}</a>
+                </div>
+            </div>
+
+            {{ form_end(form) }}
+
+        {% elseif btn is defined %}
+            <div class="col-md-8 pull-right">
+            {{ btn|raw }}
+            </div>
+        {% endif %}
+    {% else %}
+        <p>{{ 'Votre panier est vide'|trans }}</p>
+    {% endif %}
+
+    <script>
+        {% if order is defined and order is not null %}
+            var initPrice = parseFloat({{ order.priceVatIncl }});
+        {% else %}
+            var initPrice = 0;
+        {% endif %}
+
+        function shippingValue(idCountry)
+        {
+            $("#shippingChoices").html('');
+            $("#shippingCost").html('');
+            $("#totalprice").html(formatNumber(initPrice)+'€');
+            var request = $.ajax({
+                url: '{{ path('dywee_shipmentMethod_search_ajax') }}',
+                type: 'post',
+                dataType: 'json',
+                data: {country: idCountry},
+                success: function(data, textStatus, jqXHR){
+                    if(data.type == 'success') {
+                        $.each( data.shippingOptions, function( key, optionElement ) {
+                            var html = '<div class="checkbox">';
+                            html += '<label>';
+                            html += '<input type="radio" name="shippingOptions" value="' + optionElement.id + '" aria-price="' + optionElement.price + '" onclick="updatePrice(this)"> ';
+                            html += optionElement.name + ' (';
+
+                            if('priceByShipment' in optionElement)
+                                html += optionElement.priceByShipment + '€ par envoi';
+                            else html += optionElement.price + '€';
+                            html += ')</label></div>';
+                            $("#shippingChoices").append(html);
+                        });
+                    }
+                    else {
+                        //alert(data.text);
+                    }
+                }
+            });
+
+            request.fail(function(jqXHR, textStatus) {
+                ('#log').html('Request failed: ' + textStatus);
+            });
+        }
+
+        function updatePrice(radio)
+        {
+            var price = $(radio).attr('aria-price');
+            $("#shippingCost").html(price+'€');
+            var totalPrice = initPrice + parseFloat(price);
+            $("#totalprice").html(formatNumber(totalPrice)+'€');
+        }
+
+        function formatNumber(number)
+        {
+            var number = number.toFixed(2) + '';
+            var x = number.split('.');
+            var x1 = x[0];
+            var x2 = x.length > 1 ? '.' + x[1] : '';
+            var rgx = /(\d+)(\d{3})/;
+            while (rgx.test(x1))
+                x1 = x1.replace(rgx, '$1' + ',' + '$2');
+            return x1 + x2;
+        }
+
+        $(document).ready(function(){
+            shippingValue(1);
+        });
+
+        $("#form_country").change(function(){
+            shippingValue($(this).val());
+        });
+    </script>
+
+{% endblock %}

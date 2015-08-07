@@ -1,0 +1,109 @@
+<html>
+    <head>
+        <link href="{{ asset('bundles/dyweecore/css/mail.css') }}" rel="stylesheet" type="text/css" media="all" />
+    </head>
+    <body>
+        <h2>Vous venez de passer votre première commande</h2>
+
+        <div class="panel panel-default">
+            <div class="panel-heading"><h3 class="panel-title">Récapitulatif de la commande - <small>ref: {{ order.reference }}</small></h3></div>
+            <table class="table table-bordered">
+                <thead>
+                <tr><th>Produits</th><th>Prix unitaire</th><th>Quantité</th><th>Total</th></tr>
+                </thead>
+                <tbody>
+                {% for orderElement in order.orderElements %}
+                    <tr>
+                        <td>
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <img src="{{ orderElement.product.img }}" alt="Produit" class="img-responsive" />
+                                </div>
+                                <div class="col-xs-9">
+                                    {% for productLang in orderElement.product.productLangs %}
+                                        {% if productLang.idLang == 1 %}
+                                            {{ productLang.name }}
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </td>
+                        <td>{{ orderElement.unitPrice|number_format(2) }}€</td>
+                        <td>{{ orderElement.quantity }}</td>
+                        <td>{{ orderElement.totalPrice|number_format(2) }}€</td>
+                    </tr>
+                {% endfor %}
+                <tr class="active">
+                    <td colspan="3">Total HTT</td>
+                    <td colspan="2">{{ order.priceVatExcl|number_format(2) }}€</td>
+                </tr>
+                <tr>
+                    <td colspan="3">TVA</td>
+                    <td colspan="2">{{ order.vatPrice|number_format(2) }}€ ({{ order.vatRate|number_format(2) }}%)</td>
+                </tr>
+                <tr>
+                    <td colspan="3">Frais de transport (TTC)</td>
+                    <td colspan="2">{{ order.deliveryCost|number_format(2) }}€</td>
+                </tr>
+                <tr class="success">
+                    <td colspan="3">Total TTC</td>
+                    <td colspan="2">{{ order.totalPrice|number_format(2) }}€</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h3 class="panel-title">Facturation</h3></div>
+                    <div class="panel-body">
+                        <p>{{ order.billingAddress.firstName }} {{ order.billingAddress.lastName }}<br>
+                            {{ order.billingAddress.email }}<br>
+                            {{ order.billingAddress.mobile }}</p>
+
+                        <p>{{ order.billingAddress.address1 }}<br>
+                            {{ order.billingAddress.address2 }}<br>
+                            {{ order.billingAddress.zip }}<br>
+                            {{ order.billingAddress.cityString }}</p>
+                    </div>
+                </div></div>
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h3 class="panel-title">Livraison</h3></div>
+                    <div class="panel-body">
+                        <p>{{ order.shippingAddress.firstName }} {{ order.shippingAddress.lastName }}<br>
+                            {{ order.shippingAddress.email }}<br>
+                            {{ order.shippingAddress.mobile }}</p>
+
+                        <p>{{ order.shippingAddress.address1 }}
+                            {% if not order.shippingAddress == '' %}
+                                <br>
+                                {{ order.shippingAddress.address2 }}
+                            {% endif %}
+
+                            <br>
+                            {{ order.shippingAddress.zip }}<br>
+                            {{ order.shippingAddress.cityString }}</p>
+                    </div>
+                </div></div>
+            {% if not order.shippingMessage == '' %}
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h3 class="panel-title">Message pour la livraison</h3></div>
+                    <div class="panel-body">
+                        {{ order.shippingMessage }}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+
+        <p>Il ne nous reste plus qu'à recevoir la confirmation de votre payement paypal pour valider votre commande.<br>
+            Une fois la vérification terminée, vous recevrez un mail de confirmation.
+        </p>
+
+        <p>Cordialement,</p>
+
+        <img src="{{ asset('bundles/dyweecore/images/logo.png') }}" alt="La Belgique Une Fois" />
+    </body>
+</html>

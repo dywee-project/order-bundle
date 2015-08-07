@@ -1,0 +1,21 @@
+{# Dywee\OfferBundle\Resources\View\Offer\mail_body.html.twig #}
+
+<p>Bonjour {{ offer.address.firstName }} {{ offer.address.lastName }},</p>
+<p>Vous trouverez en annexe le détail de notre offre de prix pour le matériel demandé.</p>
+{% if offer.containsElementReduction() == true %}
+    <p>Des réductions sur certains produit ont été appliquées.</p>
+{% endif %}
+    {% if offer.discountValue > 0 %}
+    <p>Le montant total est de {{ offer.priceVatIncl|number_format(2) }}€ TVAC
+        avec
+        {% if offer.containsElementReduction() == true %}
+        encore
+    {% endif %}
+    une réduction de {{ offer.discountRate }}% sur ce montant.</p>
+    {% else %}
+        <p>Le montant total est de {{ offer.priceVatExcl|number_format(2) }}€ HTVA.</p>
+    {% endif %}
+
+<p>Cordialement,</p>
+<p>{{ app.user.firstName|capitalize }} {{ app.user.lastName|capitalize }} - {{ app.user.professionalEmail }}<br>
+    Fox Sound - www.foxsound.be</p>

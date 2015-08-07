@@ -1,0 +1,14 @@
+{# Dywee\OrderBundle\Resources\View\Order\edit.html.twig #}
+
+{%  extends "DyweeOrderBundle::admin.html.twig" %}
+
+{% block title %}
+    Modification d'une offre {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <h1>Modification de l'offre {{ offer.reference }}</h1>
+
+    {%  include "DyweeOrderBundle:Offer:form.html.twig" %}
+
+{% endblock %}

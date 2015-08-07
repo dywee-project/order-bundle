@@ -1,0 +1,211 @@
+{# Dywee\OrderBundle\Resources\View\Basket\recap.html.twig #}
+
+{%  extends "DyweeOrderBundle::layout.html.twig" %}
+
+{% block title %}
+    {{ 'Recapitulatif de votre commande'|trans }} {{ parent() }}
+{% endblock %}
+{% block translationLinks %}
+    <a href="{{ path('dywee_basket_step5', {_locale: 'fr'}) }}"><img src="{{ asset('bundles/dyweecore/images/flags/48/fr.png') }}" alt="Version francophone" width="28" /></a>
+    {#<a href="{{ path('dywee_basket_step5', {_locale: 'nl'}) }}">
+        <img src="{{ asset('bundles/dyweecore/images/flags/48/nl.png') }}" alt="Nederlandse Versie" width="28" />
+    </a>
+    <a href="{{ path('dywee_basket_step5', {_locale: 'en'}) }}">
+        <img src="{{ asset('bundles/dyweecore/images/flags/48/en.png') }}" alt="English Version" width="28" />
+    </a>#}
+{% endblock %}
+
+{% block bodyContent %}
+
+    <div class="spacer"></div>
+
+    <div class="fuelux hidden-xs">
+        <div id="MyWizard" class="wizard">
+            <ul class="steps">
+                <li data-step="1" class="active"><span class="badge">1</span>Panier<span class="chevron"></span></li>
+                <li data-step="2" class="active"><span class="badge">2</span>Facturation<span class="chevron"></span></li>
+                <li data-step="3" class="active"><span class="badge">3</span>Livraison<span class="chevron"></span></li>
+                <li data-step="5" class="active"><span class="badge">4</span>Récapitualtif<span class="chevron"></span></li>
+            </ul>
+        </div>
+    </div>
+
+    <h1>{{ 'Recapitulatif de votre commande'|trans }}</h1>
+    <div class="panel panel-default">
+        <div class="panel-heading"><h3 class="panel-title">{{ 'Récapitulatif de la commande'|trans }} - <small>ref: {{ order.reference }}</small></h3></div>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>{{ 'Produits'|trans }}</th>
+                <th>{{ 'Prix unitaire'|trans }}</th>
+                <th>{{ 'Quantité'|trans }}</th>
+                <th>{{ 'Total'|trans }}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for orderElement in order.orderElements %}
+                <tr>
+                    <td>
+                        <div class="row">
+                            <div class="col-xs-2">
+                                {% set image = orderElement.product.images|first %}
+                                <img src="{{ image.src }}" alt="{{ image.alt }}" class="img-responsive" />
+                            </div>
+                            <div class="col-xs-9">
+                                {{ orderElement.product.name }}
+                            </div>
+                        </div>
+                    </td>
+                    <td>{{ orderElement.unitPrice|number_format(2) }}€</td>
+                    <td>{{ orderElement.quantity }}</td>
+                    <td>{{ orderElement.totalPrice|number_format(2) }}€</td>
+                </tr>
+            {% endfor %}
+            <tr class="active">
+                <td colspan="3">{{ 'Total HTT'|trans }}</td>
+                <td colspan="2">{{ order.priceVatExcl|number_format(2) }}€</td>
+            </tr>
+            <tr>
+                <td colspan="3">{{ 'TVA'|trans }}</td>
+                <td colspan="2">{{ order.vatPrice|number_format(2) }}€ ({{ order.vatRate|number_format(2) }}%)</td>
+            </tr>
+            <tr>
+                <td colspan="3">{{ 'Frais de transport (TTC)'|trans }}</td>
+                <td colspan="2">{{ order.deliveryCost|number_format(2) }}€</td>
+            </tr>
+            <tr class="success">
+                <td colspan="3">{{ 'Total TTC'|trans }}</td>
+                <td colspan="2">{{ order.totalPrice|number_format(2) }}€</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading"><h3 class="panel-title">{{ 'Facturation'|trans }}</h3></div>
+                <div class="panel-body">
+                    <p>{% if order.billingAddress.companyName != '' %}{{ order.billingAddress.companyName }}<br>{% endif %}
+                        {{ order.billingAddress.firstName }} {{ order.billingAddress.lastName }}<br>
+                        {{ order.billingAddress.email }}<br>
+                        {{ order.billingAddress.mobile }}</p>
+
+                    <p>{{ order.billingAddress.address1 }}<br>
+                    {{ order.billingAddress.zip }} - {{ order.billingAddress.cityString }}<br>
+                    {{ order.billingAddress.country.name }}</p>
+                </div>
+            </div></div>
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading"><h3 class="panel-title">{{ 'Livraison'|trans }}</h3></div>
+                <div class="panel-body">
+                    {% if order.deliveryMethod == '24R' and relais is defined %}
+                        <p>Point relais: <br>
+                        {{ relais.address1|lower|capitalize }}<br>
+                        {{ relais.address2|lower|capitalize }}<br>
+                        {{ relais.zip }} - {{ relais.cityString|lower|capitalize }}
+                        <p>Un email sera envoyé lorsque le colis sera arrivé au point relais</p>
+                        <p>{{ order.shippingAddress.firstName }} {{ order.shippingAddress.lastName }}<br>
+                            {{ order.shippingAddress.email }}<br>
+                            {{ order.shippingAddress.mobile }}</p>
+                    {% else %}
+                    <p>
+                        {% if order.shippingAddress.companyName != '' %}{{ order.shippingAddress.companyName }}<br>{% endif %}
+                        {{ order.shippingAddress.firstName }} {{ order.shippingAddress.lastName }}<br>
+                        {{ order.shippingAddress.email }}<br>
+                        {{ order.shippingAddress.mobile }}</p>
+
+                    <p>{{ order.shippingAddress.address1 }}
+                        {% if not order.shippingAddress.address2 == '' %}
+                            <br>
+                            {{ order.shippingAddress.address2 }}
+                        {% endif %}
+                        {% if order.shippingAddress.other != '' %}
+                            <br>{{ order.shippingAddress.other }}
+                        {% endif %}
+
+                    <br>
+                    {{ order.shippingAddress.zip }}<br>
+                        {{ order.shippingAddress.cityString }} - {{ order.shippingAddress.country.name }}</p>
+                    {% endif %}
+                </div>
+            </div></div>
+        {% if not order.shippingMessage == '' %}
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading"><h3 class="panel-title">{{ 'Message pour la livraison'|trans }}</h3></div>
+                <div class="panel-body">
+                    {{ order.shippingMessage }}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <div class="col-md-12">
+            <div class="panel panel-default" id="payement">
+                <div class="panel-heading"><h3 class="panel-title">{{ 'Choix du paiement'|trans }}</h3></div>
+                <div class="panel-body">
+                    <div class="col-xs-12" id="paypalShower">
+                        <span id="firstSpinner"><i class="fa fa-spinner fa-spin"></i> Veuillez patienter pendant que nous configurons les moyens de paiement</span>
+                    </div>
+                    <div class="spacer"></div>
+                    <div class="col-xs-12">
+                        <h2 class="text-center">Choix du paiement</h2>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h3>Compte paypal</h3>
+                                <p>Si vous avez déjà un compte PAYPAL vous cliquerez sur « Payez avec votre compte PayPal »</p>
+                                <p><a href="{{ path('dywee_order_paypal_checkout') }}" onclick="showWaitingWheel(this)" id="paypalLink" class=""><img  src="{{ asset('bundles/dyweecore/images/paypal.gif') }}" border="0" alt="{{ 'Payer via paypal'|trans }}" class="img-responsive"></a></p>
+                            </div>
+                            <div class="col-md-6">
+                                <h3>Carte de crédit</h3>
+                                <p>Vous	Payez avec votre carte de crédit  VISA – MASTERCARD – AMERICAN EXPRESS<br>
+                                    Vous cliquerez sur « Vous n'avez pas de compte paypal » et vous n'enregistrez pas vos
+                                    informations dans la plateforme de paiements qui traitera la transaction de votre carte. </p>
+                                <p><a href="{{ path('dywee_order_paypal_checkout') }}" onclick="showWaitingWheel(this)" id="paypalLink2" class="btn btn-default">Payer ma commande <i class="fa fa-angle-right"></i> </a></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 alert alert-info">
+                        <h2>Important</h2>
+                        <p>PAYPAL ne tiendra compte dans ses échanges administratifs avec vous que de l'adresse de FACTURATION
+                            que avez renseignée. Mais soyez certain que ceci NE MODIFIE EN RIEN les données que vous avez transmises à
+                            « La Belgique une fois », par exemple, si vous avez indiqué deux adresses distinctes, une pour la facturation et
+                            une autre pour la livraison ou si vous avez indiqué que la livraison doit se faire pour une tierce personne que
+                            vous avez renseignée comme autre destinataire.</p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showWaitingWheel(link)
+        {
+            $(link).html('<i class="fa fa-spin fa-spinner"></i> Vous allez être redirigé vers paypal pour votre paiement. Veuillez patienter...');
+        }
+        $(document).ready(function(){
+            var request = $.ajax({
+                url: '{{ path('dywee_paypal_ajax') }}',
+                type: 'post',
+                dataType: 'json',
+                success: function(data, textStatus, jqXHR){
+                    if(data.type == 'success') {
+                        $("#paypalLink").attr('src', data.url).removeClass("hide");
+                        $("#paypalLink2").attr('src', data.url).removeClass("hide");
+                        $("#firstSpinner").addClass("hide");
+                    }
+                    else {
+                        alert(data.text);
+                    }
+                }
+            });
+
+            request.fail(function(jqXHR, textStatus) {
+                ('#log').html('Request failed: ' + textStatus);
+            });
+
+        });
+
+    </script>
+{% endblock %}

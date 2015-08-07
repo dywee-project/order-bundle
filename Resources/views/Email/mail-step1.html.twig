@@ -1,0 +1,129 @@
+<html>
+    <head>
+        <link href="http://www.labelgiqueunefois.com/bundles/dyweecore/css/bootstrap.min.css" rel="stylesheet" type="text/css" media="all" />
+    </head>
+    <body>
+    <div class="container">
+        <h1>Enregistrement de votre commande</h1>
+        <p>Votre commande est bien enregistrée. « La Belgique une fois » vous en remercie.</p>
+        <div class="panel panel-default">
+            <div class="panel-heading"><h3 class="panel-title">Récapitulatif de votre commande - <small>{{ order.reference }}</small></h3></div>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Produit</th>
+                        <th>Prix unitaire</th>
+                        <th>Quantité</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for orderElement in order.orderElements %}
+                    <tr>
+                        <td>{{ orderElement.product.name }}</td>
+                        <td>{{ orderElement.unitPrice|number_format(2) }}&euro;</td>
+                        <td>{{ orderElement.quantity }}</td>
+                        <td>{{ orderElement.totalPrice|number_format(2) }}&euro;</td>
+                    </tr>
+                    {% endfor %}
+
+                    <tr class="active">
+                        <td colspan="3">Total TTC</td><td>{{ order.priceVatIncl|number_format(2) }}&euro;</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">Transport</td>
+                        <td>
+                            {% if order.deliveryCost == 0 %}
+                                Inclus
+                            {% else %}
+                                {{ order.deliveryCost|number_format(2) }}€
+                            {% endif %}
+                         </td>
+                    </tr>
+                    <tr class="success">
+                        <td colspan="3">Total</td>
+                        <td>{{ order.totalPrice|number_format(2) }}&euro;</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h3 class="panel-title">Facturation</h3></div>
+                    <div class="panel-body">
+                        <p>{{ order.billingAddress.firstName }}  {{ order.billingAddress.lastName }}</p>
+                        <p>{{ order.billingAddress.email }}</p>
+                        <p>Mobile: {{ order.billingAddress.mobile }}</p>
+                        <p>{{ order.billingAddress.address1 }}
+                            {% if not order.shippingAddress.address2 == '' %}
+                                <br>
+                                {{ order.shippingAddress.address2 }}
+                            {% endif %}
+                            <br>
+                            {{ order.billingAddress.address2 }}<br>
+                            {{ order.billingAddress.zip }}<br>
+                            {{ order.billingAddress.cityString }}<br>
+                            {{ order.billingAddress.country.iso }} - {{ order.billingAddress.country.name }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h3 class="panel-title">Livraison</h3></div>
+                    <div class="panel-body">
+                        {% if order.deliveryMethod == '24R' and relais is defined %}
+                            <p>Point relais: <br>
+                                {{ relais.address1|lower|capitalize }}<br>
+                                {{ relais.address2|lower|capitalize }}<br>
+                                {{ relais.zip }} - {{ relais.cityString|lower|capitalize }}
+                            <p>Un email sera envoyé lorsque le colis sera arrivé au point relais</p>
+                            <p>{{ order.shippingAddress.firstName }} {{ order.shippingAddress.lastName }}<br>
+                                {{ order.shippingAddress.email }}<br>
+                                {{ order.shippingAddress.mobile }}</p>
+                        {% else %}
+                            <p>
+                                {% if order.shippingAddress.companyName != '' %}{{ order.shippingAddress.companyName }}<br>{% endif %}
+                                {{ order.shippingAddress.firstName }} {{ order.shippingAddress.lastName }}<br>
+                                {{ order.shippingAddress.email }}<br>
+                                {{ order.shippingAddress.mobile }}</p>
+
+                            <p>{{ order.shippingAddress.address1 }}
+                                {% if not order.shippingAddress.address2 == '' %}
+                                    <br>
+                                    {{ order.shippingAddress.address2 }}
+                                {% endif %}
+                                {% if order.shippingAddress.other != '' %}
+                                    <br>{{ order.shippingAddress.other }}
+                                {% endif %}
+
+                                <br>
+                                {{ order.shippingAddress.zip }}<br>
+                                {{ order.shippingAddress.cityString }} - {{ order.shippingAddress.country.name }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% if not order.shippingMessage == '' %}
+                <div class="col-sm-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><h3 class="panel-title">Message pour la livraison</h3></div>
+                        <div class="panel-body">
+                            {{ order.shippingMessage }}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <p>Nous attendons de recevoir la confirmation de votre paiement pour valider votre commande.<br>
+            Vous recevrez un mail de confirmation de notre part dés que nous l'aurons reçue.</p>
+
+        <p>Cordialement,</p>
+
+        x
+    </div>
+    </body>
+</html>

@@ -1,0 +1,116 @@
+{# Dywee\OrderBundle\Resources\View\Offer\offer.html.twig #}
+
+<p class="invoice-heading text-center"><img src="{{ asset('bundles/dyweecore/images/logo.png') }}" /> La Belgique Une Fois</p>
+
+<div class="row">
+    <div class="col-xs-6">
+        <div class="panel panel-default" style="min-height: 220px">
+            <div class="panel-heading">
+                <h2 class="panel-title text-center">Offre de prix</h2>
+            </div>
+            <!-- end panel-heading -->
+            <div class="panel-body">
+                <p>Référence: {{ offer.reference }}<br />
+                    Date: {{ offer.createdAt|date('d/m/Y') }}
+                </p>
+
+
+                <p>Description: <br />{{ offer.description }}</p>
+            </div>
+            <!-- end panel-body -->
+        </div>
+    </div>
+    <div class="col-xs-6">
+        <div class="panel panel-default text-center" style="min-height: 220px">
+            <div class="panel-heading">
+                <h2 class="panel-title">Client</h2>
+            </div>
+            <div class="panel-body">
+                <p><span class="h3">{{ offer.address.firstName }} {{ offer.address.lastName }}</span><br />
+                    {{ offer.address.address1 }}<br />
+                    {% if offer.address.address2 != '' %}{{ offer.address.address2 }}<br />{% endif %}
+                    {{ offer.address.zip }} {{ offer.address.cityString }}<br />
+                    {{ offer.address.country.name }}
+                </p>
+                <p>{{ offer.address.email }}<br />
+                    {{ offer.address.mobile }}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% set firstTableColspan = 3 %}{% set lastTableColspan = 1 %}
+{% if offer.containsElementReduction() == true %}{% set firstTableColspan = 4 %}{% set lastTableColspan = 2 %}{% endif %}
+
+<div class="panel panel-default">
+    <table class="table table-bordered table-invoice">
+        <thead>
+        <tr>
+            {#<th>Dates</th>
+            <th>Jour(s)</th>#}
+            <th>Produit</th>
+            <th>Prix unitaire</th>
+            <th>Quantité</th>
+            {#<th>Dég.</th>#}
+            {% if offer.containsElementReduction() == true %}<th>Réduction</th>{% endif %}
+            <th>Total</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for offerElement in offer.offerElements %}
+            <tr>
+                {#<td><small>Du {{ offerElement.beginAt|date('d/m/Y') }}<br>Au {{ offerElement.endAt|date('d/m/Y') }}</small></td>
+                <td>{{ offerElement.duration }}</td>#}
+                <td>{{ offerElement.product.name }}</td>
+                <td>{{ offerElement.unitPrice|number_format(2) }}€</td>
+                <td>{{ offerElement.quantity }}</td>
+                {#<td>{{ offerElement.locationCoeff }}</td>#}
+                {% if offer.containsElementReduction() == true %}
+                    <td>
+                        {% if offerElement.discountValue > 0 %}{{ offerElement.discountRate }}%{% endif %}
+                    </td>
+                {% endif %}
+                <td>{{ offerElement.totalPrice|number_format(2) }}€</td>
+            </tr>
+        {% endfor %}
+        <tr class="active">
+            <td colspan="{{ firstTableColspan }}">Prix HTT</td>
+            <td colspan="{{ lastTableColspan }}">{{ offer.PriceVatExcl|number_format(2) }}€</td>
+        </tr>
+        {% if offer.DiscountValue > 0 %}
+            <tr>
+                <td colspan="{{ firstTableColspan }}">Réduction</td>
+                <td colspan="{{ lastTableColspan }}">- {{ offer.discountValue|number_format(2) }}€ ({{ offer.discountRate }}% de réduction)</td>
+            </tr>
+        {% endif %}
+        <tr>
+            <td colspan="{{ firstTableColspan }}">TVA</td>
+            <td colspan="{{ lastTableColspan }}">{{ offer.vatPrice|number_format(2) }}€ ({{ offer.vatRate }}%)</td>
+        </tr>
+        {% if offer.deliveryCost != 0 %}
+            <tr class="info">
+                <td colspan="{{ firstTableColspan }}">Prix TTC </td>
+                <td colspan="{{ lastTableColspan }}">{{ offer.PriceVatIncl|number_format(2) }}€</td>
+            </tr>
+        {% endif %}
+        <tr class="success">
+            <td colspan="{{ firstTableColspan }}">Total TTC</td>
+            <td colspan="{{ lastTableColspan }}">{{ offer.totalPrice|number_format(2) }}€</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+            <div class="col-xs-6"><small>Conditions générales disponibles en annexe</small></div>
+            <div class="col-xs-6 text-right"><small>Validité de l'offre: 30 jours</small></div>
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-body text-center">
+        <p><small>Offre réalisée par {{ offer.createdBy.firstName|capitalize }} {{ offer.createdBy.lastName|capitalize }} pour LaBelgiqueUneFois.com - Email: info@labelgiqueunefois.com<br>
+                {{ render(controller('DyweeUserBundle:User:list', {type: 'all'})) }}</small></p>
+    </div>
+</div>

@@ -1,0 +1,13 @@
+services:
+    dywee_order.counter:
+        class: Dywee\OrderBundle\Counter\DyweeCounter
+        arguments: [ @doctrine.orm.entity_manager ]
+
+    dywee_order.doctrine.notification:
+        class: Dywee\OrderBundle\DoctrineListener\InvoiceReferenceManager
+        arguments: [ ]
+        tags:
+            - { name: doctrine.event_listener, event: prePersist }
+            - { name: doctrine.event_listener, event: preUpdate }
+            - { name: doctrine.event_listener, event: postPersist }
+            - { name: doctrine.event_listener, event: postUpdate }

@@ -1,0 +1,249 @@
+{# Dywee\OrderBundle\Resources\View\Order\view.html.twig #}
+
+{%  extends "DyweeOrderBundle::admin.html.twig" %}
+
+{% block viewBody %}
+
+    {% set firstTableColspan = 3 %}{% set lastTableColspan = 1 %}
+    {% if order.containsElementReduction() == true %}{% set firstTableColspan = 4 %}{% set lastTableColspan = 2 %}{% endif %}
+
+    <div class="title-heading">
+        <div class="pull-right">
+            <a href="{{ path('dywee_order_admin_table') }}" class="btn btn-default"><i class="fa fa-angle-left"></i> Retour à la liste des commandes</a>
+            <a href="{{ path('dywee_order_update', {id: order.id}) }}" class="btn btn-default"><i class="fa fa-pencil"></i> Editer</a>
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    Actions <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                    <li><a href="#" class="disabled"><i class="fa fa-file-pdf-o"></i> Facture</a></li>
+                    <li><a href="#" class="disabled"><i class="fa fa-file-pdf-o"></i> Note d'envoi</a></li>
+                    {#<li><a href="#" class="disabled"><i class="fa fa-file-excel-o"></i> Excel</a></li>#}
+                </ul>
+            </div>
+            {#<a href="{{ path('dywee_order_print', {id: order.id}) }}" class="btn btn-default" onclick="changeFa(this)"><i class="fa fa-file-pdf-o"></i> PDF</a>
+            <a href="{{ path('dywee_order_send', {id: order.id}) }}" class="btn btn-default"><i class="fa fa-envelope"></i> Envoyer par email</a>#}
+        </div>
+        <h1>Détail de la commande {{ order.invoiceReference }}</h1>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading"><h3 class="panel-title">Récapitulatif de la commande <span class="pull-right">ref: {{ order.reference }}</span></h3></div>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                {#<th>Dates</th>
+                <th>Jours</th>#}
+                <th>Produit</th>
+                <th>Prix unitaire</th>
+                {#<th>Dég.</th>#}
+                <th>Nombre de jours</th>
+                {% if order.containsElementReduction() == true %}<th>Réduction</th>{% endif %}
+                <th>Total</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for orderElement in order.orderElements %}
+                <tr>
+                    {#<td><small>Du {{ orderElement.beginAt|date('d/m/Y') }}<br>Au {{ orderElement.endAt|date('d/m/Y') }}</small></td>
+                    <td>{{ orderElement.duration }}</td>#}
+                    <td>{{ orderElement.product.name }}</td>
+                    <td>{{ orderElement.unitPrice|number_format(2) }}€</td>
+                    <td>{{ orderElement.quantity }}</td>
+                    {#<td>{{ orderElement.locationCoeff }}</td>#}
+                    {% if order.containsElementReduction() == true %}
+                        <td>
+                            {% if orderElement.discountValue > 0 %}{{ orderElement.discountRate }}%{% endif %}
+                        </td>
+                    {% endif %}
+                    <td>{{ orderElement.totalPrice|number_format(2) }}€</td>
+                </tr>
+            {% endfor %}
+            <tr class="active">
+                <td colspan="{{ firstTableColspan }}">Prix HTT</td>
+                <td colspan="{{ lastTableColspan }}">{{ order.PriceVatExcl|number_format(2) }}€</td>
+            </tr>
+            {% if order.DiscountValue > 0 %}
+                <tr>
+                    <td colspan="{{ firstTableColspan }}">Réduction</td>
+                    <td colspan="{{ lastTableColspan }}">- {{ order.discountValue|number_format(2) }}€ ({{ order.discountRate }}% de réduction)</td>
+                </tr>
+            {% endif %}
+            <tr>
+                <td colspan="{{ firstTableColspan }}">TVA</td>
+                <td colspan="{{ lastTableColspan }}">{{ order.vatPrice|number_format(2) }}€ ({{ order.vatRate }}%)</td>
+            </tr>
+            <tr class="active">
+                <td colspan="{{ firstTableColspan }}">Prix TTC </td>
+                <td colspan="{{ lastTableColspan }}">{{ order.PriceVatIncl|number_format(2) }}€</td>
+            </tr>
+            {% if order.deliveryCost > 0 %}
+                <tr>
+                    <td colspan="{{ firstTableColspan }}">Frais de transport (TTC)</td>
+                    <td colspan="{{ lastTableColspan }}">{{ order.deliveryCost|number_format(2) }}€</td>
+                </tr>
+            {% endif %}
+            <tr class="success">
+                <td colspan="{{ firstTableColspan }}">Total TTC</td>
+                <td colspan="{{ lastTableColspan }}">{{ order.totalPrice|number_format(2) }}€</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    {% if not order.shippingMessage == '' %}
+        <div class="panel panel-default">
+            <div class="panel-heading"><h3 class="panel-title">{{ 'Message pour la livraison'|trans }}</h3></div>
+            <div class="panel-body">
+                {{ order.shippingMessage }}
+            </div>
+        </div>
+    {% endif %}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-default" id="payement">
+                <div class="panel-heading"><h3 class="panel-title">Informations</h3></div>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Date de la commande</th>
+                        <th>Date du traitement</th>
+                        <th>Statut</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>{{ order.creationDate|date('d/m/Y à h\\hi') }}</td>
+                        <td>{{ order.validationDate|date('d/m/Y à h\\hi') }}</td>
+                        <td>
+                            {% if order.state == 0 %}
+                                <span class="label label-warning">Annulée</span>
+                            {% elseif order.state == 1 %}
+                                <span class="label label-default">En attente</span>
+                            {% elseif order.state == 2 %}
+                                <span class="label label-success">Active</span>
+                            {% elseif order.state == 3 %}
+                                <span class="label label-info">Terminée</span>
+                            {% elseif order.state == -1 %}
+                                <span class="label label-warning">En session</span>
+                            {% else %}
+                                <span class="label label-danger">Erreur</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading"><h3 class="panel-title">Paiement</h3> </div>
+                <table class="table table-bordered">
+                    <tr>
+                        <th>Statut du payement</th>
+                        <th>Moyen de paiement</th>
+                        <th>Accompte</th>
+                        <th>Détail paiement</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            {% if order.payementState == 0 %}
+                                <span class="label label-info">En attente de paiement</span>
+                            {% elseif order.payementState == 1 %}
+                                <span class="label label-primary">Acompte donné</span>
+                            {% elseif order.payementState == 2 %}
+                                <span class="label label-success">Payé</span>
+                            {% elseif order.payementState == 3 %}
+                                <span class="label label-default">Remboursé</span>
+                            {% else %}
+                                <span class="label label-danger">Erreur</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if order.payementMethod == 1 %}
+                                <span class="label label-primary">Liquidité</span>
+                            {% elseif order.payementMethod == 2 %}
+                                <span class="label label-primary">Virement</span>
+                            {% elseif order.payementMethod == 3 %}
+                                <span class="label label-info">Paypal</span>
+                            {% elseif order.payementMethod == 4 %}
+                                <span class="label label-info">Ogone</span>
+                            {% else %}
+                                <span class="label label-warning">Non renseigné</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ order.deposit|number_format(2) }}€</td>
+                        <td><a href="{{ path('dywee_order_payment_overview', {id: order.id}) }}">Détail paiement</a></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-default" id="payement">
+                <div class="panel-heading"><h3 class="panel-title">Livraison</h3></div>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Livraison</th>
+                            <th>Type</th>
+                            <th>Param</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            {% if order.deliver.name is defined and order.deliveryMethod is defined %}
+                                <td>{{ order.deliver.name }}</td>
+                                <td>{{ order.deliveryMethod }}</td>
+                            {% else %}
+                                <td>NC</td><td>NC</td>
+                            {% endif %}
+                            <td>{{ order.deliveryInfo }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading"><h3 class="panel-title">Facturation</h3></div>
+                <div class="panel-body">
+                    {% if order.billingAddress is not null %}
+                        <p>
+                        {{ order.billingAddress.firstName }} {{ order.billingAddress.lastName }}<br>
+                        {{ order.billingAddress.email }}<br>
+                        {{ order.billingAddress.mobile }}
+                    </p>
+
+                        <p>{{ order.billingAddress.address1 }}<br>
+                            {{ order.billingAddress.address2 }}</p>
+                        <p>{{ order.billingAddress.zip }}<br>
+                            {{ order.billingAddress.cityString }}</p>
+                    {% else %}
+                        Non renseigné
+                    {% endif %}
+                </div>
+            </div></div>
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading"><h3 class="panel-title">Livraison</h3></div>
+                <div class="panel-body">
+                    {% if order.shippingAddress is not null %}
+                        <p>{{ order.shippingAddress.firstName }} {{ order.shippingAddress.lastName }}<br>
+                            {{ order.shippingAddress.email }}<br>
+                            {{ order.shippingAddress.mobile }}</p>
+
+                        <p>{{ order.shippingAddress.address1 }}<br>
+                            {{ order.shippingAddress.address2 }}</p>
+                        <p>{{ order.shippingAddress.zip }}<br>
+                            {{ order.shippingAddress.cityString }}</p>
+                    {% else %}
+                        Non renseigné
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

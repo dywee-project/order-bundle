@@ -1,0 +1,21 @@
+{# Dywee\OrderBundle\Resources\View\Order\add.html.twig #}
+
+{%  extends "DyweeOrderBundle::admin.html.twig" %}
+
+{% block title %}
+    Création d'une commande {{ parent() }}
+{% endblock %}
+
+{% block title %}
+    Modification d'une commande {{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+    <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" />
+{% endblock %}
+
+{% block body %}
+    <h1>Création d'une commande</h1>
+
+    {%  include "DyweeOrderBundle:Order:form.html.twig" %}
+{% endblock %}

@@ -1,0 +1,251 @@
+{# Dywee\OrderBundle\Resources\View\Order\form.html.twig #}
+
+{% set langDropDown %}
+{#<div class="input-group-btn">
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+        <img src="{{ asset('bundles/dyweecore/images/flags/48/fr.png') }}" width="18" />
+        <i class="fa fa-caret-down fa-caret-down-btn-correct"></i>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+        <li><a href="javascript:void(0)" onclick="showLang(1)">
+                <img src="{{ asset('bundles/dyweecore/images/flags/48/fr.png') }}" width="18" /> Français
+            </a>
+        </li>
+        <li><a href="javascript:void(0)" onclick="showLang(2)">
+                <img src="{{ asset('bundles/dyweecore/images/flags/48/en.png') }}" width="18" /> Anglais
+            </a>
+        </li>
+        <li><a href="javascript:void(0)" onclick="showLang(3)">
+                <img src="{{ asset('bundles/dyweecore/images/flags/48/nl.png') }}" width="18" /> Néerlandais
+            </a>
+        </li>
+    </ul>
+</div>#}
+{% endset %}
+
+{% form_theme form 'DyweeOrderBundle:Form:collection_widget_rent.html.twig' %}
+
+{{ form_start(form, {"attr": {"class": "form-horizontal"}}) }}
+
+{{ form_errors(form) }}
+
+{{ form_widget(form.save, {'attr': {'class': 'btn btn-success pull-right'}, 'label': 'Valider'}) }}
+
+<ul id="descriptions" class="nav nav-tabs">
+    <li class="active"><a href="#content" data-toggle="tab"><i class="fa fa-font"></i> Contenu</a></li>
+    <li><a href="#settings" data-toggle="tab"><i class="fa fa-cog"></i> Paramètres</a></li>
+</ul>
+
+<div class="spacer"></div>
+
+<div class="tab-content">
+    <div class="tab-pane fade in active" id="content">
+        <div class="row">
+            <div class="col-xs-12 col-md-6">
+                <div class="panel panel-default" style="min-height: 220px">
+                    <div class="panel-heading">
+                        <h2 class="panel-title text-center">Description</h2>
+                    </div>
+                    <div class="panel-body">
+                        {{ form_errors(form.description) }}
+                        <p>Description: <br />
+                            {{ form_widget(form.description, {attr: {class: "form-control"}}) }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-6">
+                <div class="panel panel-default text-center" style="min-height: 220px">
+                    <div class="panel-heading">
+                        <h2 class="panel-title">Client</h2>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Facturation</label>
+                            <div class="col-sm-10">
+                                {{ form_errors(form.billingAddress) }}
+                                {{ form_widget(form.billingAddress, {attr: {class: "form-control"}}) }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Livraison</label>
+                            <div class="col-sm-10">
+                                {{ form_errors(form.shippingAddress) }}
+                                {{ form_widget(form.shippingAddress, {attr: {class: "form-control"}}) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            {{ form_widget(form.orderElements) }}
+        </div>
+    </div>
+
+    <div class="tab-pane fade in" id="settings">
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.discountRate, "% de reduc", {"label_attr": {"class": "label-control col-md-3"}}) }}
+                {{ form_errors(form.discountRate) }}
+                <div class="col-md-8">
+                    {{ form_widget(form.discountRate, {attr: {class: "form-control"}}) }}
+                </div>
+            </div>
+            <div class="form-group">
+                {{ form_label(form.discountValue, "valeur de reduc", {"label_attr": {"class": "label-control col-md-3"}}) }}
+                {{ form_errors(form.discountValue) }}
+                <div class="col-md-8">
+                    {{ form_widget(form.discountValue, {attr: {class: "form-control"}}) }}
+                </div>
+            </div>
+            <div class="form-group">
+                {{ form_label(form.deliver, "Livraison", {"label_attr": {"class": "label-control col-md-3"}}) }}
+                {{ form_errors(form.deliver) }}
+                <div class="col-md-8">
+                    {{ form_widget(form.deliver, {attr: {class: "form-control"}}) }}
+                </div>
+            </div>
+            <div class="form-group">
+                {{ form_label(form.deliveryInfo, "Info de livraison", {"label_attr": {"class": "label-control col-md-3"}}) }}
+                {{ form_errors(form.deliveryInfo) }}
+                <div class="col-md-8">
+                    {{ form_widget(form.deliveryInfo, {attr: {class: "form-control"}}) }}
+                </div>
+            </div>
+            <div class="form-group">
+                {{ form_label(form.deliveryCost, "Coût de livraison", {"label_attr": {"class": "label-control col-md-3"}}) }}
+                {{ form_errors(form.deliveryCost) }}
+                <div class="col-md-8">
+                    {{ form_widget(form.deliveryCost, {attr: {class: "form-control"}}) }}
+                </div>
+            </div>
+            <div class="form-group">
+                {{ form_label(form.payementMethod, "Paiement via", {"label_attr": {"class": "label-control col-md-3"}}) }}
+                {{ form_errors(form.payementMethod) }}
+                <div class="col-md-8">
+                    {{ form_widget(form.payementMethod, {attr: {class: "form-control"}}) }}
+                </div>
+            </div>
+            <div class="form-group">
+                {{ form_label(form.payementState, "Statut du paiement", {"label_attr": {"class": "label-control col-md-3"}}) }}
+                {{ form_errors(form.payementState) }}
+                <div class="col-md-8">
+                    {{ form_widget(form.payementState, {attr: {class: "form-control"}}) }}
+                </div>
+            </div>
+            <div class="form-group">
+                {{ form_label(form.state, "Statut", {"label_attr": {"class": "label-control col-md-3"}}) }}
+                {{ form_errors(form.state) }}
+                <div class="col-md-8">
+                    {{ form_widget(form.state, {attr: {class: "form-control"}}) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{{ form_rest(form) }}
+
+{{ form_end(form) }}
+
+
+{# On charge la bibliothèque jQuery. Ici, je la prends depuis le CDN google
+   mais si vous l'avez en local, changez simplement l'adresse. #}
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="{{ asset('bundles/dyweeckeditor/ckeditor/ckeditor.js') }}"></script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        // On récupère la balise <div> en question qui contient l'attribut « data-prototype » qui nous intéresse.
+        var $container = $('#dywee_orderbundle_baseorderrent_orderElements');
+
+        var x = new Date();
+        x.setDate(x.getDate());
+        m1 = x.getMonth()+1,
+                d1 = x.getDate(),
+                y1 = x.getFullYear();
+        x.setDate(x.getDate() + 2);
+        m2 = x.getMonth()+1,
+                d2 = x.getDate(),
+                y2 = x.getFullYear();
+
+        var beginAt = y1+'-'+(m1<10?"0"+m1:m1)+'-'+(d1<10?"0"+d1:d1);
+        var endAt = y2+'-'+(m2<10?"0"+m2:m2)+'-'+(d2<10?"0"+d2:d2);
+
+        // On ajoute un lien pour ajouter une nouvelle catégorie
+        var $addLink = $('<a href="#" id="add_element" class="btn btn-success"><i class="fa fa-plus"></i> Ajouter un élement</a>');
+        $("#content").append($addLink);
+
+        // On ajoute un nouveau champ à chaque clic sur le lien d'ajout.
+        $addLink.click(function(e) {
+            addElement($container);
+            e.preventDefault(); // évite qu'un # apparaisse dans l'URL
+            return false;
+        });
+
+        // On définit un compteur unique pour nommer les champs qu'on va ajouter dynamiquement
+        var index = $('#offerElementsContainer tr').length;
+
+        // On ajoute un premier champ automatiquement s'il n'en existe pas déjà un (cas d'une nouvelle annonce par exemple).
+        if (index == 0) {
+            addElement($container);
+        } else {
+            // Pour chaque catégorie déjà existante, on ajoute un lien de suppression
+            $('#offerElementsContainer').children('tr').each(function() {
+                addDeleteLink($(this));
+            });
+        }
+
+        // La fonction qui ajoute un formulaire Categorie
+        function addElement($container) {
+            // Dans le contenu de l'attribut « data-prototype », on remplace :
+            // - le texte "__name__label__" qu'il contient par le label du champ
+            // - le texte "__name__" qu'il contient par le numéro du champ
+            var $prototype = $($container.attr('data-prototype').replace(/__name__label__/g, 'Element n°' + (index+1))
+                    .replace(/__name__/g, index));
+
+            $prototype.find("[id$='beginAt']").val(beginAt).on('change', function()
+            {
+                beginAt = $(this).val();
+            });
+
+            $prototype.find("[id$='endAt']").val(endAt).on('change', function()
+            {
+                endAt = $(this).val();
+            });
+
+
+            // On ajoute au prototype un lien pour pouvoir supprimer la catégorie
+            addDeleteLink($prototype);
+
+            // On ajoute le prototype modifié à la fin de la balise <div>
+            $("#offerElementsContainer").append($prototype);
+
+            // Enfin, on incrémente le compteur pour que le prochain ajout se fasse avec un autre numéro
+            index++;
+        }
+
+        // La fonction qui ajoute un lien de suppression d'une catégorie
+        function addDeleteLink($prototype) {
+            // Création du lien
+            $deleteLink = $('<a href="#" class="btn btn-danger">Supprimer</a>');
+
+            $actionCell = $('<td>');
+
+            $actionCell.append($deleteLink);
+
+            // Ajout du lien
+            $prototype.append($actionCell);
+
+            // Ajout du listener sur le clic du lien
+            $deleteLink.click(function(e) {
+                $prototype.remove();
+                e.preventDefault(); // évite qu'un # apparaisse dans l'URL
+                return false;
+            });
+        }
+    });
+</script>

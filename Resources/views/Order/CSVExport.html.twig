@@ -1,0 +1,4 @@
+Date;facture;Nom facturation;Nom livraison;prix
+{% for order in orderList %}
+    {{ order.validationDate|date('d/m/Y') }};{{ order.invoiceReference }};{% if order.billingAddress is not null %}{{ order.billingAddress.lastName}}{% else %}erreur{% endif %};{% if order.shippingAddress is not null %}{{ order.shippingAddress.lastName }}{% else %}erreur{% endif %};{{ order.totalPrice|number_format(2, ',', '.') }}
+{% endfor %}

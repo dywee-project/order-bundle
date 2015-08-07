@@ -1,0 +1,32 @@
+{# Dywee\OrderBundle\Resources\View\Offer\add.html.twig #}
+
+{%  extends "DyweeOrderBundle::admin.html.twig" %}
+
+{% block title %}
+    Vision d'une offre {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <div class="title-heading">
+        <div class="pull-right">
+            <a href="{{ path('dywee_offer_table') }}" class="btn btn-default"><i class="fa fa-angle-left"></i> Retour à la liste des offres</a>
+            <a href="{{ path('dywee_offer_update', {id: offer.id}) }}" class="btn btn-default"><i class="fa fa-pencil"></i> Modifier</a>
+            <a href="{{ path('dywee_offer_print', {id: offer.id}) }}" class="btn btn-default" onclick="changeFa(this)"><i class="fa fa-file-pdf-o"></i> PDF</a>
+            <a href="{{ path('dywee_offer_send', {id: offer.id}) }}" class="btn btn-default"><i class="fa fa-envelope"></i> Envoyer par email</a>
+        </div>
+        <h1>Vision d'une offre</h1>
+    </div>
+
+    {% include 'DyweeOrderBundle:Offer:offer.html.twig' %}
+
+    <script>
+        var oldHtml;
+        var savedBtn;
+        function changeFa(btn)
+        {
+            oldHtml = $(btn).html();
+            $(btn).html('<i class="fa fa-spinner fa-spin"></i> En cours');
+        }
+    </script>
+
+{% endblock %}

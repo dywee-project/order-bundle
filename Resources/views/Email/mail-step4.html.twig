@@ -1,0 +1,36 @@
+<html>
+    <head>
+        <link href="http://www.labelgiqueunefois.com/bundles/dyweecore/css/bootstrap.min.css" rel="stylesheet" type="text/css" media="all" />
+    </head>
+    <body>
+    <div class="container">
+        <h1>Monsieur, Madame,</h1>
+
+        <p>Nous vous informons que vous recevrez bientôt un colis de la “Belgique une fois” qui vous a été offert par
+            {{ order.billingAddress.firstName }} {{ order.billingAddress.lastName }}.</p>
+
+        {% if order.deliver is not null and order.deliver.id == 2 and order.deliveryMethod == '24R' %}
+        <p>L’envoi de votre colis est pris en charge par le transporteur Mondial Relay qui vous enverra d’ici quelques jours les indications
+            vous permettant de le retirer auprès d’un de ses points de dépôts.
+            L’information vous parviendra sur cette adresse mail.
+            Attention, en fonction du niveau de sécurité de votre messagerie, il se peut que leur courriel apparaisse dans votre boite
+            ‘Courrier indésirable’.</p>
+
+        {% else %}
+            <p>L’envoi de votre colis est pris en charge par la société {{ order.deliver.name }} qui vous le livrera
+                (en collaboration avec la poste) à domicile très prochainement.<br></p>
+        {% endif %}
+
+        <p>Nous vous souhaitons de bons moments de dégustation.</p>
+
+        <p>Cordialement,</p>
+
+        <img src="http://www.labelgiqueunefois.com/bundles/dyweecore/images/logo.png" alt="La Belgique Une Fois" />
+
+        <p>&nbsp;</p>
+
+        <p><a href="http://www.labelgiqueunefois.com">En savoir plus sur « La Belgique une fois »</a></p>
+
+    </div>
+    </body>
+</html>

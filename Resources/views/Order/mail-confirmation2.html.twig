@@ -1,0 +1,14 @@
+<html>
+    <head>
+        <link href="{{ asset('bundles/dyweecore/css/mail.css') }}" rel="stylesheet" type="text/css" media="all" />
+    </head>
+
+    <body>
+        <h2>Votre payement a été validé</h2>
+        <p>Bonjour, <br />
+            L'équipe de "La Belgique Une Fois" vient de valider votre payement.</p>
+        <p>Vous recevrez votre colis lors de la prochaine date d'expédition. <a href="{{ path('dywee_cms_view', {'data': 'envois-bieres-belges'}) }}">En savoir plus</a></p>
+        <p>Cordialement</p>
+        <p><img src="{{ asset('bundles/dyweecore/images/logo.png') }}" alt="La Belgique Une Fois" /></p>
+    </body>
+</html>

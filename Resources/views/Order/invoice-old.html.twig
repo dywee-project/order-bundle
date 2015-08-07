@@ -1,0 +1,109 @@
+{# Dywee\OrderBundle\Resources\View\Order\invoice.html.twig #}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+
+    <title>La belgique une fois - Facture {{ order.reference }}</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="{{ asset('bundles/dyweecore/css/bootstrap.css') }}" type="text/css" />
+</head>
+
+<body>
+<div class="container">
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+    <div class="row">
+        <div class="col-xs-8">
+            <p>BLC Services Belgium sprl	</p>
+
+            <p>Vieux chemin de Nivelles, 124<br>
+                1440 Braine-le-Château<br>
+                TVA BE 541 953 252<br>
+                Entrepôt fiscal : 555.399
+            </p>
+        </div>
+
+        <div class="col-xs-4">
+
+            <p>{{ order.billingAddress.firstName }} {{ order.billingAddress.lastName }}</p>
+
+            <p>{{ order.billingAddress.address1 }}<br>
+                {{ order.billingAddress.address2 }}<br>
+                {{ order.billingAddress.zip }} {{ order.billingAddress.cityString }}
+            </p>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-8">
+            <p>ref. commande :	{{ order.reference }}<br>
+                ref. facture :	{{ order.invoiceReference }}
+            </p>
+        </div>
+        <div class="col-xs-4">
+            <p>DATE :	{{ order.creationDate|date('d/m/Y') }}</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <table class="table table-bordered table-condensed">
+                <thead>
+                <tr><th>Produit</th><th>Prix unitaire</th><th>Quantite</th><th>Total</th></tr>
+                </thead>
+                <tbody>
+                {% for orderElement in order.orderElements %}
+                    <tr>
+                        <td>{{ orderElement.product.name }}</td>
+                        <td>{{ orderElement.unitPrice|number_format(2) }}€</td>
+                        <td>{{ orderElement.quantity }}</td>
+                        <td>{{ orderElement.totalPrice|number_format(2) }}€</td>
+                    </tr>
+                {% endfor %}
+                <tr class="active">
+                    <td colspan="3">Prix HTT</td>
+                    <td colspan="2">{{ order.PriceVatExcl|number_format(2) }}€</td>
+                </tr>
+                <tr class="active">
+                    <td colspan="3">TVA</td>
+                    <td colspan="2">{{ order.vatPrice|number_format(2) }}€ ({{ order.vatRate }}%)</td>
+                </tr>
+                <tr class="info">
+                    <td colspan="3">Prix TTC </td>
+                    <td colspan="2">{{ order.PriceVatIncl|number_format(2) }}€</td>
+                </tr>
+                <tr>
+                    <td colspan="3">Frais de transport (TTC)</td>
+                    <td colspan="2">{{ order.deliveryCost|number_format(2) }}€</td>
+                </tr>
+                <tr class="success">
+                    <td colspan="3">Total TTC</td>
+                    <td colspan="2">{{ order.totalPrice|number_format(2) }}€</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            {% if order.shippingAddress.country.id == 1 %}
+            <div><small>La TVA est déclarée et acquitée à l'Administration française par notre mandataire fiscal en France, la sarl A.VAT.S sarl, 3087 Rue de la Gare, F-59299 Boescheppe.<br>
+                    Notre numéro fiscal en France : FR 91 799 728 522
+            </small></div>
+            {% endif %}
+            <hr>
+            <p class="text-center"><small>BELFIUS  -  IBAN BE11 0688 9837 7348  -  BIC  GKCCBEBB <br>
+                    TVA 0541 953 252 – RPM NIVELLES<br>
+                    Entrepôt fiscal : 555.399</small></p>
+
+            <p class="text-center"><small>TEL : 06 35 93 25 25<br>
+                    http://www.labelgiqueunefois.com</small></p>
+        </div>
+    </div>
+</div>
+</body>
+</html>
