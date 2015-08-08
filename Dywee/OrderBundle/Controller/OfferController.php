@@ -25,15 +25,11 @@ class OfferController extends Controller
         return $this->render('DyweeOrderBundle:Offer:table.html.twig', array('offerList' => $os));
     }
 
-    public function viewAction($id)
+    public function viewAction(Offer $offer)
     {
         $em = $this->getDoctrine()->getManager();
-        $o = $em->getRepository('DyweeOrderBundle:Offer')->findOneById($id);
 
-        if($o != null)
-            return $this->render('DyweeOrderBundle:Offer:view.html.twig', array('offer' => $o));
-
-        throw $this->createNotFoundException('Cette commande ne semble plus exister');
+        return $this->render('DyweeOrderBundle:Offer:view.html.twig', array('offer' => $o));
     }
 
     public function addAction(Request $request)
@@ -71,164 +67,118 @@ class OfferController extends Controller
         return $this->render($template, array('form' => $form->createView()));
     }
 
-    public function updateAction($id, Request $request)
+    public function updateAction(Offer $offer, Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $or = $em->getRepository('DyweeOrderBundle:Offer');
 
-        $offer = $or->findOneById($id);
-
-        if($offer != null)
+        if($offer->getState() != 2)
         {
-            if($offer->getState() != 2)
+            $form = $this->get('form.factory')->create(new OfferType(), $offer);
+
+            if($form->handleRequest($request)->isValid())
             {
-                $form = $this->get('form.factory')->create(new OfferType(), $offer);
-
-                if($form->handleRequest($request)->isValid())
+                if($offer->getState() < 2)
                 {
-                    if($offer->getState() < 2)
-                    {
-                        $em->persist($offer);
-                        $em->flush();
+                    $em->persist($offer);
+                    $em->flush();
 
-                        return $this->redirect($this->generateUrl('dywee_offer_view', array('id' => $offer->getId())));
-                    }
-                    else if($offer->getState() == 2)
-                    {
-                        $order = new BaseOrder();
-                        $order->setFromOffer($offer);
-
-                        $em->persist($order);
-                        $em->flush();
-
-                        return $this->redirect($this->generateUrl('dywee_order_view', array('id' => $order->getId())));
-                    }
+                    return $this->redirect($this->generateUrl('dywee_offer_view', array('id' => $offer->getId())));
                 }
+                else if($offer->getState() == 2)
+                {
+                    $order = new BaseOrder();
+                    $order->setFromOffer($offer);
 
-                return $this->render('DyweeOrderBundle:Offer:edit.html.twig', array('offer' => $offer, 'form' => $form->createView()));
+                    $em->persist($order);
+                    $em->flush();
+
+                    return $this->redirect($this->generateUrl('dywee_order_view', array('id' => $order->getId())));
+                }
             }
-            $this->get('session')->getFlashBag()->add('warning', 'Vous ne pouvez pas modifier une offre acceptée. Essayez de modifier la commande');
-            return $this->redirect($this->generateUrl('dywee_offer_table'));
 
+            return $this->render('DyweeOrderBundle:Offer:edit.html.twig', array('offer' => $offer, 'form' => $form->createView()));
         }
-        throw $this->createNotFoundException('Cette offre n\'est plus disponible');
-
+        $this->get('session')->getFlashBag()->add('warning', 'Vous ne pouvez pas modifier une offre acceptée. Essayez de modifier la commande');
+        return $this->redirect($this->generateUrl('dywee_offer_table'));
     }
 
-    public function deleteAction($id)
+    public function deleteAction(Offer $offer)
     {
         $em = $this->getDoctrine()->getManager();
-        $or = $em->getRepository('DyweeOrderBundle:Offer');
 
-        $Offer = $or->findOneById($id);
+        $em->remove($offer);
+        $em->flush();
+        $this->get('session')->getFlashBag()->add('success', 'offre bien effacée');
 
-        if($Offer != null){
-            $em->remove($Offer);
-            $em->flush();
-            $this->get('session')->getFlashBag()->add('success', 'Commande Bien effacée');
+        return $this->redirect($this->generateUrl('dywee_offer_table'));
 
-            return $this->redirect($this->generateUrl('dywee_offer_table'));
-        }
-        throw $this->createNotFoundException('Commande introuvable');
     }
 
-    public function invoiceDownloadAction($idOffer)
+    public function invoiceDownloadAction(Offer $offer)
     {
-        $or = $this->getDoctrine()->getManager()->getRepository('DyweeOrderBundle:Offer');
-        $Offer = $or->findOneById($idOffer);
-
-        if($Offer != null)
-        {
-            return new Response(
-                $this->get('knp_snappy.pdf')->getOutput($this->generateUrl('dywee_invoice_view', array('idOffer' => $idOffer), true)),
-                200,
-                array(
-                    'Content-Type'          => 'application/pdf',
-                    'Content-Disposition'   => 'attachment; filename="invoice07.pdf"'
-                )
-            );
-        }
-        throw $this->createNotFoundException('Commande introuvable');
+        return new Response(
+            $this->get('knp_snappy.pdf')->getOutput($this->generateUrl('dywee_invoice_view', array('idOffer' => $offer->getId()), true)),
+            200,
+            array(
+                'Content-Type'          => 'application/pdf',
+                'Content-Disposition'   => 'attachment; filename="invoice07.pdf"'
+            )
+        );
     }
 
-    public function invoiceViewAction($idOffer)
+    public function invoiceViewAction(Offer $offer)
     {
         $this->container->get('profiler')->disable();
-        $or = $this->getDoctrine()->getManager()->getRepository('DyweeOrderBundle:Offer');
-        $Offer = $or->findOneById($idOffer);
-        if($Offer != null) {
-            return $this->render('DyweeOrderBundle:Offer:invoice.html.twig', array('Offer' => $Offer));
-        }
-        throw $this->createNotFoundException('Commande introuvable');
+
+        return $this->render('DyweeOrderBundle:Offer:invoice.html.twig', array('Offer' => $offer));
+
     }
 
-    public function confirmationOfferAction($idOffer)
+    public function confirmationOfferAction(Offer $offer)
     {
-        $em = $this->getDoctrine()->getManager();
-        $or = $em->getRepository('DyweeOrderBundle:Offer');
-        $Offer = $or->findOneById($idOffer);
-        if($Offer != null)
-        {
-            //return $this->render('DyweeOrderBundle:Offer:mail-confirmation.html.twig', array('Offer' => $Offer));
-            return $this->render('DyweeOrderBundle:Offer:mail-confirmation2.html.twig');
-        }
+        //return $this->render('DyweeOrderBundle:Offer:mail-confirmation.html.twig', array('Offer' => $Offer));
+        return $this->render('DyweeOrderBundle:Offer:mail-confirmation2.html.twig');
+
     }
 
-    public function printAction($id)
+    public function printAction(Offer $offer)
     {
-        $em = $this->getDoctrine()->getManager();
-        $o = $em->getRepository('DyweeOrderBundle:Offer')->findOneById($id);
-
-        if($o != null)
-        {
-            $name = 'Offre '.$o->getReference();
-            return new Response(
-                $this->get('knp_snappy.pdf')->getOutput($this->generateUrl('dywee_offer_rough', array('id' => $id), true)),
-                200,
-                array(
-                    'Content-Type'          => 'application/pdf',
-                    'Content-Disposition'   => 'attachment; filename="'.$name.'.pdf"'
-                )
-            );
-        }
-        throw $this->createNotFoundException('Cette offre ne semble plus exister');
+        $name = 'Offre '.$offer->getReference();
+        return new Response(
+            $this->get('knp_snappy.pdf')->getOutput($this->generateUrl('dywee_offer_rough', array('id' => $offer->getId()), true)),
+            200,
+            array(
+                'Content-Type'          => 'application/pdf',
+                'Content-Disposition'   => 'attachment; filename="'.$name.'.pdf"'
+            )
+        );
     }
 
-    public function roughAction($id)
+    public function roughAction(Offer $offer)
     {
         $this->container->get('profiler')->disable();
-        $em = $this->getDoctrine()->getManager();
-        $o = $em->getRepository('DyweeOrderBundle:Offer')->findOneById($id);
 
-        if($o != null)
-            return $this->render('DyweeOrderBundle:Offer:print.html.twig', array('offer' => $o));
-
-        throw $this->createNotFoundException('Cette offre ne semble plus exister');
+        return $this->render('DyweeOrderBundle:Offer:print.html.twig', array('offer' => $offer));
     }
 
-    public function sendEmailAction($id)
+    public function sendEmailAction(Offer $offer)
     {
-        $em = $this->getDoctrine()->getManager();
-        $o = $em->getRepository('DyweeOrderBundle:Offer')->findOneById($id);
+        $data = array(
+            'subject'   =>  'Fox Sound - Offre '.$offer->getReference(),
+            'to'        =>  $offer->getAddress()->getEmail(),
+            'body'      =>  $this->renderView('DyweeOrderBundle:Offer:mail_body.html.twig', array('offer' => $offer))
+        );
 
-        if($o != null) {
-            $data = array(
-                'subject'   =>  'Fox Sound - Offre '.$o->getReference(),
-                'to'        =>  $o->getAddress()->getEmail(),
-                'body'      =>  $this->renderView('DyweeOrderBundle:Offer:mail_body.html.twig', array('offer' => $o))
-            );
+        $form = $this->createFormBuilder($data)
+                ->add('subject',    'text')
+                ->add('from',       'choice',   array('choices' => array('info@foxsound.be' => 'info@foxsound.be', $this->getUser()->getProfessionalEmail() => $this->getUser()->getProfessionalEmail())))
+                ->add('to',         'email')
+                ->add('body',       'textarea')
+                ->add('send',       'submit')
+                ->getForm();
 
-            $form = $this->createFormBuilder($data)
-                    ->add('subject',    'text')
-                    ->add('from',       'choice',   array('choices' => array('info@foxsound.be' => 'info@foxsound.be', $this->getUser()->getProfessionalEmail() => $this->getUser()->getProfessionalEmail())))
-                    ->add('to',         'email')
-                    ->add('body',       'textarea')
-                    ->add('send',       'submit')
-                    ->getForm();
+        return $this->render('DyweeOrderBundle:Offer:mail_form.html.twig', array('form' => $form->createView()));
 
-            return $this->render('DyweeOrderBundle:Offer:mail_form.html.twig', array('form' => $form->createView()));
-        }
-        throw $this->createNotFoundException('Cette offre ne semble plus exister');
     }
 
 }

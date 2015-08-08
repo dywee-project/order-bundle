@@ -46,14 +46,8 @@ class OrderAdminController extends Controller
         return $this->render('DyweeOrderBundle:Order:table.html.twig', array('pagination' => $pagination));
     }
 
-    public function paymentOverviewAction($id)
+    public function paymentOverviewAction(BaseOrder $order)
     {
-        $or = $this->getDoctrine()->getManager()->getRepository('DyweeOrderBundle:BaseOrder');
-        $order = $or->findOneById($id);
-
-        if($order == null)
-            throw $this->createNotFoundException('Commande introuvable');
-
         $apiContext = new ApiContext(
             new OAuthTokenCredential(
                 $this->container->getParameter('paypal.clientID'),

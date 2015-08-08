@@ -33,17 +33,9 @@ class OrderController extends Controller
         return $this->render('DyweeOrderBundle:Order:table.html.twig', array('pagination' => $pagination));
     }
 
-    public function viewAction($id)
+    public function viewAction(BaseOrder $order)
     {
-        $em = $this->getDoctrine()->getManager();
-        $or = $em->getRepository('DyweeOrderBundle:BaseOrder');
-
-        $o = $or->findOneById($id);
-
-        if($o != null)
-            return $this->render('DyweeOrderBundle:Order:view.html.twig', array('order' => $o));
-
-        throw $this->createNotFoundException('Cette commande ne semble plus exister');
+        return $this->render('DyweeOrderBundle:Order:view.html.twig', array('order' => $order));
     }
 
     public function addAction(Request $request)
@@ -78,69 +70,43 @@ class OrderController extends Controller
         return $this->render($template, array('form' => $form->createView()));
     }
 
-    public function updateAction($id, Request $request)
+    public function updateAction(BaseOrder $order, Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
-        $or = $em->getRepository('DyweeOrderBundle:BaseOrder');
+        $form = $this->get('form.factory')->create(new BaseOrderType(), $order);
 
-        $order = $or->findOneById($id);
-
-        if($order != null)
+        if($form->handleRequest($request)->isValid())
         {
-            $form = $this->get('form.factory')->create(new BaseOrderType(), $order);
-
-            if($form->handleRequest($request)->isValid())
-            {
-                $em->persist($order);
-                $em->flush();
-
-                return $this->redirect($this->generateUrl('dywee_order_view', array('id' => $order->getId())));
-            }
-
-            return $this->render('DyweeOrderBundle:Order:edit.html.twig', array('order' => $order, 'form' => $form->createView()));
-
-        }
-        throw $this->createNotFoundException('Cette offre n\'est plus disponible');
-    }
-
-    public function deleteAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $or = $em->getRepository('DyweeOrderBundle:BaseOrder');
-
-        $order = $or->findOneById($id);
-
-        if($order != null){
-            $em->remove($order);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($order);
             $em->flush();
-            $this->get('session')->getFlashBag()->add('success', 'Commande Bien effacée');
 
-            return $this->redirect($this->generateUrl('dywee_order_admin_table'));
+            return $this->redirect($this->generateUrl('dywee_order_view', array('id' => $order->getId())));
         }
-        throw $this->createNotFoundException('Commande introuvable');
+
+        return $this->render('DyweeOrderBundle:Order:edit.html.twig', array('order' => $order, 'form' => $form->createView()));
     }
 
-    public function invoiceViewAction($idOrder)
+    public function deleteAction(BaseOrder $order)
     {
-        $or = $this->getDoctrine()->getManager()->getRepository('DyweeOrderBundle:BaseOrder');
-        $order = $or->findOneById($idOrder);
+        $em = $this->getDoctrine()->getManager();
 
-        if($order != null)
-        {
-            return $this->render('DyweeOrderBundle:Order:invoice.html.twig', array(
-                'order'  => $order
-            ));
-        }
-        throw $this->createNotFoundException('Commande introuvable');
+        $em->remove($order);
+        $em->flush();
+        $this->get('session')->getFlashBag()->add('success', 'Commande Bien effacée');
+
+        return $this->redirect($this->generateUrl('dywee_order_admin_table'));
     }
 
-    public function invoiceDownloadAction($idOrder)
+    public function invoiceViewAction(BaseOrder $order)
     {
-        $or = $this->getDoctrine()->getManager()->getRepository('DyweeOrderBundle:BaseOrder');
-        $order = $or->findOneById($idOrder);
+        return $this->render('DyweeOrderBundle:Order:invoice.html.twig', array(
+            'order'  => $order
+        ));
+    }
 
-        if($order != null)
-        {
+    public function invoiceDownloadAction(BaseOrder $order)
+    {
+
             /*$html = $this->renderView('DyweeOrderBundle:Order:invoice.html.twig', array(
                 'order'  => $order
             ));
@@ -197,10 +163,6 @@ class OrderController extends Controller
                     );
                 }*/
             }
-
-
-        }
-        throw $this->createNotFoundException('Commande introuvable');
     }
 
     public function exportToCSVAction($type, $data = false)
