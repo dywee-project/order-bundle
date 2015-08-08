@@ -3,58 +3,62 @@
 {%  extends "DyweeOrderBundle::admin.html.twig" %}
 
 {% block viewBody %}
-    <a href="{{ path('dywee_offer_add') }}" class="btn btn-success pull-right"><i class="fa fa-plus"></i> Ajouter</a>
+    <a href="{{ path('dywee_offer_add') }}" class="btn btn-success pull-right"><i class="fa fa-plus"></i> Créer une offre</a>
 
     <div class="title-heading">
         <h1 class="text-center">Liste des Offres</h1>
     </div>
-    <div class="table-responsive">
-        <table class="table table-striped table-hover table-condensed">
-            <thead>
-            <tr>
-                <th>#</th>
-                <th>Réference</th>
-                <th>Client</th>
-                <th>Statut</th>
-                <th>Total HTVA</th>
-                <th>Remise</th>
-                <th>Total TVAC</th>
-                <th>Commande</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            {%  for offer in offerList %}
+    {% if offerList|length > 0 %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover table-condensed">
+                <thead>
                 <tr>
-                    <td>{{ offer.id }}</td>
-                    <td>{{ offer.reference }}</td>
-                    <td>{{ offer.address.firstName|capitalize }} {{ offer.address.lastName|capitalize }}</td>
-                    <td>
-                        {% if offer.state == 0 %}
-                            <span class="label label-warning">Annulée</span>
-                        {% elseif offer.state == 1 %}
-                            <span class="label label-info">Proposée</span>
-                        {% elseif offer.state == 2 %}
-                            <span class="label label-success">Acceptée</span>
-                        {% else %}
-                            <span class="label label-danger">Error</span>
-                        {% endif %}
-                    </td>
-                    <td>{{ offer.priceVatExcl|number_format(2) }}€</td>
-                    <td>{{ offer.discountRate|number_format(2) }}%</td>
-                    <td>{{ offer.totalPrice|number_format(2) }}€</td>
-                    <td>{{ offer.createdAt|date('d/m/Y') }}</td>
-                    <td> <a href="{{ path('dywee_offer_view', {id: offer.id}) }}" class="link-unstyled"><i class="fa fa-eye"></i> </a>
-                        <a href="{{ path('dywee_offer_update', {id: offer.id}) }}" class="link-unstyled"><i class="fa fa-pencil"></i> </a>
-                        <a href="{{ path('dywee_offer_send', {id: offer.id}) }}" class="link-unstyled btn-disabled" onclick="changeFa(this)"><i class="fa fa-envelope"></i> </a>
-                        <a href="{{ path('dywee_offer_print', {id: offer.id}) }}" class="link-unstyled"><i class="fa fa-file-pdf-o"></i> </a>
-                        <a href="{{ path('dywee_offer_delete', {id: offer.id}) }}" class="link-unstyled" onclick="return confirm('Etes-vous sûr de vouloir supprimer cette offre?');"><i class="fa fa-trash-o"></i> </a>
-                    </td>
+                    <th>#</th>
+                    <th>Réference</th>
+                    <th>Client</th>
+                    <th>Statut</th>
+                    <th>Total HTVA</th>
+                    <th>Remise</th>
+                    <th>Total TVAC</th>
+                    <th>Commande</th>
+                    <th>Actions</th>
                 </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
-
+                </thead>
+                <tbody>
+                {%  for offer in offerList %}
+                    <tr>
+                        <td>{{ offer.id }}</td>
+                        <td>{{ offer.reference }}</td>
+                        <td>{{ offer.address.firstName|capitalize }} {{ offer.address.lastName|capitalize }}</td>
+                        <td>
+                            {% if offer.state == 0 %}
+                                <span class="label label-warning">Annulée</span>
+                            {% elseif offer.state == 1 %}
+                                <span class="label label-info">Proposée</span>
+                            {% elseif offer.state == 2 %}
+                                <span class="label label-success">Acceptée</span>
+                            {% else %}
+                                <span class="label label-danger">Error</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ offer.priceVatExcl|number_format(2) }}€</td>
+                        <td>{{ offer.discountRate|number_format(2) }}%</td>
+                        <td>{{ offer.totalPrice|number_format(2) }}€</td>
+                        <td>{{ offer.createdAt|date('d/m/Y') }}</td>
+                        <td> <a href="{{ path('dywee_offer_view', {id: offer.id}) }}" class="link-unstyled"><i class="fa fa-eye"></i> </a>
+                            <a href="{{ path('dywee_offer_update', {id: offer.id}) }}" class="link-unstyled"><i class="fa fa-pencil"></i> </a>
+                            <a href="{{ path('dywee_offer_send', {id: offer.id}) }}" class="link-unstyled btn-disabled" onclick="changeFa(this)"><i class="fa fa-envelope"></i> </a>
+                            <a href="{{ path('dywee_offer_print', {id: offer.id}) }}" class="link-unstyled"><i class="fa fa-file-pdf-o"></i> </a>
+                            <a href="{{ path('dywee_offer_delete', {id: offer.id}) }}" class="link-unstyled" onclick="return confirm('Etes-vous sûr de vouloir supprimer cette offre?');"><i class="fa fa-trash-o"></i> </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p>Aucune commande n'a été enregistrée.</p>
+        <p><a href="{{ path('dywee_offer_add') }}" class="btn btn-success"><i class="fa fa-plus"></i> Créer une offre</a></p>
+    {% endif %}
 
 {% endblock %}
