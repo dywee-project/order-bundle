@@ -5,7 +5,7 @@ namespace Dywee\OrderBundle\Form;
 use Dywee\AddressBundle\Form\AddressType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class OfferType extends AbstractType
 {
