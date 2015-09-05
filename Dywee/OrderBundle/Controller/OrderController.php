@@ -2,6 +2,7 @@
 
 namespace Dywee\OrderBundle\Controller;
 
+use Dywee\NotificationBundle\Entity\Notification;
 use Dywee\OrderBundle\Entity\BaseOrder;
 use Dywee\OrderBundle\Form\BaseOrderType;
 use Dywee\OrderBundle\Form\BaseOrderRentType;
@@ -300,7 +301,14 @@ class OrderController extends Controller
             $message->setContentType("text/html");
 
             $order->setState(1);
+
+            $notification = new Notification();
+            $notification->setContent('Une nouvelle commande a été passée');
+            $notification->setArgument1($order->getId());
+            $notification->setType('order');
+
             $em->persist($order);
+            $em->persist($notification);
             $em->flush();
 
             $this->get('mailer')->send($message);
