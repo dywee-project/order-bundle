@@ -4,7 +4,21 @@
 
 {% block viewBody %}
     <div class="actions-right">
-        <a href="{{ path('dywee_order_add') }}" class="btn btn-success"><i class="fa fa-plus"></i> Ajouter</a>
+        {% if sellType == 'both' %}
+            <div class="btn-group">
+                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-plus"></i> Ajouter <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                    <li><a href="{{ path('dywee_order_add') }}?sellType=1"><i class="fa fa-plus"></i> Ajouter une vente</a></li>
+                    <li><a href="{{ path('dywee_order_add') }}?sellType=2"><i class="fa fa-plus"></i> Ajouter une location</a></li>
+                </ul>
+            </div>
+        {% elseif sellType == 'rent' %}
+            <a href="{{ path('dywee_order_add') }}" class="btn btn-success"><i class="fa fa-plus"></i> Ajouter une location</a>
+        {% else %}
+            <a href="{{ path('dywee_order_add') }}" class="btn btn-success"><i class="fa fa-plus"></i> Ajouter une vente</a>
+        {% endif %}
         <div class="btn-group">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                 <i class="fa fa-download"></i> Exporter <span class="caret"></span>

@@ -13,7 +13,13 @@
 {% block body %}
     <h1>Création d'une commande</h1>
 
-    {%  include "DyweeOrderBundle:Order:form.html.twig" %}
+    {% if form.vars.value.sellType == 1 %}
+        {%  include "DyweeOrderBundle:Order:form.html.twig" %}
+    {% elseif form.vars.value.sellType == 2 %}
+        {%  include "DyweeOrderBundle:Order:formRent.html.twig" %}
+    {% else %}
+        Erreur: aucun type de vente défini
+    {% endif %}
 {% endblock %}
 
 {% block footerJavascript %}

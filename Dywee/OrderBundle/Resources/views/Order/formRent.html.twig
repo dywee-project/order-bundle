@@ -108,6 +108,13 @@
                 </div>
             </div>
             <div class="form-group">
+                {{ form_label(form.deliveryMethod, "Type de livraison", {"label_attr": {"class": "label-control col-md-3"}}) }}
+                {{ form_errors(form.deliveryMethod) }}
+                <div class="col-md-8">
+                    {{ form_widget(form.deliveryMethod, {attr: {class: "form-control"}}) }}
+                </div>
+            </div>
+            <div class="form-group">
                 {{ form_label(form.deliveryInfo, "Info de livraison", {"label_attr": {"class": "label-control col-md-3"}}) }}
                 {{ form_errors(form.deliveryInfo) }}
                 <div class="col-md-8">

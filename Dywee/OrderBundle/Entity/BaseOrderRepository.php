@@ -79,4 +79,18 @@ class BaseOrderRepository extends EntityRepository
             ->getResult()
             ;
     }
+
+    public function findLastRentingByProduct($productId)
+    {
+        $qb = $this->createQueryBuilder('o')
+            ->select('o')
+            //->join('o.orderElement', 'oe')
+            ->where('o.sellType = 2')
+            ->andWhere('o.state > 0')
+            //->andWhere('oe.product = :productId')
+            //->setParameters(array('productId' => $productId))
+        ;
+
+        return $qb->getQuery()->getResult();
+    }
 }

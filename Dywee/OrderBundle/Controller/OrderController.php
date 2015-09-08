@@ -31,7 +31,9 @@ class OrderController extends Controller
             20/*limit per page*/
         );
 
-        return $this->render('DyweeOrderBundle:Order:table.html.twig', array('pagination' => $pagination));
+        $sellType = $this->container->getParameter('dywee_order_bundle.sellType');
+
+        return $this->render('DyweeOrderBundle:Order:table.html.twig', array('pagination' => $pagination, 'sellType' => $sellType));
     }
 
     public function viewAction(BaseOrder $order)
@@ -46,18 +48,21 @@ class OrderController extends Controller
         $order = new BaseOrder();
         $order->setIsPriceTTC($this->container->getParameter('dywee_order_bundle.isPriceTTC'));
 
+        //On va checker le type de vente par défaut dans la config
         $sellType = $this->container->getParameter('dywee_order_bundle.sellType');
-        if($sellType == 'default')
+
+        // On peut forcer le type en le passant en $_GET
+        $type = $request->query->get('sellType');
+
+        if(($type != null && $type == 1) || ($type == null && $sellType == 'default'))
         {
             $order->setSellType(1);
             $form = $this->get('form.factory')->create(new BaseOrderType(), $order);
-            $template = 'DyweeOrderBundle:Order:add.html.twig';
         }
-        else if($sellType == 'rent')
+        else if(($type != null && $type == 2) || ($type == null && $sellType == 'rent'))
         {
             $order->setSellType(2);
             $form = $this->get('form.factory')->create(new BaseOrderRentType(), $order);
-            $template = 'DyweeOrderBundle:Order:addRent.html.twig';
         }
 
 
@@ -68,12 +73,17 @@ class OrderController extends Controller
 
             return $this->redirect($this->generateUrl('dywee_order_view', array('id' => $order->getId())));
         }
-        return $this->render($template, array('form' => $form->createView()));
+        return $this->render('DyweeOrderBundle:Order:add.html.twig', array('form' => $form->createView()));
     }
 
     public function updateAction(BaseOrder $order, Request $request)
     {
-        $form = $this->get('form.factory')->create(new BaseOrderType(), $order);
+        //Si c'est une commande de vente
+        if($order->getSellType() == 1)
+            $form = $this->get('form.factory')->create(new BaseOrderType(), $order);
+        //Si c'est une commande de location
+        else if($order->getSellType() == 2)
+            $form = $this->get('form.factory')->create(new BaseOrderRentType(), $order);
 
         if($form->handleRequest($request)->isValid())
         {

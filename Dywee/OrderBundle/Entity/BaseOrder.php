@@ -284,6 +284,21 @@ class BaseOrder
     private $sellType;
 
     /**
+     * @ORM\Column(name="collectionAt", type="datetime", nullable=true)
+     */
+    private $collectionAt;
+
+    /**
+     * @ORM\Column(name="returnFor", type="datetime", nullable=true)
+     */
+    private $returnFor;
+
+    /**
+     * @ORM\Column(name="returnedAt", type="datetime", nullable=true)
+     */
+    private $returnedAt;
+
+    /**
      * @var integer
      *
      * @ORM\Column(name="duration", type="smallint")
@@ -1626,7 +1641,6 @@ class BaseOrder
     public function setSellType($sellType)
     {
         $this->sellType = $sellType;
-
         return $this;
     }
 
@@ -1670,7 +1684,6 @@ class BaseOrder
     public function setMailSended($mailSended)
     {
         $this->mailSended = $mailSended;
-
         return $this;
     }
 
@@ -1682,5 +1695,71 @@ class BaseOrder
     public function getMailSended()
     {
         return $this->mailSended;
+    }
+
+    /**
+     * Set collectionAt
+     *
+     * @param \DateTime $date
+     * @return BaseOrder
+     */
+    public function setCollectionAt($date)
+    {
+        $this->collectionAt = $date;
+        return $this;
+    }
+
+    /**
+     * Get collectionAt
+     *
+     * @return \DateTime
+     */
+    public function getCollectionAt()
+    {
+        return $this->collectionAt;
+    }
+
+    /**
+     * Set returnFor
+     *
+     * @param \DateTime $date
+     * @return BaseOrder
+     */
+    public function setReturnFor($date)
+    {
+        $this->returnFor = $date;
+        return $this;
+    }
+
+    /**
+     * Get returnFor
+     *
+     * @return \DateTime
+     */
+    public function getReturnFor()
+    {
+        return $this->returnFor;
+    }
+
+    /**
+     * Set returnedAt
+     *
+     * @param \DateTime $date
+     * @return BaseOrder
+     */
+    public function setReturnedAt($date)
+    {
+        $this->returnedAt = $date;
+        return $this;
+    }
+
+    /**
+     * Get returnedAt
+     *
+     * @return \DateTime
+     */
+    public function getReturnedAt()
+    {
+        return $this->returnedAt;
     }
 }

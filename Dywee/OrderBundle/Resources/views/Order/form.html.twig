@@ -160,85 +160,83 @@
 
 {{ form_end(form) }}
 
-<script type="text/javascript">
-    $(document).ready(function() {
-        // On récupère la balise <div> en question qui contient l'attribut « data-prototype » qui nous intéresse.
-        var $container = $('#dywee_orderbundle_baseorder_orderElements');
+{% block footerJavascript %}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            // On récupère la balise <div> en question qui contient l'attribut « data-prototype » qui nous intéresse.
+            var $container = $('#dywee_orderbundle_baseorder_orderElements');
 
-        // On ajoute un lien pour ajouter une nouvelle catégorie
-        var $addLink = $('<a href="#" id="add_element" class="btn btn-success"><i class="fa fa-plus"></i> Ajouter un élement</a>');
-        $("#content").append($addLink);
+            // On ajoute un lien pour ajouter une nouvelle catégorie
+            var $addLink = $('<a href="#" id="add_element" class="btn btn-success"><i class="fa fa-plus"></i> Ajouter un élement</a>');
+            $("#content").append($addLink);
 
-        // On ajoute un nouveau champ à chaque clic sur le lien d'ajout.
-        $addLink.click(function(e) {
-            addElement($container);
-            e.preventDefault(); // évite qu'un # apparaisse dans l'URL
-            return false;
-        });
-
-        // On définit un compteur unique pour nommer les champs qu'on va ajouter dynamiquement
-        var index = $('#offerElementsContainer tr').length;
-
-        // On ajoute un premier champ automatiquement s'il n'en existe pas déjà un (cas d'une nouvelle annonce par exemple).
-        if (index == 0) {
-            addElement($container);
-        } else {
-            // Pour chaque catégorie déjà existante, on ajoute un lien de suppression
-            $('#offerElementsContainer').children('tr').each(function() {
-                addDeleteLink($(this));
-            });
-        }
-
-        // La fonction qui ajoute un formulaire Categorie
-        function addElement($container) {
-            console.log($container);
-            // Dans le contenu de l'attribut « data-prototype », on remplace :
-            // - le texte "__name__label__" qu'il contient par le label du champ
-            // - le texte "__name__" qu'il contient par le numéro du champ
-            var $prototype = $($container.attr('data-prototype').replace(/__name__label__/g, 'Element n°' + (index+1))
-                    .replace(/__name__/g, index));
-
-
-            // On ajoute au prototype un lien pour pouvoir supprimer la catégorie
-            addDeleteLink($prototype);
-
-            // On ajoute le prototype modifié à la fin de la balise <div>
-            $("#offerElementsContainer").append($prototype);
-
-            //On convertit le select en select2
-            //console.log()
-            $("#dywee_orderbundle_baseorder_orderElements_"+index+"_product").select2();
-
-            // Enfin, on incrémente le compteur pour que le prochain ajout se fasse avec un autre numéro
-            index++;
-        }
-
-        // La fonction qui ajoute un lien de suppression d'une catégorie
-        function addDeleteLink($prototype) {
-            // Création du lien
-            $deleteLink = $('<a href="#" class="btn btn-danger">Supprimer</a>');
-
-            $actionCell = $('<td>');
-
-            $actionCell.append($deleteLink);
-
-            // Ajout du lien
-            $prototype.append($actionCell);
-
-            // Ajout du listener sur le clic du lien
-            $deleteLink.click(function(e) {
-                $prototype.remove();
+            // On ajoute un nouveau champ à chaque clic sur le lien d'ajout.
+            $addLink.click(function(e) {
+                addElement($container);
                 e.preventDefault(); // évite qu'un # apparaisse dans l'URL
                 return false;
             });
-        }
 
-        $("#dywee_orderbundle_baseorder_billingAddress").select2();
-        $("#dywee_orderbundle_baseorder_shippingAddress").select2();
-    });
+            // On définit un compteur unique pour nommer les champs qu'on va ajouter dynamiquement
+            var index = $('#offerElementsContainer tr').length;
 
-</script>
+            // On ajoute un premier champ automatiquement s'il n'en existe pas déjà un (cas d'une nouvelle annonce par exemple).
+            if (index == 0) {
+                addElement($container);
+            } else {
+                // Pour chaque catégorie déjà existante, on ajoute un lien de suppression
+                $('#offerElementsContainer').children('tr').each(function() {
+                    addDeleteLink($(this));
+                });
+            }
 
-{% block footerJavascript %}
-    test1
+            // La fonction qui ajoute un formulaire Categorie
+            function addElement($container) {
+                console.log($container);
+                // Dans le contenu de l'attribut « data-prototype », on remplace :
+                // - le texte "__name__label__" qu'il contient par le label du champ
+                // - le texte "__name__" qu'il contient par le numéro du champ
+                var $prototype = $($container.attr('data-prototype').replace(/__name__label__/g, 'Element n°' + (index+1))
+                        .replace(/__name__/g, index));
+
+
+                // On ajoute au prototype un lien pour pouvoir supprimer la catégorie
+                addDeleteLink($prototype);
+
+                // On ajoute le prototype modifié à la fin de la balise <div>
+                $("#offerElementsContainer").append($prototype);
+
+                //On convertit le select en select2
+                //console.log()
+                $("#dywee_orderbundle_baseorder_orderElements_"+index+"_product").select2();
+
+                // Enfin, on incrémente le compteur pour que le prochain ajout se fasse avec un autre numéro
+                index++;
+            }
+
+            // La fonction qui ajoute un lien de suppression d'une catégorie
+            function addDeleteLink($prototype) {
+                // Création du lien
+                $deleteLink = $('<a href="#" class="btn btn-danger">Supprimer</a>');
+
+                $actionCell = $('<td>');
+
+                $actionCell.append($deleteLink);
+
+                // Ajout du lien
+                $prototype.append($actionCell);
+
+                // Ajout du listener sur le clic du lien
+                $deleteLink.click(function(e) {
+                    $prototype.remove();
+                    e.preventDefault(); // évite qu'un # apparaisse dans l'URL
+                    return false;
+                });
+            }
+
+            $("#dywee_orderbundle_baseorder_billingAddress").select2();
+            $("#dywee_orderbundle_baseorder_shippingAddress").select2();
+        });
+
+    </script>
 {% endblock %}
