@@ -111,8 +111,8 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td>{{ order.creationDate|date('d/m/Y à h\\hi') }}</td>
-                        <td>{{ order.validationDate|date('d/m/Y à h\\hi') }}</td>
+                        <td>{{ order.creationDate|date('d/m/Y à H\\hi') }}</td>
+                        <td>{{ order.validationDate|date('d/m/Y à H\\hi') }}</td>
                         <td>
                             {% if order.state == 0 %}
                                 <span class="label label-warning">Annulée</span>
@@ -212,10 +212,12 @@
                 <div class="panel-body">
                     {% if order.billingAddress is not null %}
                         <p>
-                        {{ order.billingAddress.firstName }} {{ order.billingAddress.lastName }}<br>
-                        {{ order.billingAddress.email }}<br>
-                        {{ order.billingAddress.mobile }}
-                    </p>
+                            {{ order.billingAddress.firstName }} {{ order.billingAddress.lastName }}<br>
+                            {{ order.billingAddress.email }}<br>
+                            {% if order.billingAddress.mobile is not null %}
+                                {{ phone_number_format(order.billingAddress.mobile, 'INTERNATIONAL') }}
+                            {% endif %}
+                        </p>
 
                         <p>{{ order.billingAddress.address1 }}<br>
                             {{ order.billingAddress.address2 }}</p>
@@ -233,7 +235,10 @@
                     {% if order.shippingAddress is not null %}
                         <p>{{ order.shippingAddress.firstName }} {{ order.shippingAddress.lastName }}<br>
                             {{ order.shippingAddress.email }}<br>
-                            {{ order.shippingAddress.mobile }}</p>
+                        {% if order.shippingAddress.mobile is not null %}
+                            {{ phone_number_format(order.shippingAddress.mobile, 'INTERNATIONAL') }}
+                        {% endif %}
+                        </p>
 
                         <p>{{ order.shippingAddress.address1 }}<br>
                             {{ order.shippingAddress.address2 }}</p>

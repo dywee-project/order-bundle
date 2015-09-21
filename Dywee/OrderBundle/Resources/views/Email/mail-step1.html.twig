@@ -55,7 +55,7 @@
                     <div class="panel-body">
                         <p>{{ order.billingAddress.firstName }}  {{ order.billingAddress.lastName }}</p>
                         <p>{{ order.billingAddress.email }}</p>
-                        <p>Mobile: {{ order.billingAddress.mobile }}</p>
+                        <p>Mobile: {{ phone_number_format(order.billingAddress.mobile, 'INTERNATIONAL') }}</p>
                         <p>{{ order.billingAddress.address1 }}
                             {% if not order.shippingAddress.address2 == '' %}
                                 <br>
@@ -82,13 +82,13 @@
                             <p>Un email sera envoyé lorsque le colis sera arrivé au point relais</p>
                             <p>{{ order.shippingAddress.firstName }} {{ order.shippingAddress.lastName }}<br>
                                 {{ order.shippingAddress.email }}<br>
-                                {{ order.shippingAddress.mobile }}</p>
+                                {{ phone_number_format(order.shippingAddress.mobile, 'INTERNATIONAL') }}</p>
                         {% else %}
                             <p>
                                 {% if order.shippingAddress.companyName != '' %}{{ order.shippingAddress.companyName }}<br>{% endif %}
                                 {{ order.shippingAddress.firstName }} {{ order.shippingAddress.lastName }}<br>
                                 {{ order.shippingAddress.email }}<br>
-                                {{ order.shippingAddress.mobile }}</p>
+                                {{ phone_number_format(order.shippingAddress.mobile, 'INTERNATIONAL') }}</p>
 
                             <p>{{ order.shippingAddress.address1 }}
                                 {% if not order.shippingAddress.address2 == '' %}
@@ -121,9 +121,6 @@
         <p>Nous attendons de recevoir la confirmation de votre paiement pour valider votre commande.<br>
             Vous recevrez un mail de confirmation de notre part dés que nous l'aurons reçue.</p>
 
-        <p>Cordialement,</p>
-
-        x
     </div>
     </body>
 </html>

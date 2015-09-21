@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Olivier
- * Date: 16/02/15
- * Time: 17:05
- */
 
 namespace Dywee\OrderBundle\DoctrineListener;
 

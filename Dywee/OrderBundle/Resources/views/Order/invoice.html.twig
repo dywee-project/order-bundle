@@ -8,7 +8,7 @@
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.4 -->
-    <link rel="stylesheet" href="{{ asset('bundles/dyweecore/css/bootstrap.css') }}" type="text/css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <!-- Font Awesome Icons -->
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
     <!-- Ionicons -->
@@ -58,7 +58,7 @@
                     {% if order.billingAddress.address2 != '' %}{{ order.billingAddress.address2 }}<br>{% endif %}
                     {{ order.billingAddress.zip }} {{ order.billingAddress.cityString }}<br>
                     {{ order.billingAddress.country.iso }} {{ order.billingAddress.country.name }}<br>
-                    <i class="fa fa-phone"></i> {{ order.billingAddress.mobile }}<br/>
+                    <i class="fa fa-phone"></i> {{ phone_number_format(order.billingAddress.mobile, 'INTERNATIONAL') }}<br/>
                     <i class="fa fa-at"></i> {{ order.billingAddress.email }}
                 </address>
 

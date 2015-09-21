@@ -307,6 +307,8 @@ class BaseOrder
 
     private $mustRecaculShipments = false;
 
+    private $oldState = null;
+
     /**
      * Get id
      *
@@ -919,6 +921,10 @@ class BaseOrder
      */
     public function setState($state)
     {
+        //On retient si le state a changé
+        if($this->state != $state)
+            $this->oldState = $this->state;
+
         $this->state = $state;
 
         //Si la commande est marquée comme finalisée on marque comme étant finalisés tous les envois
@@ -1761,5 +1767,26 @@ class BaseOrder
     public function getReturnedAt()
     {
         return $this->returnedAt;
+    }
+
+    public function decreaseStock()
+    {
+        foreach($this->getOrderElements() as $orderElement)
+            $orderElement->getProduct()->decreaseStock($orderElement->getQuantity());
+
+        return $this;
+    }
+
+    public function refundStock()
+    {
+        foreach($this->getOrderElements() as $orderElement)
+            $orderElement->getProduct()->refundStock($orderElement->getQuantity());
+
+        return $this;
+    }
+
+    public function getOldState()
+    {
+        return $this->oldState;
     }
 }

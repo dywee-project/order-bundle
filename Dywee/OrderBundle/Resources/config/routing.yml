@@ -25,10 +25,10 @@ dywee_order_delete:
             id: \d+
 
 dywee_invoice_view:
-    path:     /invoice/{idOrder}/view
+    path:     /invoice/{id}/view
     defaults: { _controller: DyweeOrderBundle:Order:invoiceView }
     requirements:
-            id: \d+
+        id: \d+
 
 dywee_invoice_user_view:
     path:     /invoice/view/{invoiceReference}

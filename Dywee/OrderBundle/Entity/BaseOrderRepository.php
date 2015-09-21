@@ -17,7 +17,7 @@ class BaseOrderRepository extends EntityRepository
         $qb = $this->createQueryBuilder('o');
         if($state)
         {
-            $qb->where('o.state = :state');
+            $qb->where('o.state = :state and o.totalPrice > 0');
             $qb->setParameter('state', $state);
         }
         $qb->orderBy('o.creationDate', 'desc');

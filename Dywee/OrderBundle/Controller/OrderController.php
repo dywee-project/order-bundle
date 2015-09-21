@@ -54,7 +54,7 @@ class OrderController extends Controller
         // On peut forcer le type en le passant en $_GET
         $type = $request->query->get('sellType');
 
-        if(($type != null && $type == 1) || ($type == null && $sellType == 'default'))
+        if(($type != null && $type == 1) || ($type == null && $sellType == 'buy'))
         {
             $order->setSellType(1);
             $form = $this->get('form.factory')->create(new BaseOrderType(), $order);
@@ -84,6 +84,9 @@ class OrderController extends Controller
         //Si c'est une commande de location
         else if($order->getSellType() == 2)
             $form = $this->get('form.factory')->create(new BaseOrderRentType(), $order);
+        //Dans le cas des anciennes commandes
+        else
+            $form = $this->get('form.factory')->create(new BaseOrderType(), $order->setSellType(1));
 
         if($form->handleRequest($request)->isValid())
         {
@@ -315,7 +318,10 @@ class OrderController extends Controller
             $notification = new Notification();
             $notification->setContent('Une nouvelle commande a été passée');
             $notification->setArgument1($order->getId());
-            $notification->setType('order');
+            $notification->setBundle('order');
+            $notification->setType('order.new');
+            $notification->setRoutingPath('dywee_order_view');
+            $notification->setRoutingArguments('{id: '.$order->getId().'}');
 
             $em->persist($order);
             $em->persist($notification);

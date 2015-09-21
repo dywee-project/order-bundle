@@ -159,7 +159,7 @@
                         <td>{{ order.creationDate|date('d/m/Y') }}</td>
                         <td class="actions"> <a href="{{ path('dywee_order_view', {id: order.id}) }}" ><i class="fa fa-eye"></i> </a>
                                 <a href="{{ path('dywee_order_update', {id: order.id}) }}"><i class="fa fa-pencil"></i> </a>
-                                <a href="{{ path('dywee_invoice_view', {idOrder: order.id}) }}"><i class="fa fa-file-text"></i> </a>
+                                <a href="{{ path('dywee_invoice_view', {id: order.id}) }}"><i class="fa fa-file-text"></i> </a>
                                 <a href="{{ path('dywee_shipment_table', {idOrder: order.id}) }}"><i class="fa fa-truck"></i> </a>
                                 <a href="{{ path('dywee_order_delete', {id: order.id}) }}" data-confirm="Êtes-vous sûr de vouloir supprimer cette commande?"><i class="fa fa-trash-o"></i> </a>
 
