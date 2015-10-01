@@ -4,6 +4,7 @@ namespace Dywee\OrderBundle\Controller;
 
 use Dywee\OrderBundle\Entity\BaseOrder;
 use Dywee\OrderBundle\Entity\OrderElement;
+use Dywee\OrderBundle\Filter\OrderFilterType;
 use Dywee\OrderBundle\Form\BaseOrderType;
 use Dywee\OrderBundle\Form\BaseOrderRentType;
 use PayPal\Api\Payment;
@@ -31,19 +32,40 @@ class OrderAdminController extends Controller
 
     public function tableAction($state, $page, Request $request)
     {
-
         $or = $this->getDoctrine()->getManager()->getRepository('DyweeOrderBundle:BaseOrder');
 
-        $query = $or->FindAllForPagination();
+
+        $form = $this->get('form.factory')->create(new OrderFilterType())
+            ->add('chercher', 'submit')
+        ;
+
+        $filterActive = false;
+
+        if($form->handleRequest($request)->isValid())
+        {
+            $query = $or->FindAllForPagination();
+            // build the query from the given form object
+            $this->get('lexik_form_filter.query_builder_updater')->addFilterConditions($form, $query);
+
+            $filterActive = true;
+        }
+        else $query = $or->FindAllForPagination($state);
 
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
             $query,
-            $request->query->get('page', $page)/*page number*/,
-            10/*limit per page*/
+            $request->query->get('page', $page), //page number
+            20 // limit per page
         );
 
-        return $this->render('DyweeOrderBundle:Order:table.html.twig', array('pagination' => $pagination));
+        $sellType = $this->container->getParameter('dywee_order_bundle.sellType');
+
+        return $this->render('DyweeOrderBundle:Order:table.html.twig', array(
+            'pagination' => $pagination,
+            'searchForm' => $form->createView(),
+            'filterActive' => $filterActive,
+            'sellType' => $sellType
+        ));
     }
 
     public function paymentOverviewAction(BaseOrder $order)

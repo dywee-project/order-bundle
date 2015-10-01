@@ -22,8 +22,6 @@ class OrderController extends Controller
 
         $query = $or->FindAllForPagination($state);
 
-        //print_r($request->query); exit;
-
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
             $query,
@@ -304,6 +302,8 @@ class OrderController extends Controller
                     );
                 }
             }
+
+            $order->setValidationDate(new \DateTime());
 
             $message = \Swift_Message::newInstance()
                 ->setSubject('Confirmation de votre commande')

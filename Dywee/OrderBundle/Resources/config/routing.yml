@@ -1,6 +1,6 @@
 dywee_order_admin_table:
     path:     /admin6833/order/table/{state}/{page}
-    defaults: { _controller: DyweeOrderBundle:Order:table, state: 2, page: 1 }
+    defaults: { _controller: DyweeOrderBundle:OrderAdmin:table, state: 2, page: 1 }
 
 dywee_order_add:
     path:     /admin6833/order/add

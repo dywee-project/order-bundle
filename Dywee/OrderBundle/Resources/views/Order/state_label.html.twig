@@ -1,0 +1,13 @@
+{% if order.state == 0 %}
+    <span class="label label-warning">Annulée</span>
+{% elseif order.state == 1 %}
+    <span class="label label-default">En attente</span>
+{% elseif order.state == 2 %}
+    <span class="label label-success">Active</span>
+{% elseif order.state == 3 %}
+    <span class="label label-info">Terminée</span>
+{% elseif order.state == -1 %}
+    <span class="label label-warning">En session</span>
+{% else %}
+    <span class="label label-danger">Erreur</span>
+{% endif %}

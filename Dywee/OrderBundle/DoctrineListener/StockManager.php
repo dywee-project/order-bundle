@@ -41,9 +41,14 @@ class StockManager
 
             if(is_numeric($entity->getOldState()))
                 if($entity->getState() >= 1 && $entity->getOldState() < 1)
+                {
                     $entity->decreaseStock();
+                }
+
                 elseif($entity->getState() < 1 && $entity->getOldState() >= 1)
+                {
                     $entity->refundStock();
+                }
         }
 
     }

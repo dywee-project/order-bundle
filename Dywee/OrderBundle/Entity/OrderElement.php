@@ -40,6 +40,8 @@ class OrderElement
      */
     private $quantity = 1;
 
+    private $oldQuantity;
+
     /**
      * @var float
      *
@@ -95,6 +97,11 @@ class OrderElement
      * @ORM\Column(name="endAt", type="datetime", nullable=true)
      */
     private $endAt;
+
+    public function __construct()
+    {
+
+    }
 
     /**
      * Get id

@@ -47,131 +47,125 @@
     <div class="title-heading">
         <h1 class="text-center">Liste des Commandes ({{ pagination.getTotalItemCount }})</h1>
     </div>
-    {% if pagination.getTotalItemCount > 0 %}
-        <div class="table-responsive">
-            <table class="table table-striped table-hover">
-                <thead>
-                <tr>
-                    <th{% if pagination.isSorted('o.id') %} class="sorted"{% endif %}>
-                        {{ knp_pagination_sortable(pagination, '#', 'o.id') }}
-                    </th>
-                    <th{% if pagination.isSorted('o.reference') %} class="sorted"{% endif %}>
-                        {{ knp_pagination_sortable(pagination, 'Référence', 'o.reference') }}
-                    </th>
-                    <th{% if pagination.isSorted('o.invoiceReference') %} class="sorted"{% endif %}>
-                        {{ knp_pagination_sortable(pagination, 'Facture', 'o.billingAddress.invoiceReference') }}
-                        {#<i class="fa fa-file-text"></i>#}</th>
-                    <th{% if pagination.isSorted('o.billingAddress.lastName') %} class="sorted"{% endif %}>
-                        {#{{ knp_pagination_sortable(pagination, 'Acheteur', 'o.billingAddress.lastName') }}#}
-                        Facturation
-                    </th>
-                    <th{% if pagination.isSorted('o.shippingAddress.') %} class="sorted"{% endif %}>
-                        {#{{ knp_pagination_sortable(pagination, 'Receveur', 'o.shippingAddress.lastName') }}#}
-                        Livraison
-                    </th>
-                    <th{% if pagination.isSorted('o.payementMethod') %} class="sorted"{% endif %}>
-                        {{ knp_pagination_sortable(pagination, 'Paiement', 'o.payementMethod') }}
-                    </th>
-                    <th{% if pagination.isSorted('o.payementState') %} class="sorted"{% endif %}>
-                        {{ knp_pagination_sortable(pagination, 'Statut paiement', 'o.payementState') }}
-                    </th>
-                    <th>Statut</th>
-                    <th{% if pagination.isSorted('o.isGift') %} class="sorted"{% endif %}>
-                        {{ knp_pagination_sortable(pagination, 'Cadeau', 'o.isGift') }}
-                        {#<i class="fa fa-gift"></i>#}
-                    </th>
-                    <th><i class="fa fa-enveloppe-o"></i></th>
-                    <th{% if pagination.isSorted('o.totalPrice') %} class="sorted"{% endif %}>
-                        {{ knp_pagination_sortable(pagination, 'Total', 'o.totalPrice') }}
-                    </th>
-                    <th{% if pagination.isSorted('o.creationDate') %} class="sorted"{% endif %}>
-                        {{ knp_pagination_sortable(pagination, 'Commande', 'o.creationDate') }}
-                    </th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for order in pagination %}
-                    <tr>
-                        <td>{{ order.id }}</td>
-                        <td>{{ order.reference }}</td>
-                        <td>{{ order.invoiceReference }}</td>
-                        <td>
-                                {% if order.billingAddress is not null %}
-                                    {{ order.billingAddress.lastName }}
-                                {% else %}
-                                    <span class="label label-default">NC</span>
-                                {% endif %}
-                            </td>
-                        <td>
-                                {% if order.shippingAddress is not null %}
-                                    {{ order.shippingAddress.lastName }}
-                                {% else %}
-                                    <span class="label label-default">NC</span>
-                                {% endif %}
-                            </td>
-                        <td>
-                                {% if order.payementMethod == 1 %}
-                                    <span class="label label-primary">Liquidité</span>
-                                {% elseif order.payementMethod == 2 %}
-                                    <span class="label label-primary">Virement</span>
-                                {% elseif order.payementMethod == 3 %}
-                                    <span class="label label-info">Paypal</span>
-                                {% elseif order.payementMethod == 4 %}
-                                    <span class="label label-info">Ogone</span>
-                                {% else %}
-                                    <span class="label label-warning">Non renseigné</span>
-                                {% endif %}
+    {% if pagination.getTotalItemCount > 0 or filterActive == true %}
+        <div class="row">
+            <div class="col-md-9">
+                <div class="box box-success">
+                    {% if pagination.getTotalItemCount > 0 %}
+                        <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                            <tr>
+                                <th{% if pagination.isSorted('o.id') %} class="sorted"{% endif %}>
+                                    {{ knp_pagination_sortable(pagination, '#', 'o.id') }}
+                                </th>
+                                <th{% if pagination.isSorted('o.reference') %} class="sorted"{% endif %}>
+                                    {{ knp_pagination_sortable(pagination, 'Référence', 'o.reference') }}
+                                </th>
+                                <th{% if pagination.isSorted('o.invoiceReference') %} class="sorted"{% endif %}>
+                                    {{ knp_pagination_sortable(pagination, 'Facture', 'o.billingAddress.invoiceReference') }}
+                                    {#<i class="fa fa-file-text"></i>#}</th>
+                                <th{% if pagination.isSorted('o.billingAddress.lastName') %} class="sorted"{% endif %}>
+                                    {#{{ knp_pagination_sortable(pagination, 'Acheteur', 'o.billingAddress.lastName') }}#}
+                                    Facturation
+                                </th>
+                                <th{% if pagination.isSorted('o.shippingAddress.') %} class="sorted"{% endif %}>
+                                    {#{{ knp_pagination_sortable(pagination, 'Receveur', 'o.shippingAddress.lastName') }}#}
+                                    Livraison
+                                </th>
+                                <th{% if pagination.isSorted('o.payementState') %} class="sorted"{% endif %}>
+                                    {{ knp_pagination_sortable(pagination, 'Statut paiement', 'o.payementState') }}
+                                </th>
+                                <th>Statut</th>
+                                <th><i class="fa fa-gift"></i></th>
+                                <th><i class="fa fa-enveloppe"></i></th>
+                                <th{% if pagination.isSorted('o.totalPrice') %} class="sorted"{% endif %}>
+                                    {{ knp_pagination_sortable(pagination, 'Total', 'o.totalPrice') }}
+                                </th>
+                                <th{% if pagination.isSorted('o.creationDate') %} class="sorted"{% endif %}>
+                                    {{ knp_pagination_sortable(pagination, 'Commande', 'o.creationDate') }}
+                                </th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for order in pagination %}
+                                <tr>
+                                    <td><small>{{ order.id }}</small></td>
+                                    <td><small>{{ order.reference }}</small></td>
+                                    <td><small>{{ order.invoiceReference }}</small></td>
+                                    <td><small>
+                                            {% if order.billingAddress is not null %}
+                                                {{ order.billingAddress.lastName }}
+                                            {% else %}
+                                                <span class="label label-default">NC</span>
+                                            {% endif %}
+                                        </small>
+                                    </td>
+                                    <td><small>
+                                            {% if order.shippingAddress is not null %}
+                                                {{ order.shippingAddress.lastName }}
+                                            {% else %}
+                                                <span class="label label-default">NC</span>
+                                            {% endif %}
+                                        </small>
+                                    </td>
+                                    <td><small>
+                                            {% if order.payementState == 0 %}
+                                                <span class="label label-info">En attente de paiement</span>
+                                            {% elseif order.payementState == 1 %}
+                                                <span class="label label-primary">Accompte donné</span>
+                                            {% elseif order.payementState == 2 %}
+                                                <span class="label label-success">Payé</span>
+                                            {% elseif order.payementState == 3 %}
+                                                <span class="label label-default">Remboursé</span>
+                                            {% else %}
+                                                <span class="label label-danger">Erreur</span>
+                                            {% endif %}
+                                        </small>
+                                    </td>
+                                    <td><small>
+                                            {% include 'DyweeOrderBundle:Order:state_label.html.twig' %}
+                                        </small>
+                                    </td>
+                                    <td><small>{% if order.isGift == 1 %} <i class="fa fa-gift"></i> {% endif %}</small></td>
+                                    <td><small>{% if order.shippingMessage != '' %} <i class="fa fa-envelope"></i> {% endif %}</small></td>
+                                    <td><small>{{ order.totalPrice|number_format(2) }}€</small></td>
+                                    <td><small>{{ order.creationDate|date('d/m/Y') }}</small></td>
+                                    <td class="actions"> <a href="{{ path('dywee_order_view', {id: order.id}) }}" ><i class="fa fa-eye"></i> </a>
+                                        <a href="{{ path('dywee_order_update', {id: order.id}) }}"><i class="fa fa-pencil"></i> </a>
+                                        <a href="{{ path('dywee_invoice_view', {id: order.id}) }}"><i class="fa fa-file-text"></i> </a>
+                                        <a href="{{ path('dywee_shipment_table', {idOrder: order.id}) }}"><i class="fa fa-truck"></i> </a>
+                                        <a href="{{ path('dywee_order_delete', {id: order.id}) }}" data-confirm="Êtes-vous sûr de vouloir supprimer cette commande?"><i class="fa fa-trash-o"></i> </a>
 
-                        </td>
-                        <td>
-                                {% if order.payementState == 0 %}
-                                    <span class="label label-info">En attente de paiement</span>
-                                {% elseif order.payementState == 1 %}
-                                    <span class="label label-primary">Accompte donné</span>
-                                {% elseif order.payementState == 2 %}
-                                    <span class="label label-success">Payé</span>
-                                {% elseif order.payementState == 3 %}
-                                    <span class="label label-default">Remboursé</span>
-                                {% else %}
-                                    <span class="label label-danger">Erreur</span>
-                                {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
 
-                        </td>
-                        <td>
-                                {% if order.state == 0 %}
-                                    <span class="label label-warning">Annulée</span>
-                                {% elseif order.state == 1 %}
-                                    <span class="label label-default">En attente</span>
-                                {% elseif order.state == 2 %}
-                                    <span class="label label-success">Active</span>
-                                {% elseif order.state == 3 %}
-                                    <span class="label label-info">Terminée</span>
-                                {% elseif order.state == -1 %}
-                                    <span class="label label-warning">En session</span>
-                                {% else %}
-                                    <span class="label label-danger">Erreur</span>
-                                {% endif %}
-                            </td>
-                        <td>{% if order.isGift == 1 %} <i class="fa fa-gift"></i> {% endif %}</td>
-                        <td>{% if order.shippingMessage != '' %} <i class="fa fa-envelope"></i> {% endif %}</td>
-                        <td>{{ order.totalPrice|number_format(2) }}€</td>
-                        <td>{{ order.creationDate|date('d/m/Y') }}</td>
-                        <td class="actions"> <a href="{{ path('dywee_order_view', {id: order.id}) }}" ><i class="fa fa-eye"></i> </a>
-                                <a href="{{ path('dywee_order_update', {id: order.id}) }}"><i class="fa fa-pencil"></i> </a>
-                                <a href="{{ path('dywee_invoice_view', {id: order.id}) }}"><i class="fa fa-file-text"></i> </a>
-                                <a href="{{ path('dywee_shipment_table', {idOrder: order.id}) }}"><i class="fa fa-truck"></i> </a>
-                                <a href="{{ path('dywee_order_delete', {id: order.id}) }}" data-confirm="Êtes-vous sûr de vouloir supprimer cette commande?"><i class="fa fa-trash-o"></i> </a>
-
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
-
-        <div class="navigation text-center">
-            {{ knp_pagination_render(pagination) }}
+                    <div class="navigation text-center">
+                        {{ knp_pagination_render(pagination) }}
+                    </div>
+                    {% else %}
+                        <div class="box-body">
+                            <p>Aucune commande ne répond à ces critères</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><i class="fa fa-search"></i> Recherche de commande</h3>
+                    </div><!-- /.box-header -->
+                    <div class="box-body">
+                        {% form_theme searchForm 'bootstrap_3_layout.html.twig' %}
+                        {{ form(searchForm) }}
+                    </div>
+                </div>
+            </div>
         </div>
     {% else %}
         <p>Aucune commande n'a été enregistrée.</p>
