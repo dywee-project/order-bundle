@@ -104,12 +104,4 @@ class OrderAdminController extends Controller
         print_r($payment);
         echo '</pre>'; exit;
     }
-
-    public function renderLastRentingAction($productId)
-    {
-        $or = $this->getDoctrine()->getManager()->getRepository('DyweeOrderBundle:BaseOrder');
-        $os = $or->findLastRentingByProduct($productId);
-
-        return $this->render('DyweeOrderBundle:Order:rentMiniTable.html.twig', array('orderList' => $os));
-    }
 }

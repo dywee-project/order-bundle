@@ -12,5 +12,18 @@ use Doctrine\ORM\EntityRepository;
  */
 class OrderElementRepository extends EntityRepository
 {
+    public function findLastRentingByProduct($product)
+    {
+        $qb = $this->createQueryBuilder('oe')
+            ->select('oe')
+            ->join('oe.order', 'o')
+            //->join('o.orderElement', 'oe')
+            ->where('oe.product = :product')
+            ->andWhere('o.sellType = 2')
+            //->andWhere('oe.product = :productId')
+            ->setParameters(array('product' => $product))
+        ;
 
+        return $qb->getQuery()->getResult();
+    }
 }
