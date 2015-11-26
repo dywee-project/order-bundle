@@ -115,7 +115,7 @@ class Offer
     private $state = 1;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Dywee\EshopBundle\Entity\Address", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Dywee\AddressBundle\Entity\Address", cascade={"persist"})
      */
     private $address;
 
@@ -128,6 +128,11 @@ class Offer
      * @ORM\Column(name="isPriceTTC", type="boolean")
      */
     private $isPriceTTC = true;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Dywee\WebsiteBundle\Entity\Website")
+     */
+    private $website;
 
     /**
      * @var string
@@ -490,10 +495,10 @@ class Offer
     /**
      * Set address
      *
-     * @param \Dywee\EshopBundle\Entity\Address $address
+     * @param \Dywee\AddressBundle\Entity\Address $address
      * @return Offer
      */
-    public function setAddress(\Dywee\EshopBundle\Entity\Address $address = null)
+    public function setAddress(\Dywee\AddressBundle\Entity\Address $address = null)
     {
         $this->address = $address;
 
@@ -503,7 +508,7 @@ class Offer
     /**
      * Get address
      *
-     * @return \Dywee\EshopBundle\Entity\Address 
+     * @return \Dywee\AddressBundle\Entity\Address
      */
     public function getAddress()
     {
@@ -549,6 +554,7 @@ class Offer
      */
     public function forcePriceCalculation()
     {
+        $isTTC = true;
         $price = 0;
         $this->setVatRate($this->getAddress()->getCountry()->getVatRate());
         $this->setPriceVatIncl(0);
@@ -556,9 +562,17 @@ class Offer
             $price += $offerElement->getTotalPrice();
 
 
-        $this->setPriceVatExcl($price);
-        $this->setVatPrice($this->getPriceVatExcl()*$this->getVatRate()/100);
-        $this->setPriceVatIncl($this->getPriceVatExcl()+$this->getVatPrice());
+        if($isTTC)
+        {
+            $this->setPriceVatIncl($price);
+            $this->setPriceVatExcl($price/(1 + $this->getVatRate()/100));
+            $this->setVatPrice($this->getPriceVatIncl()-$this->getPriceVatExcl());
+        }
+        else{
+            /*$this->setPriceVatExcl($price);
+            $this->setVatPrice($this->getPriceVatExcl()*$this->getVatRate()/100);
+            $this->setPriceVatIncl($this->getPriceVatExcl()+$this->getVatPrice());*/
+        }
 
         if($this->getDiscountRate() > 0 || $this->getDiscountValue() > 0)
         {
@@ -717,5 +731,29 @@ class Offer
     public function getIsPriceTTC()
     {
         return $this->isPriceTTC;
+    }
+
+    /**
+     * Set sellType
+     *
+     * @param integer $sellType
+     *
+     * @return Offer
+     */
+    public function setSellType($sellType)
+    {
+        $this->sellType = $sellType;
+
+        return $this;
+    }
+
+    /**
+     * Get sellType
+     *
+     * @return integer
+     */
+    public function getSellType()
+    {
+        return $this->sellType;
     }
 }

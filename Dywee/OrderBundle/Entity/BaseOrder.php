@@ -299,6 +299,11 @@ class BaseOrder
     private $returnedAt;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Dywee\WebsiteBundle\Entity\Website")
+     */
+    private $website;
+
+    /**
      * @var integer
      *
      * @ORM\Column(name="duration", type="smallint")
@@ -1788,5 +1793,28 @@ class BaseOrder
     public function getOldState()
     {
         return $this->oldState;
+    }
+
+    /**
+     * Set website
+     *
+     * @param \Dywee\WebsiteBundle\Entity\Website $website
+     * @return BaseOrder
+     */
+    public function setWebsite(\Dywee\WebsiteBundle\Entity\Website $website = null)
+    {
+        $this->website = $website;
+
+        return $this;
+    }
+
+    /**
+     * Get website
+     *
+     * @return \Dywee\WebsiteBundle\Entity\Website 
+     */
+    public function getWebsite()
+    {
+        return $this->website;
     }
 }

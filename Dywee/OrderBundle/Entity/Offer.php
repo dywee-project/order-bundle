@@ -130,6 +130,11 @@ class Offer
     private $isPriceTTC = true;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Dywee\WebsiteBundle\Entity\Website")
+     */
+    private $website;
+
+    /**
      * @var string
      *
      * @ORM\ManyToOne(targetEntity="Dywee\ShipmentBundle\Entity\Deliver")
@@ -750,5 +755,28 @@ class Offer
     public function getSellType()
     {
         return $this->sellType;
+    }
+
+    /**
+     * Set website
+     *
+     * @param \Dywee\WebsiteBundle\Entity\Website $website
+     * @return Offer
+     */
+    public function setWebsite(\Dywee\WebsiteBundle\Entity\Website $website = null)
+    {
+        $this->website = $website;
+
+        return $this;
+    }
+
+    /**
+     * Get website
+     *
+     * @return \Dywee\WebsiteBundle\Entity\Website 
+     */
+    public function getWebsite()
+    {
+        return $this->website;
     }
 }

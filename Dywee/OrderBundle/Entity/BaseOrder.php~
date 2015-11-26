@@ -226,7 +226,7 @@ class BaseOrder
      *
      * @ORM\Column(name="state", type="smallint", nullable=true)
      */
-    private $state = 1;
+    private $state = -1;
 
     /**
      * @ORM\ManyToOne(targetEntity="Dywee\UserBundle\Entity\User", cascade={"persist"})
@@ -271,7 +271,7 @@ class BaseOrder
     /**
      * @ORM\Column(name="mailSended", type="boolean")
      */
-    private $mailSended = 0;
+    private $mailSended = false;
 
     /**
      * @ORM\Column(name="isPriceTTC", type="boolean")
@@ -284,6 +284,26 @@ class BaseOrder
     private $sellType;
 
     /**
+     * @ORM\Column(name="collectionAt", type="datetime", nullable=true)
+     */
+    private $collectionAt;
+
+    /**
+     * @ORM\Column(name="returnFor", type="datetime", nullable=true)
+     */
+    private $returnFor;
+
+    /**
+     * @ORM\Column(name="returnedAt", type="datetime", nullable=true)
+     */
+    private $returnedAt;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Dywee\WebsiteBundle\Entity\Website")
+     */
+    private $website;
+
+    /**
      * @var integer
      *
      * @ORM\Column(name="duration", type="smallint")
@@ -291,6 +311,8 @@ class BaseOrder
     private $duration = 0;
 
     private $mustRecaculShipments = false;
+
+    private $oldState = null;
 
     /**
      * Get id
@@ -904,6 +926,10 @@ class BaseOrder
      */
     public function setState($state)
     {
+        //On retient si le state a changé
+        if($this->state != $state)
+            $this->oldState = $this->state;
+
         $this->state = $state;
 
         //Si la commande est marquée comme finalisée on marque comme étant finalisés tous les envois
@@ -1201,13 +1227,13 @@ class BaseOrder
         if($isTTC)
         {
             $this->setPriceVatIncl($price);
-            $this->setVatPrice($this->getPriceVatIncl()*$this->getVatRate()/100);
-            $this->setPriceVatExcl($this->getPriceVatIncl()-$this->getVatPrice());
+            $this->setPriceVatExcl($price/(1 + $this->getVatRate()/100));
+            $this->setVatPrice($this->getPriceVatIncl()-$this->getPriceVatExcl());
         }
         else{
-            $this->setPriceVatExcl($price);
+            /*$this->setPriceVatExcl($price);
             $this->setVatPrice($this->getPriceVatExcl()*$this->getVatRate()/100);
-            $this->setPriceVatIncl($this->getPriceVatExcl()+$this->getVatPrice());
+            $this->setPriceVatIncl($this->getPriceVatExcl()+$this->getVatPrice());*/
         }
 
 
@@ -1372,9 +1398,17 @@ class BaseOrder
      *
      * @return float
      */
-    public function getWeight()
+    public function getWeight($byType = false)
     {
-        return $this->weight;
+        if(is_numeric($byType))
+        {
+            $weight = 0;
+            foreach($this->getOrderElements() as $orderElement)
+                if($orderElement->getProduct()->getProductType() == $byType)
+                    $weight += $orderElement->getProduct()->getWeight() * $orderElement->getQuantity();
+            return $weight;
+        }
+        else return $this->weight;
     }
 
     /**
@@ -1618,7 +1652,6 @@ class BaseOrder
     public function setSellType($sellType)
     {
         $this->sellType = $sellType;
-
         return $this;
     }
 
@@ -1650,5 +1683,115 @@ class BaseOrder
             return 0;
         }
         else return count($this->getShipments())-$this->countSendedShipments();
+    }
+
+    /**
+     * Set mailSended
+     *
+     * @param boolean $mailSended
+     *
+     * @return BaseOrder
+     */
+    public function setMailSended($mailSended)
+    {
+        $this->mailSended = $mailSended;
+        return $this;
+    }
+
+    /**
+     * Get mailSended
+     *
+     * @return boolean
+     */
+    public function getMailSended()
+    {
+        return $this->mailSended;
+    }
+
+    /**
+     * Set collectionAt
+     *
+     * @param \DateTime $date
+     * @return BaseOrder
+     */
+    public function setCollectionAt($date)
+    {
+        $this->collectionAt = $date;
+        return $this;
+    }
+
+    /**
+     * Get collectionAt
+     *
+     * @return \DateTime
+     */
+    public function getCollectionAt()
+    {
+        return $this->collectionAt;
+    }
+
+    /**
+     * Set returnFor
+     *
+     * @param \DateTime $date
+     * @return BaseOrder
+     */
+    public function setReturnFor($date)
+    {
+        $this->returnFor = $date;
+        return $this;
+    }
+
+    /**
+     * Get returnFor
+     *
+     * @return \DateTime
+     */
+    public function getReturnFor()
+    {
+        return $this->returnFor;
+    }
+
+    /**
+     * Set returnedAt
+     *
+     * @param \DateTime $date
+     * @return BaseOrder
+     */
+    public function setReturnedAt($date)
+    {
+        $this->returnedAt = $date;
+        return $this;
+    }
+
+    /**
+     * Get returnedAt
+     *
+     * @return \DateTime
+     */
+    public function getReturnedAt()
+    {
+        return $this->returnedAt;
+    }
+
+    public function decreaseStock()
+    {
+        foreach($this->getOrderElements() as $orderElement)
+            $orderElement->getProduct()->decreaseStock($orderElement->getQuantity());
+
+        return $this;
+    }
+
+    public function refundStock()
+    {
+        foreach($this->getOrderElements() as $orderElement)
+            $orderElement->getProduct()->refundStock($orderElement->getQuantity());
+
+        return $this;
+    }
+
+    public function getOldState()
+    {
+        return $this->oldState;
     }
 }
