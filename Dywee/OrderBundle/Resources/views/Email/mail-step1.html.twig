@@ -1,11 +1,11 @@
 <html>
     <head>
-        <link href="http://www.labelgiqueunefois.com/bundles/dyweecore/css/bootstrap.min.css" rel="stylesheet" type="text/css" media="all" />
+        <link href="http://dywee.com/bundles/dyweecore/css/bootstrap.min.css" rel="stylesheet" type="text/css" media="all" />
     </head>
     <body>
     <div class="container">
         <h1>Enregistrement de votre commande</h1>
-        <p>Votre commande est bien enregistrée. « La Belgique une fois » vous en remercie.</p>
+        <p>Votre commande a bien été enregistrée sur le site {{ website.publicName }}.</p>
         <div class="panel panel-default">
             <div class="panel-heading"><h3 class="panel-title">Récapitulatif de votre commande - <small>{{ order.reference }}</small></h3></div>
             <table class="table table-bordered">
@@ -57,9 +57,9 @@
                         <p>{{ order.billingAddress.email }}</p>
                         <p>Mobile: {{ phone_number_format(order.billingAddress.mobile, 'INTERNATIONAL') }}</p>
                         <p>{{ order.billingAddress.address1 }}
-                            {% if not order.shippingAddress.address2 == '' %}
+                            {% if not order.billingAddress.address2 == '' %}
                                 <br>
-                                {{ order.shippingAddress.address2 }}
+                                {{ order.billingAddress.address2 }}
                             {% endif %}
                             <br>
                             {{ order.billingAddress.address2 }}<br>
@@ -70,41 +70,43 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-6">
-                <div class="panel panel-default">
-                    <div class="panel-heading"><h3 class="panel-title">Livraison</h3></div>
-                    <div class="panel-body">
-                        {% if order.deliveryMethod == '24R' and relais is defined %}
-                            <p>Point relais: <br>
-                                {{ relais.address1|lower|capitalize }}<br>
-                                {{ relais.address2|lower|capitalize }}<br>
-                                {{ relais.zip }} - {{ relais.cityString|lower|capitalize }}
-                            <p>Un email sera envoyé lorsque le colis sera arrivé au point relais</p>
-                            <p>{{ order.shippingAddress.firstName }} {{ order.shippingAddress.lastName }}<br>
-                                {{ order.shippingAddress.email }}<br>
-                                {{ phone_number_format(order.shippingAddress.mobile, 'INTERNATIONAL') }}</p>
-                        {% else %}
-                            <p>
-                                {% if order.shippingAddress.companyName != '' %}{{ order.shippingAddress.companyName }}<br>{% endif %}
-                                {{ order.shippingAddress.firstName }} {{ order.shippingAddress.lastName }}<br>
-                                {{ order.shippingAddress.email }}<br>
-                                {{ phone_number_format(order.shippingAddress.mobile, 'INTERNATIONAL') }}</p>
+            {% if order.shippingAddress is defined and order.shippingAddress is not null %}
+                <div class="col-sm-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><h3 class="panel-title">Livraison</h3></div>
+                        <div class="panel-body">
+                            {% if order.deliveryMethod == '24R' and relais is defined %}
+                                <p>Point relais: <br>
+                                    {{ relais.address1|lower|capitalize }}<br>
+                                    {{ relais.address2|lower|capitalize }}<br>
+                                    {{ relais.zip }} - {{ relais.cityString|lower|capitalize }}
+                                <p>Un email sera envoyé lorsque le colis sera arrivé au point relais</p>
+                                <p>{{ order.shippingAddress.firstName }} {{ order.shippingAddress.lastName }}<br>
+                                    {{ order.shippingAddress.email }}<br>
+                                    {{ phone_number_format(order.shippingAddress.mobile, 'INTERNATIONAL') }}</p>
+                            {% else %}
+                                <p>
+                                    {% if order.shippingAddress.companyName != '' %}{{ order.shippingAddress.companyName }}<br>{% endif %}
+                                    {{ order.shippingAddress.firstName }} {{ order.shippingAddress.lastName }}<br>
+                                    {{ order.shippingAddress.email }}<br>
+                                    {{ phone_number_format(order.shippingAddress.mobile, 'INTERNATIONAL') }}</p>
 
-                            <p>{{ order.shippingAddress.address1 }}
-                                {% if not order.shippingAddress.address2 == '' %}
+                                <p>{{ order.shippingAddress.address1 }}
+                                    {% if not order.shippingAddress.address2 == '' %}
+                                        <br>
+                                        {{ order.shippingAddress.address2 }}
+                                    {% endif %}
+                                    {% if order.shippingAddress.other != '' %}
+                                        <br>{{ order.shippingAddress.other }}
+                                    {% endif %}
+
                                     <br>
-                                    {{ order.shippingAddress.address2 }}
-                                {% endif %}
-                                {% if order.shippingAddress.other != '' %}
-                                    <br>{{ order.shippingAddress.other }}
-                                {% endif %}
-
-                                <br>
-                                {{ order.shippingAddress.zip }}<br>
-                                {{ order.shippingAddress.cityString }} - {{ order.shippingAddress.country.name }}</p>
-                        {% endif %}
+                                    {{ order.shippingAddress.zip }}<br>
+                                    {{ order.shippingAddress.cityString }} - {{ order.shippingAddress.country.name }}</p>
+                            {% endif %}
+                        </div>
                     </div>
-                </div>
+                {% endif %}
             </div>
             {% if not order.shippingMessage == '' %}
                 <div class="col-sm-12">
@@ -118,9 +120,10 @@
             {% endif %}
         </div>
 
-        <p>Nous attendons de recevoir la confirmation de votre paiement pour valider votre commande.<br>
-            Vous recevrez un mail de confirmation de notre part dés que nous l'aurons reçue.</p>
-
+        <div class="col-sm-12">
+            <p>Nous attendons de recevoir la confirmation de votre paiement pour valider votre commande.<br>
+                Vous recevrez un mail de confirmation de notre part dés que nous l'aurons reçue.</p>
+        </div>
     </div>
     </body>
 </html>

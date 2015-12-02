@@ -108,25 +108,9 @@ dywee_order_table_current_month:
     requirements:
         state: \d*
 
-dywee_order_paypal_checkout:
-    path:     /basket/paypal-checkout
-    defaults: { _controller: DyweeCartBundle:Basket:paypalCheckout }
-
-dywee_order_paypal_validation:
-    path:     /paypal-confirmation/{type}/{reference}
-    defaults: { _controller: DyweeOrderBundle:Order:paypalConfirmation }
-    requirements:
-        type: success|cancelled
-
 dywee_order_validated:
     path:     /order/validated
     defaults: { _controller: DyweeOrderBundle:Order:validated }
-
-dywee_paypal_ajax:
-    path: /order/paypalSetup
-    defaults: { _controller: DyweeCartBundle:Basket:paypalCheckoutAjax }
-    requirements:
-        _methods: POST
 
 dywee_order_list:
     path:     /admin6833/order/list

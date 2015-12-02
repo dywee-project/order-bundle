@@ -3,15 +3,18 @@
 {%  extends "DyweeOrderBundle::layout.html.twig" %}
 
 {% block bodyContent %}
-    <h2>Confirmation de votre commande</h2>
-    <p>Votre commande a bien été enregistrée, un email reprenant le détail de votre commande vous a été envoyé.</p>
-    <p>Il ne nous reste plus qu'à valider le payement. Un email vous sera à nouveau envoyé pour confirmer la bonne réception de votre paiement.
-        Cela peut prendre 24 à 72h.</p>
+    <h1>Confirmation de votre commande</h1>
 
-    <p>Si vous ne voyez rien venir de notre part, soyez attentif, il se pourrait que notre courrier se trouve dans vos "indésirables"</p>
+    <div class="container">
+        <p>Votre commande a bien été enregistrée, un email reprenant le détail de votre commande vous a été envoyé.</p>
+        <p>Il ne nous reste plus qu'à valider le payement. Un email vous sera à nouveau envoyé pour confirmer la bonne réception de votre paiement.
+            Cela peut prendre 24 à 72h.</p>
 
-    <p>Votre référence de commande est le {{ validatedOrderReference }}</p>
+        <p>Si vous ne voyez rien venir de notre part, soyez attentif, il se pourrait que notre courrier se trouve dans vos "indésirables"</p>
 
-    <p>Cordialement,</p>
-    <img src="{{ asset('bundles/dyweecore/images/logo.png') }}" alt="La Belgique Une fois" />
+        <p>Votre référence de commande est le {{ validatedOrderReference }}</p>
+
+        {#<p>Cordialement,</p>
+        <img src="{{ asset('bundles/dyweecore/images/logo.png') }}" alt="La Belgique Une fois" />#}
+    </div>
 {% endblock %}

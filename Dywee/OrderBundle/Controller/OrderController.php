@@ -258,7 +258,7 @@ class OrderController extends Controller
             $execution = new PaymentExecution();
             $execution->setPayerId($request->query->get('PayerID'));
 
-            try {
+            /*try {
                 // Execute the payment
                 // (See bootstrap.php for more on `ApiContext`)
                 $payment->execute($execution, $apiContext);
@@ -269,9 +269,9 @@ class OrderController extends Controller
             }
         } catch (Exception $ex) {
                 throw $this->createException('Something went wrong (Paypal Exception)');
-            }
+            }*/
 
-            if($order->getDeliveryMethod() == '24R')
+            if($order->getDeliveryMethod() === '24R')
             {
                 $client = new \nusoap_client('http://www.mondialrelay.fr/WebService/Web_Services.asmx?WSDL', true);
 
@@ -305,9 +305,15 @@ class OrderController extends Controller
 
             $order->setValidationDate(new \DateTime());
 
+            $website = $order->getWebsite();
+
+            $from = $website->getPublicName();
+
+            $data['website'] = $website;
+
             $message = \Swift_Message::newInstance()
                 ->setSubject('Confirmation de votre commande')
-                ->setFrom('info@labelgiqueunefois.be')
+                ->setFrom('no-reply@dywee.com')
                 ->setTo($order->getBillingAddress()->getEmail())
                 ->setBody($this->renderView('DyweeOrderBundle:Email:mail-step1.html.twig', $data))
             ;
@@ -317,11 +323,10 @@ class OrderController extends Controller
 
             $notification = new Notification();
             $notification->setContent('Une nouvelle commande a été passée');
-            $notification->setArgument1($order->getId());
             $notification->setBundle('order');
             $notification->setType('order.new');
             $notification->setRoutingPath('dywee_order_view');
-            $notification->setRoutingArguments('{id: '.$order->getId().'}');
+            $notification->setRoutingArguments(json_encode(array('id' => $order->getId())));
 
             $em->persist($order);
             $em->persist($notification);

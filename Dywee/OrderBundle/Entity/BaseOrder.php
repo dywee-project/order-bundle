@@ -1817,4 +1817,12 @@ class BaseOrder
     {
         return $this->website;
     }
+
+    public function isVirtual()
+    {
+        foreach ($this->getOrderElements() as $element)
+            if ($element->getProduct()->getSellType() == 2)
+                return true;
+        return false;
+    }
 }
