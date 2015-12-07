@@ -2,6 +2,7 @@
 
 namespace Dywee\OrderBundle\Form;
 
+use Dywee\AddressBundle\Entity\AddressRepository;
 use Dywee\AddressBundle\Form\AddressType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -15,6 +16,7 @@ class BaseOrderType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $website = $builder->getData()->getWebsite();
         $builder
             ->add('discountRate')
             ->add('discountValue')
@@ -25,15 +27,21 @@ class BaseOrderType extends AbstractType
             ->add('billingAddress',     'genemu_jqueryselect2_entity', array(
                 'class' => 'DyweeAddressBundle:Address',
                 'property' => 'formValue',
-                'required' => false
+                'required' => false,
+                'query_builder' => function(AddressRepository $r) use ($website) {
+                    return $r->getSelectList($website);
+                },
             ))
             ->add('shippingAddress',    'genemu_jqueryselect2_entity', array(
                 'class' => 'DyweeAddressBundle:Address',
                 'property' => 'formValue',
-                'required' => false
+                'required' => false,
+                'query_builder' => function(AddressRepository $r) use ($website) {
+                    return $r->getSelectList($website);
+                },
             ))
             ->add('orderElements',      'collection',   array(
-                'type'          => new OrderElementType(),
+                'type'          => new OrderElementType($website),
                 'allow_add'     => true,
                 'allow_delete'  => true,
                 'by_reference'  => false

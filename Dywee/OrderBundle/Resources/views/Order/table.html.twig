@@ -92,8 +92,8 @@
                             {% for order in pagination %}
                                 <tr>
                                     <td><small>{{ order.id }}</small></td>
-                                    <td><small>{{ order.reference }}</small></td>
-                                    <td><small>{{ order.invoiceReference }}</small></td>
+                                    <td><small><a href="{{ path('dywee_order_view', {id: order.id}) }}" class="link-unstyled" >{{ order.reference }}</a></small></td>
+                                    <td><small><a href="{{ path('dywee_invoice_view', {id: order.id}) }}" class="link-unstyled" >{{ order.invoiceReference }}</a></small></td>
                                     <td><small>
                                             {% if order.billingAddress is not null %}
                                                 {{ order.billingAddress.lastName }}

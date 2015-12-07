@@ -43,8 +43,11 @@ class OrderController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
+        $websiteRepository = $em->getRepository('DyweeWebsiteBundle:Website');
+
         $order = new BaseOrder();
         $order->setIsPriceTTC($this->container->getParameter('dywee_order_bundle.isPriceTTC'));
+        $order->setWebsite($websiteRepository->findOneById($this->container->get('session')->get('activeWebsite')));
 
         //On va checker le type de vente par défaut dans la config
         $sellType = $this->container->getParameter('dywee_order_bundle.sellType');
@@ -52,7 +55,7 @@ class OrderController extends Controller
         // On peut forcer le type en le passant en $_GET
         $type = $request->query->get('sellType');
 
-        if(($type != null && $type == 1) || ($type == null && $sellType == 'buy'))
+        if(!isset($type) || ($type != null && $type == 1) || ($type == null && $sellType == 'buy'))
         {
             $order->setSellType(1);
             $form = $this->get('form.factory')->create(new BaseOrderType(), $order);
@@ -62,7 +65,6 @@ class OrderController extends Controller
             $order->setSellType(2);
             $form = $this->get('form.factory')->create(new BaseOrderRentType(), $order);
         }
-
 
         if($form->handleRequest($request)->isValid())
         {
