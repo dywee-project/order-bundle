@@ -1,7 +1,7 @@
 services:
     dywee_order.counter:
         class: Dywee\OrderBundle\Counter\DyweeCounter
-        arguments: [ @doctrine.orm.entity_manager ]
+        arguments: [ '@doctrine.orm.entity_manager' ]
 
     dywee_order.doctrine.notification:
         class: Dywee\OrderBundle\DoctrineListener\InvoiceReferenceManager
