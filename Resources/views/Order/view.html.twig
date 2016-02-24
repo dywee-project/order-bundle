@@ -2,7 +2,7 @@
 
 {%  extends "DyweeOrderBundle::admin.html.twig" %}
 
-{% block viewBody %}
+{% block body %}
 
     {% set firstTableColspan = 3 %}{% set lastTableColspan = 1 %}
     {% if order.containsElementReduction() == true %}{% set firstTableColspan = 4 %}{% set lastTableColspan = 2 %}{% endif %}
