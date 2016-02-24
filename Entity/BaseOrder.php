@@ -10,7 +10,7 @@ use Dywee\ShipmentBundle\Entity\ShipmentElement;
  * BaseOrder
  *
  * @ORM\Table(name="orders")
- * @ORM\Entity(repositoryClass="Dywee\OrderBundle\Entity\BaseOrderRepository")
+ * @ORM\Entity(repositoryClass="Dywee\OrderBundle\Repository\BaseOrderRepository")
  * @ORM\HasLifecycleCallbacks()
  */
 class BaseOrder
