@@ -9,7 +9,7 @@ use Dywee\ProductBundle\Entity\Product;
  * OrderElement
  *
  * @ORM\Table(name="offer_elements")
- * @ORM\Entity(repositoryClass="Dywee\OrderBundle\Entity\OrderElementRepository")
+ * @ORM\Entity(repositoryClass="Dywee\OrderBundle\Repository\OrderElementRepository")
  */
 class OfferElement
 {

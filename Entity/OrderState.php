@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * OrderState
  *
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="Dywee\OrderBundle\Entity\OrderStateRepository")
+ * @ORM\Entity(repositoryClass="Dywee\OrderBundle\Repository\OrderStateRepository")
  */
 class OrderState
 {

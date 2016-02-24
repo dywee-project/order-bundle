@@ -1,6 +1,6 @@
 <?php
 
-namespace Dywee\OrderBundle\Entity;
+namespace Dywee\OrderBundle\Repository;
 
 /**
  * OrderStateRepository
