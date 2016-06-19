@@ -21,4 +21,4 @@ parameters:
   dywee_order_bundle.orderConnexionPermission: anon  #anon|registered|both
 ```
 
-This bundle has a few dependencies, be sure to include "genemu/form-bundle" in your project
+This bundle has a few dependencies, be sure to include "genemu/form-bundle" and the "knplabs/knp-paginator-bundle" in your project
