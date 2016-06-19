@@ -16,9 +16,9 @@ This bundle comes with a little configuration
 
 ```yml
 parameters:
-  dywee_order_bundle.isPriceTTC: true
-  dywee_order_bundle.sellType: both  #buy|rent|both
-  dywee_order_bundle.orderConnexionPermission: anon  #anon|registered|both
+  order_bundle.isPriceTTC: true
+  order_bundle.sellType: both  #buy|rent|both
+  order_bundle.orderConnexionPermission: anon  #anon|registered|both
 ```
 
 This bundle has a few dependencies, be sure to include "genemu/form-bundle" and the "knplabs/knp-paginator-bundle" in your project
