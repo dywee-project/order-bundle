@@ -3,8 +3,12 @@
 namespace Dywee\OrderBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dywee\AddressBundle\Entity\Address;
+use Dywee\ProductBundle\Entity\BaseProduct;
+use Dywee\ProductBundle\Entity\ProductDownloadable;
 use Dywee\ShipmentBundle\Entity\Shipment;
 use Dywee\ShipmentBundle\Entity\ShipmentElement;
+use Dywee\UserBundle\Entity\User;
 
 /**
  * BaseOrder
@@ -15,6 +19,26 @@ use Dywee\ShipmentBundle\Entity\ShipmentElement;
  */
 class BaseOrder
 {
+    const STATE_IN_SESSION = 'order.state_session';
+    const STATE_CANCELLED = 'order.state_cancelled';
+    const STATE_WAITING = 'order.state_waiting';
+    const STATE_IN_PROGRESS = 'order.state_in_progress';
+    const STATE_FINALIZED = 'order.state_finalized';
+    const STATE_RETURNED = 'order.state_returned';
+
+    const STATE_READY_FOR_SHIPPING = 'order.state_ready_shipping';
+    const STATE_IN_SHIPPING = 'order.state_in_shipping';
+
+    const STATE_CUSTOMER_ERROR = 'order.state_customer_error';
+    const STATE_SELLER_ERROR = 'order.state_seller_customer';
+    const STATE_ERROR = 'order.state_error';
+
+    const PAYMENT_STATE_WAITING = 'order_payment.state_waiting';
+    const PAYMENT_WAITING_VALIDATION = 'order_payment.state_waiting';
+    const PAYMENT_VALIDATED = 'order_payment.state_validated';
+    const PAYMENT_REFUND = 'order_payment.state_refund';
+
+
     /**
      * @var integer
      *
@@ -29,7 +53,7 @@ class BaseOrder
      *
      * @ORM\Column(name="isGift", type="boolean")
      */
-    private $isGift = 0;
+    private $isGift = false;
 
     /**
      * @var float
@@ -104,30 +128,30 @@ class BaseOrder
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="creationDate", type="datetime")
+     * @ORM\Column(type="datetime")
      */
-    private $creationDate;
+    private $createdAt;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="endingDate", type="datetime", nullable=true)
+     * @ORM\Column(type="datetime", nullable=true)
      */
-    private $endingDate;
+    private $endedAt;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="updateDate", type="datetime", nullable=true)
+     * @ORM\Column(type="datetime", nullable=true)
      */
-    private $updateDate;
+    private $updatedAt;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="validationDate", type="datetime", nullable=true)
+     * @ORM\Column(type="datetime", nullable=true)
      */
-    private $validationDate;
+    private $validatedAt;
 
     /**
      * @var string
@@ -152,13 +176,6 @@ class BaseOrder
     private $deliveryInfo;
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="deliveryState", type="smallint")
-     */
-    private $deliveryState = 0;
-
-    /**
      * @var string
      *
      * @ORM\Column(name="payementMethod", type="smallint", nullable=true)
@@ -175,9 +192,9 @@ class BaseOrder
     /**
      * @var string
      *
-     * @ORM\Column(name="PayementState", type="string", length=255)
+     * @ORM\Column(type="string", length=255)
      */
-    private $payementState = 0;
+    private $paymentState = self::PAYMENT_WAITING_VALIDATION;
 
     /**
      * @var string
@@ -212,7 +229,7 @@ class BaseOrder
      *
      * @ORM\Column(name="active", type="boolean")
      */
-    private $active = 0;
+    private $active = false;
 
     /**
      * @var string
@@ -226,7 +243,7 @@ class BaseOrder
      *
      * @ORM\Column(name="state", type="smallint", nullable=true)
      */
-    private $state = -1;
+    private $state = self::STATE_IN_SESSION;
 
     /**
      * @ORM\ManyToOne(targetEntity="Dywee\UserBundle\Entity\User", cascade={"persist"})
@@ -269,46 +286,15 @@ class BaseOrder
     private $weight = 0;
 
     /**
-     * @ORM\Column(name="mailSended", type="boolean")
+     * @ORM\Column(name="mailStep", type="smallint")
      */
-    private $mailSended = false;
+    private $mailStep = false;
 
     /**
      * @ORM\Column(name="isPriceTTC", type="boolean")
      */
     private $isPriceTTC = true;
 
-    /**
-     * @ORM\Column(name="sellType", type="smallint", nullable=true)
-     */
-    private $sellType;
-
-    /**
-     * @ORM\Column(name="collectionAt", type="datetime", nullable=true)
-     */
-    private $collectionAt;
-
-    /**
-     * @ORM\Column(name="returnFor", type="datetime", nullable=true)
-     */
-    private $returnFor;
-
-    /**
-     * @ORM\Column(name="returnedAt", type="datetime", nullable=true)
-     */
-    private $returnedAt;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Dywee\WebsiteBundle\Entity\Website")
-     */
-    private $website;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="duration", type="smallint")
-     */
-    private $duration = 0;
 
     private $mustRecaculShipments = false;
 
@@ -568,62 +554,62 @@ class BaseOrder
     }
 
     /**
-     * Set creationDate
+     * Set createdAt
      *
      * @param \DateTime $creationDate
      * @return BaseOrder
      */
-    public function setCreationDate($creationDate)
+    public function setCreatedAt(\DateTime $creationDate)
     {
-        $this->creationDate = $creationDate;
+        $this->createdAt = $creationDate;
 
         return $this;
     }
 
     /**
-     * Get creationDate
+     * Get createdAt
      *
      * @return \DateTime
      */
-    public function getCreationDate()
+    public function getCreatedAt()
     {
-        return $this->creationDate;
+        return $this->createdAt;
     }
 
     /**
-     * Set updateDate
+     * Set updatedAt
      *
      * @param \DateTime $updateDate
      * @return BaseOrder
      */
-    public function setUpdateDate($updateDate)
+    public function setUpdatedAt(\DateTime $updateDate)
     {
-        $this->updateDate = $updateDate;
+        $this->updatedAt = $updateDate;
 
         return $this;
     }
 
     /**
-     * Get updateDate
+     * Get updatedAt
      *
      * @return \DateTime
      */
-    public function getUpdateDate()
+    public function getUpdatedAt()
     {
-        return $this->updateDate;
+        return $this->updatedAt;
     }
 
     /**
-     * Set validationDate
+     * Set validatedAt
      *
      * @param \DateTime $validationDate
      * @return BaseOrder
      */
-    public function setValidationDate($validationDate)
+    public function setValidatedAt(\DateTime $validationDate)
     {
-        if($this->validationDate != null) return $this;
+        if($this->validatedAt != null) return $this;
 
-        $this->validationDate = $validationDate;
+        $this->validatedAt = $validationDate;
 
         $this->shipmentsCalculation();
 
@@ -631,13 +617,13 @@ class BaseOrder
     }
 
     /**
-     * Get validationDate
+     * Get validatedAt
      *
      * @return \DateTime
      */
-    public function getValidationDate()
+    public function getValidatedAt()
     {
-        return $this->validationDate;
+        return $this->validatedAt;
     }
 
     /**
@@ -709,28 +695,6 @@ class BaseOrder
         return $this->deliveryInfo;
     }
 
-    /**
-     * Set deliveryState
-     *
-     * @param integer $deliveryState
-     * @return BaseOrder
-     */
-    public function setDeliveryState($deliveryState)
-    {
-        $this->deliveryState = $deliveryState;
-
-        return $this;
-    }
-
-    /**
-     * Get deliveryState
-     *
-     * @return integer
-     */
-    public function getDeliveryState()
-    {
-        return $this->deliveryState;
-    }
 
     /**
      * Set payementMethod
@@ -779,26 +743,26 @@ class BaseOrder
     }
 
     /**
-     * Set payementState
+     * Set paymentState
      *
-     * @param string $payementState
+     * @param string $paymentState
      * @return BaseOrder
      */
-    public function setPayementState($payementState)
+    public function setPaymentState($paymentState)
     {
-        $this->payementState = $payementState;
+        $this->paymentState = $paymentState;
 
         return $this;
     }
 
     /**
-     * Get payementState
+     * Get paymentState
      *
      * @return string
      */
-    public function getPayementState()
+    public function getPaymentState()
     {
-        return $this->payementState;
+        return $this->paymentState;
     }
 
     /**
@@ -953,28 +917,6 @@ class BaseOrder
         return $this->state;
     }
 
-    /**
-     * Set idDeliver
-     *
-     * @param integer $idDeliver
-     * @return BaseOrder
-     */
-    public function setIdDeliver($idDeliver)
-    {
-        $this->idDeliver = $idDeliver;
-
-        return $this;
-    }
-
-    /**
-     * Get idDeliver
-     *
-     * @return integer
-     */
-    public function getIdDeliver()
-    {
-        return $this->idDeliver;
-    }
 
     /**
      * Set billingUser
@@ -982,7 +924,7 @@ class BaseOrder
      * @param \Dywee\UserBundle\Entity\User $billingUser
      * @return BaseOrder
      */
-    public function setBillingUser(\Dywee\UserBundle\Entity\User $billingUser = null)
+    public function setBillingUser(User $billingUser = null)
     {
         $this->billingUser = $billingUser;
 
@@ -1002,10 +944,10 @@ class BaseOrder
     /**
      * Set shippingUser
      *
-     * @param \Dywee\UserBundle\Entity\User $shippingUser
+     * @param User $shippingUser
      * @return BaseOrder
      */
-    public function setShippingUser(\Dywee\UserBundle\Entity\User $shippingUser = null)
+    public function setShippingUser(User $shippingUser = null)
     {
         $this->shippingUser = $shippingUser;
 
@@ -1028,7 +970,7 @@ class BaseOrder
      * @param \Dywee\AddressBundle\Entity\Address $billingAddress
      * @return BaseOrder
      */
-    public function setBillingAddress(\Dywee\AddressBundle\Entity\Address $billingAddress = null)
+    public function setBillingAddress(Address $billingAddress = null)
     {
         $this->billingAddress = $billingAddress;
 
@@ -1051,7 +993,7 @@ class BaseOrder
      * @param \Dywee\AddressBundle\Entity\Address $shippingAddress
      * @return BaseOrder
      */
-    public function setShippingAddress(\Dywee\AddressBundle\Entity\Address $shippingAddress = null)
+    public function setShippingAddress(Address $shippingAddress = null)
     {
         $this->shippingAddress = $shippingAddress;
 
@@ -1095,7 +1037,7 @@ class BaseOrder
      */
     public function __construct()
     {
-        $this->setCreationDate(new \DateTime());
+        $this->createdAt = new \DateTime();
         $this->orderElements = new \Doctrine\Common\Collections\ArrayCollection();
         $this->shipments = new \Doctrine\Common\Collections\ArrayCollection();
         $this->reference = time().'-'.strtoupper(substr(md5(rand().rand()), 0, 4));
@@ -1172,28 +1114,6 @@ class BaseOrder
         return $this->shipments;
     }
 
-    /**
-     * Set old_id
-     *
-     * @param integer $oldId
-     * @return BaseOrder
-     */
-    public function setOldId($oldId)
-    {
-        $this->old_id = $oldId;
-
-        return $this;
-    }
-
-    /**
-     * Get old_id
-     *
-     * @return integer
-     */
-    public function getOldId()
-    {
-        return $this->old_id;
-    }
 
     public function countProducts($type = null)
     {
@@ -1348,7 +1268,7 @@ class BaseOrder
         return $this;
     }
 
-    public function addProduct(\Dywee\ProductBundle\Entity\Product $product, $quantity, $locationCoeff = 1)
+    public function addProduct(BaseProduct $product, $quantity, $locationCoeff = 1)
     {
         $exist = false;
         //Check si le produit a déjà été commandé une fois
@@ -1553,26 +1473,26 @@ class BaseOrder
     }
 
     /**
-     * Set endingDate
+     * Set endedAt
      *
      * @param \DateTime $endingDate
      * @return BaseOrder
      */
-    public function setEndingDate($endingDate)
+    public function setEndedAt(\DateTime $endingDate)
     {
-        $this->endingDate = $endingDate;
+        $this->endedAt = $endingDate;
 
         return $this;
     }
 
     /**
-     * Get endingDate
+     * Get endedAt
      *
      * @return \DateTime
      */
-    public function getEndingDate()
+    public function getEndedAt()
     {
-        return $this->endingDate;
+        return $this->endedAt;
     }
 
     /**
@@ -1588,15 +1508,6 @@ class BaseOrder
         return $this;
     }
 
-    /**
-     * Get duration
-     *
-     * @return integer
-     */
-    public function getDuration()
-    {
-        return $this->duration;
-    }
 
     public function containsOnlyOneType($type = null)
     {
@@ -1655,15 +1566,6 @@ class BaseOrder
         return $this;
     }
 
-    /**
-     * Get sellType
-     *
-     * @return integer
-     */
-    public function getSellType()
-    {
-        return $this->sellType;
-    }
 
     public function countSendedShipments()
     {
@@ -1686,93 +1588,28 @@ class BaseOrder
     }
 
     /**
-     * Set mailSended
+     * Set mailStep
      *
-     * @param boolean $mailSended
+     * @param integer $mailStep
      *
      * @return BaseOrder
      */
-    public function setMailSended($mailSended)
+    public function setMailStep($mailStep)
     {
-        $this->mailSended = $mailSended;
+        $this->mailStep = $mailStep;
         return $this;
     }
 
     /**
-     * Get mailSended
+     * Get mailStep
      *
      * @return boolean
      */
-    public function getMailSended()
+    public function getMailStep()
     {
-        return $this->mailSended;
+        return $this->mailStep;
     }
 
-    /**
-     * Set collectionAt
-     *
-     * @param \DateTime $date
-     * @return BaseOrder
-     */
-    public function setCollectionAt($date)
-    {
-        $this->collectionAt = $date;
-        return $this;
-    }
-
-    /**
-     * Get collectionAt
-     *
-     * @return \DateTime
-     */
-    public function getCollectionAt()
-    {
-        return $this->collectionAt;
-    }
-
-    /**
-     * Set returnFor
-     *
-     * @param \DateTime $date
-     * @return BaseOrder
-     */
-    public function setReturnFor($date)
-    {
-        $this->returnFor = $date;
-        return $this;
-    }
-
-    /**
-     * Get returnFor
-     *
-     * @return \DateTime
-     */
-    public function getReturnFor()
-    {
-        return $this->returnFor;
-    }
-
-    /**
-     * Set returnedAt
-     *
-     * @param \DateTime $date
-     * @return BaseOrder
-     */
-    public function setReturnedAt($date)
-    {
-        $this->returnedAt = $date;
-        return $this;
-    }
-
-    /**
-     * Get returnedAt
-     *
-     * @return \DateTime
-     */
-    public function getReturnedAt()
-    {
-        return $this->returnedAt;
-    }
 
     public function decreaseStock()
     {
@@ -1795,34 +1632,43 @@ class BaseOrder
         return $this->oldState;
     }
 
-    /**
-     * Set website
-     *
-     * @param \Dywee\WebsiteBundle\Entity\Website $website
-     * @return BaseOrder
-     */
-    public function setWebsite(\Dywee\WebsiteBundle\Entity\Website $website = null)
-    {
-        $this->website = $website;
+    private $isVirtual = null;
+    private $isOnlyVirtual = null;
 
-        return $this;
+    public function isVirtual($forceRecalcul = false)
+    {
+        if($this->isVirtual && !$forceRecalcul)
+            return $this->isVirtual;
+
+        $this->calculVirtualisation();
+
+        return $this->isVirtual;
     }
 
-    /**
-     * Get website
-     *
-     * @return \Dywee\WebsiteBundle\Entity\Website 
-     */
-    public function getWebsite()
+    public function isOnlyVirtual($forceRecalcul = false)
     {
-        return $this->website;
+        if($this->isOnlyVirtual && !$forceRecalcul)
+            return $this->isVirtual;
+
+        $this->calculVirtualisation();
+
+        return $this->isOnlyVirtual;
     }
 
-    public function isVirtual()
+    private function calculVirtualisation()
     {
+        $this->isVirtual = false;
+
+        if($this->getOrderElements() < 1)
+            $this->isOnlyVirtual = false;
+        else $this->isOnlyVirtual = true;
+
+
+
         foreach ($this->getOrderElements() as $element)
-            if ($element->getProduct()->getSellType() == 2)
-                return true;
-        return false;
+            if ($element->getProduct() instanceof ProductDownloadable)
+                $this->isVirtual = true;
+            else
+                $this->isOnlyVirtual = false;
     }
 }

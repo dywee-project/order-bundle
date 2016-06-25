@@ -20,7 +20,7 @@ class BaseOrderRepository extends EntityRepository
             $qb->where('o.state = :state and o.totalPrice > 0');
             $qb->setParameters(array('state' => $state));
         }
-        $qb->orderBy('o.creationDate', 'desc');
+        $qb->orderBy('o.createdAt', 'desc');
 
         return $qb;
     }
@@ -28,7 +28,7 @@ class BaseOrderRepository extends EntityRepository
     public function findAllByTypeAndData($type, $data)
     {
         $qb = $this->createQueryBuilder('o')
-            ->where('o.creationDate < :date and o.state = 1')
+            ->where('o.createdAt < :date and o.state = 1')
             ->setParameter('date', new \DateTime());
 
         return $qb
@@ -70,7 +70,7 @@ class BaseOrderRepository extends EntityRepository
 
         $qb = $this->createQueryBuilder('o');
         $qb
-            ->where('YEAR(o.validationDate) > :year and MONTH(o.validationDate) = :month and o.validationDate and o.state = 2')
+            ->where('YEAR(o.createdAt) > :year and MONTH(o.createdAt) = :month and o.createdAt and o.state = 2')
             ->setParameter('month', $month)
             ->setParameter('year', $year);
 

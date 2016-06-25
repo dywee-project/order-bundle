@@ -10,14 +10,14 @@
                     <i class="fa fa-plus"></i> Ajouter <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                    <li><a href="{{ path('dywee_order_add') }}?sellType=1"><i class="fa fa-plus"></i> Ajouter une vente</a></li>
-                    <li><a href="{{ path('dywee_order_add') }}?sellType=2"><i class="fa fa-plus"></i> Ajouter une location</a></li>
+                    <li><a href="{{ path('order_add') }}?sellType=1"><i class="fa fa-plus"></i> Ajouter une vente</a></li>
+                    <li><a href="{{ path('order_add') }}?sellType=2"><i class="fa fa-plus"></i> Ajouter une location</a></li>
                 </ul>
             </div>
         {% elseif sellType == 'rent' %}
-            <a href="{{ path('dywee_order_add') }}" class="btn btn-success"><i class="fa fa-plus"></i> Ajouter une location</a>
+            <a href="{{ path('order_add') }}" class="btn btn-success"><i class="fa fa-plus"></i> Ajouter une location</a>
         {% else %}
-            <a href="{{ path('dywee_order_add') }}" class="btn btn-success"><i class="fa fa-plus"></i> Ajouter une vente</a>
+            <a href="{{ path('order_add') }}" class="btn btn-success"><i class="fa fa-plus"></i> Ajouter une vente</a>
         {% endif %}
         <div class="btn-group">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -25,7 +25,7 @@
             </button>
             <ul class="dropdown-menu dropdown-menu-right" role="menu">
                 <li><a href="#">PDF</a></li>
-                <li><a href="{{ path('dywee_order_export_csv', {type: 'current_month'}) }}">Excel</a></li>
+                <li><a href="{{ path('order_export_csv', {type: 'current_month'}) }}">Excel</a></li>
             </ul>
         </div>
         <div class="btn-group">
@@ -33,13 +33,13 @@
                 <i class="fa fa-filter"></i> Filtrer <span class="caret"></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                <li><a href="{{ path('dywee_order_admin_table', {state: -1}) }}">En session</a></li>
-                <li><a href="{{ path('dywee_order_admin_table', {state: 1}) }}">En attente</a></li>
-                <li><a href="{{ path('dywee_order_admin_table', {state: 2}) }}">Active</a></li>
-                <li><a href="{{ path('dywee_order_admin_table', {state: 3}) }}">Finalisée</a></li>
+                <li><a href="{{ path('order_table', {state: -1}) }}">En session</a></li>
+                <li><a href="{{ path('order_table', {state: 1}) }}">En attente</a></li>
+                <li><a href="{{ path('order_table', {state: 2}) }}">Active</a></li>
+                <li><a href="{{ path('order_table', {state: 3}) }}">Finalisée</a></li>
                 <li class="divider"></li>
-                <li><a href="{{ path('dywee_order_admin_table', {state: 1}) }}">Tout lister</a></li>
-                <li><a href="{{ path('dywee_order_table_current_month') }}">Mois courant</a></li>
+                <li><a href="{{ path('order_table', {state: 1}) }}">Tout lister</a></li>
+                <li><a href="{{ path('order_table_current_month') }}">Mois courant</a></li>
             </ul>
         </div>
     </div>
@@ -92,8 +92,8 @@
                             {% for order in pagination %}
                                 <tr>
                                     <td><small>{{ order.id }}</small></td>
-                                    <td><small><a href="{{ path('dywee_order_view', {id: order.id}) }}" class="link-unstyled" >{{ order.reference }}</a></small></td>
-                                    <td><small><a href="{{ path('dywee_invoice_view', {id: order.id}) }}" class="link-unstyled" >{{ order.invoiceReference }}</a></small></td>
+                                    <td><small><a href="{{ path('order_view', {id: order.id}) }}" class="link-unstyled" >{{ order.reference }}</a></small></td>
+                                    <td><small><a href="{{ path('invoice_view', {id: order.id}) }}" class="link-unstyled" >{{ order.invoiceReference }}</a></small></td>
                                     <td><small>
                                             {% if order.billingAddress is not null %}
                                                 {{ order.billingAddress.lastName }}
@@ -132,11 +132,11 @@
                                     <td><small>{% if order.shippingMessage != '' %} <i class="fa fa-envelope"></i> {% endif %}</small></td>
                                     <td><small>{{ order.totalPrice|number_format(2) }}€</small></td>
                                     <td><small>{{ order.creationDate|date('d/m/Y') }}</small></td>
-                                    <td class="actions"> <a href="{{ path('dywee_order_view', {id: order.id}) }}" ><i class="fa fa-eye"></i> </a>
-                                        <a href="{{ path('dywee_order_update', {id: order.id}) }}"><i class="fa fa-pencil"></i> </a>
-                                        <a href="{{ path('dywee_invoice_view', {id: order.id}) }}"><i class="fa fa-file-text"></i> </a>
-                                        <a href="{{ path('dywee_shipment_table', {idOrder: order.id}) }}"><i class="fa fa-truck"></i> </a>
-                                        <a href="{{ path('dywee_order_delete', {id: order.id}) }}" data-confirm="Êtes-vous sûr de vouloir supprimer cette commande?"><i class="fa fa-trash-o"></i> </a>
+                                    <td class="actions"> <a href="{{ path('order_view', {id: order.id}) }}" ><i class="fa fa-eye"></i> </a>
+                                        <a href="{{ path('order_update', {id: order.id}) }}"><i class="fa fa-pencil"></i> </a>
+                                        <a href="{{ path('invoice_view', {id: order.id}) }}"><i class="fa fa-file-text"></i> </a>
+                                        <a href="{{ path('shipment_table', {idOrder: order.id}) }}"><i class="fa fa-truck"></i> </a>
+                                        <a href="{{ path('order_delete', {id: order.id}) }}" data-confirm="Êtes-vous sûr de vouloir supprimer cette commande?"><i class="fa fa-trash-o"></i> </a>
 
                                     </td>
                                 </tr>
@@ -169,6 +169,6 @@
         </div>
     {% else %}
         <p>Aucune commande n'a été enregistrée.</p>
-        <p><a href="{{ path('dywee_order_add') }}" class="btn btn-success"><i class="fa fa-plus"></i> Ajouter une commande manuellement</a></p>
+        <p><a href="{{ path('order_add') }}" class="btn btn-success"><i class="fa fa-plus"></i> Ajouter une commande manuellement</a></p>
     {% endif %}
 {% endblock %}

@@ -3,6 +3,7 @@
 namespace Dywee\OrderBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -16,8 +17,8 @@ class OfferRentType extends AbstractType
     {
         $builder
             ->remove('offerElements')
-            ->add('offerElements',      'collection',   array(
-                'type'          => new OfferElementRentType(),
+            ->add('offerElements',      CollectionType::class,   array(
+                'entry_type'          => OfferElementRentType::class,
                 'allow_add'     => true,
                 'allow_delete'  => true,
                 'by_reference'  => false
@@ -35,16 +36,8 @@ class OfferRentType extends AbstractType
         ));
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return 'dywee_orderbundle_offerrent';
-    }
-
     public function getParent()
     {
-        return new OfferType();
+        return OfferType::class;
     }
 }

@@ -3,6 +3,7 @@
 namespace Dywee\OrderBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -15,11 +16,11 @@ class OfferElementRentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('beginAt',    'date', array(
+            ->add('beginAt',    DateType::class, array(
                 'input' => 'datetime',
                 'widget'=> 'single_text'
             ))
-            ->add('endAt',    'date', array(
+            ->add('endAt',    DateType::class, array(
                 'input' => 'datetime',
                 'widget'=> 'single_text'
             ));
@@ -36,16 +37,9 @@ class OfferElementRentType extends AbstractType
         ));
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return 'dywee_orderbundle_offerelement_rent';
-    }
 
     public function getParent()
     {
-        return new OfferElementType();
+        return OfferElementType::class;
     }
 }

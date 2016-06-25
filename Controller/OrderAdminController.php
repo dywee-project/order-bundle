@@ -12,6 +12,7 @@ use PayPal\Api\PaymentExecution;
 use PayPal\Auth\OAuthTokenCredential;
 use PayPal\Rest\ApiContext;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -35,8 +36,8 @@ class OrderAdminController extends Controller
         $or = $this->getDoctrine()->getManager()->getRepository('DyweeOrderBundle:BaseOrder');
 
 
-        $form = $this->get('form.factory')->create(new OrderFilterType())
-            ->add('chercher', 'submit')
+        $form = $this->get('form.factory')->create(OrderFilterType::class)
+            ->add('chercher', SubmitType::class)
         ;
 
         $filterActive = false;
@@ -58,7 +59,8 @@ class OrderAdminController extends Controller
             20 // limit per page
         );
 
-        $sellType = $this->container->getParameter('dywee_order_bundle.sellType');
+        //$sellType = $this->container->getParameter('order_bundle.sell_type');
+        $sellType = 'buy';
 
         return $this->render('DyweeOrderBundle:Order:table.html.twig', array(
             'pagination' => $pagination,

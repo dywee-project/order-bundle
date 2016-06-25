@@ -130,11 +130,6 @@ class Offer
     private $isPriceTTC = true;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Dywee\WebsiteBundle\Entity\Website")
-     */
-    private $website;
-
-    /**
      * @var string
      *
      * @ORM\ManyToOne(targetEntity="Dywee\ShipmentBundle\Entity\Deliver")

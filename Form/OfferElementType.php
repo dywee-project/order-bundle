@@ -2,7 +2,9 @@
 
 namespace Dywee\OrderBundle\Form;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -15,8 +17,8 @@ class OfferElementType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('quantity', 'number', array('empty_data' => 1))
-            ->add('product',    'entity',   array(
+            ->add('quantity', NumberType::class, array('empty_data' => 1))
+            ->add('product',    EntityType::class,   array(
                 'class'     => 'DyweeProductBundle:Product',
                 'property'  => 'name'
             ))
@@ -28,7 +30,7 @@ class OfferElementType extends AbstractType
                 'input' => 'datetime',
                 'widget'=> 'single_text'
             ))*/
-            ->add('discountRate', 'number', array('empty_data' => 0))
+            ->add('discountRate', NumberType::class, array('empty_data' => 0))
         ;
     }
     
@@ -40,13 +42,5 @@ class OfferElementType extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => 'Dywee\OrderBundle\Entity\OfferElement'
         ));
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return 'dywee_orderbundle_offerelement';
     }
 }

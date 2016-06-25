@@ -14,24 +14,14 @@ class OrderElementType extends AbstractType
      * @param array $options
      */
 
-    private $website;
-
-    public function __construct($website)
-    {
-        $this->website = $website;
-    }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $website = $this->website;
         $builder
-            ->add('quantity', 'number', array('empty_data' => 1))
+            ->add('quantity', null, array('empty_data' => 1))
             ->add('product',    'genemu_jqueryselect2_entity',   array(
                 'class'     => 'DyweeProductBundle:Product',
                 'property'  => 'completeName',
-                'query_builder' => function(ProductRepository $r) use ($website) {
-                    return $r->getSelectList($website);
-                },
             ));
             /*->add('beginAt',    'date', array(
                 'input' => 'datetime',
@@ -41,7 +31,7 @@ class OrderElementType extends AbstractType
                 'input' => 'datetime',
                 'widget'=> 'single_text'
             ))*/
-            $builder->add('discountRate', 'number', array('empty_data' => 0))
+            $builder->add('discountRate', null, array('empty_data' => 0))
         ;
     }
     
@@ -53,13 +43,5 @@ class OrderElementType extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => 'Dywee\OrderBundle\Entity\OrderElement'
         ));
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return 'dywee_orderbundle_orderelement';
     }
 }

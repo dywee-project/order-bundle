@@ -2,14 +2,9 @@
 
 namespace Dywee\OrderBundle\Controller;
 
-use Dywee\NotificationBundle\Entity\Notification;
 use Dywee\OrderBundle\Entity\BaseOrder;
 use Dywee\OrderBundle\Form\BaseOrderType;
 use Dywee\OrderBundle\Form\BaseOrderRentType;
-use PayPal\Api\Payment;
-use PayPal\Api\PaymentExecution;
-use PayPal\Auth\OAuthTokenCredential;
-use PayPal\Rest\ApiContext;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,7 +24,9 @@ class OrderController extends Controller
             20/*limit per page*/
         );
 
-        $sellType = $this->container->getParameter('dywee_order_bundle.sellType');
+        $sellType = $this->container->getParameter('order_bundle.sell_type');
+        if(!$sellType)
+            $sellType = 'buy';
 
         return $this->render('DyweeOrderBundle:Order:table.html.twig', array('pagination' => $pagination, 'sellType' => $sellType));
     }
@@ -43,27 +40,18 @@ class OrderController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $websiteRepository = $em->getRepository('DyweeWebsiteBundle:Website');
 
         $order = new BaseOrder();
-        $order->setIsPriceTTC($this->container->getParameter('dywee_order_bundle.isPriceTTC'));
-        $order->setWebsite($websiteRepository->findOneById($this->container->get('session')->get('activeWebsite')));
+        $order->setIsPriceTTC(/*$this->getParameter('order_bundle_is_price_ttc')*/ true);
 
-        //On va checker le type de vente par défaut dans la config
-        $sellType = $this->container->getParameter('dywee_order_bundle.sellType');
 
-        // On peut forcer le type en le passant en $_GET
-        $type = $request->query->get('sellType');
-
-        if(!isset($type) || ($type != null && $type == 1) || ($type == null && $sellType == 'buy'))
+        if(!isset($type) || ($type != null && $type == 1) || $type == null)
         {
-            $order->setSellType(1);
-            $form = $this->get('form.factory')->create(new BaseOrderType(), $order);
+            $form = $this->get('form.factory')->create(BaseOrderType::class, $order);
         }
-        else if(($type != null && $type == 2) || ($type == null && $sellType == 'rent'))
+        else if(($type != null && $type == 2) || $type == null)
         {
-            $order->setSellType(2);
-            $form = $this->get('form.factory')->create(new BaseOrderRentType(), $order);
+            $form = $this->get('form.factory')->create(BaseOrderRentType::class, $order);
         }
 
         if($form->handleRequest($request)->isValid())
@@ -71,7 +59,7 @@ class OrderController extends Controller
             $em->persist($order);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('dywee_order_view', array('id' => $order->getId())));
+            return $this->redirect($this->generateUrl('order_view', array('id' => $order->getId())));
         }
         return $this->render('DyweeOrderBundle:Order:add.html.twig', array('form' => $form->createView()));
     }
@@ -80,13 +68,13 @@ class OrderController extends Controller
     {
         //Si c'est une commande de vente
         if($order->getSellType() == 1)
-            $form = $this->get('form.factory')->create(new BaseOrderType(), $order);
+            $form = $this->get('form.factory')->create(BaseOrderType::class, $order);
         //Si c'est une commande de location
         else if($order->getSellType() == 2)
-            $form = $this->get('form.factory')->create(new BaseOrderRentType(), $order);
+            $form = $this->get('form.factory')->create(BaseOrderRentType::class, $order);
         //Dans le cas des anciennes commandes
         else
-            $form = $this->get('form.factory')->create(new BaseOrderType(), $order->setSellType(1));
+            $form = $this->get('form.factory')->create(BaseOrderType::class, $order->setSellType(1));
 
         if($form->handleRequest($request)->isValid())
         {
@@ -94,7 +82,7 @@ class OrderController extends Controller
             $em->persist($order);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('dywee_order_view', array('id' => $order->getId())));
+            return $this->redirect($this->generateUrl('order_view', array('id' => $order->getId())));
         }
 
         return $this->render('DyweeOrderBundle:Order:edit.html.twig', array('order' => $order, 'form' => $form->createView()));
@@ -108,7 +96,7 @@ class OrderController extends Controller
         $em->flush();
         $this->get('session')->getFlashBag()->add('success', 'Commande Bien effacée');
 
-        return $this->redirect($this->generateUrl('dywee_order_admin_table'));
+        return $this->redirect($this->generateUrl('order_admin_table'));
     }
 
     public function invoiceViewAction(BaseOrder $order)
@@ -168,7 +156,7 @@ class OrderController extends Controller
 
                 $response->setContent(readfile($fileName));
                 /*return new Response(
-                        $this->get('knp_snappy.pdf')->getOutput($this->generateUrl('dywee_invoice_view', array('idOrder' => $idOrder), true)),
+                        $this->get('knp_snappy.pdf')->getOutput($this->generateUrl('invoice_view', array('idOrder' => $idOrder), true)),
                         200,
                         array(
                             'Content-Type'          => 'application/pdf',
@@ -307,12 +295,6 @@ class OrderController extends Controller
 
             $order->setValidationDate(new \DateTime());
 
-            $website = $order->getWebsite();
-
-            $from = $website->getPublicName();
-
-            $data['website'] = $website;
-
             $message = \Swift_Message::newInstance()
                 ->setSubject('Confirmation de votre commande')
                 ->setFrom('no-reply@dywee.com')
@@ -327,7 +309,7 @@ class OrderController extends Controller
             $notification->setContent('Une nouvelle commande a été passée');
             $notification->setBundle('order');
             $notification->setType('order.new');
-            $notification->setRoutingPath('dywee_order_view');
+            $notification->setRoutingPath('order_view');
             $notification->setRoutingArguments(json_encode(array('id' => $order->getId())));
 
             $em->persist($order);
@@ -336,7 +318,7 @@ class OrderController extends Controller
 
             $this->get('mailer')->send($message);
 
-            return $this->redirect($this->generateUrl('dywee_order_validated'));
+            return $this->redirect($this->generateUrl('order_validated'));
         }
         else throw $this->createNotFoundException('Commande introuvable');
 

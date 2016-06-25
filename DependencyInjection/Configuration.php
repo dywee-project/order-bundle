@@ -20,9 +20,13 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('dywee_order');
 
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
+        $rootNode
+            ->children()
+                ->booleanNode('is_price_ttc')->end()
+                ->scalarNode('sell_type')->end()
+                ->scalarNode('order_connexion_permission')->end()
+            ->end()
+        ;
 
         return $treeBuilder;
     }

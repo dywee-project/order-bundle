@@ -18,3 +18,14 @@ services:
             tags:
                 - { name: doctrine.event_listener, event: prePersist }
                 - { name: doctrine.event_listener, event: preUpdate }
+
+
+    dywee_order.sidebar_handler:
+        class: Dywee\OrderBundle\Service\OrderAdminSidebarHandler
+        arguments: [ '@router' ]
+
+    dywee_order.admin_sidebar_listener:
+        class: Dywee\OrderBundle\Listener\AdminSidebarBuilderListener
+        arguments: [ '@dywee_order.sidebar_handler' ]
+        tags:
+            - { name: kernel.event_subscriber }

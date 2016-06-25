@@ -1,121 +1,122 @@
-dywee_order_admin_table:
-    path:     /admin6833/order/table/{state}/{page}
+order_table:
+    #path:     /admin/order/table/{state}/{page}
+    path:     /admin/order/table
     defaults: { _controller: DyweeOrderBundle:OrderAdmin:table, state: 2, page: 1 }
 
-dywee_order_add:
-    path:     /admin6833/order/add
+order_add:
+    path:     /admin/order/add
     defaults: { _controller: DyweeOrderBundle:Order:add }
 
-dywee_order_view:
-    path:     /admin6833/order/view/{id}
+order_view:
+    path:     /admin/order/view/{id}
     defaults: { _controller: DyweeOrderBundle:Order:view }
     requirements:
         id: \d+
 
-dywee_order_update:
-    path:     /admin6833/order/update/{id}
+order_update:
+    path:     /admin/order/update/{id}
     defaults: { _controller: DyweeOrderBundle:Order:update }
     requirements:
             id: \d+
 
-dywee_order_delete:
-    path:     /admin6833/order/delete/{id}
+order_delete:
+    path:     /admin/order/delete/{id}
     defaults: { _controller: DyweeOrderBundle:Order:delete }
     requirements:
             id: \d+
 
-dywee_invoice_view:
+invoice_view:
     path:     /invoice/{id}/view
     defaults: { _controller: DyweeOrderBundle:Order:invoiceView }
     requirements:
         id: \d+
 
-dywee_invoice_user_view:
+invoice_user_view:
     path:     /invoice/view/{invoiceReference}
     defaults: { _controller: DyweeOrderBundle:Order:invoiceUserView }
 
-dywee_order_invoice_download:
-    path:     /admin6833/order/invoice/{idOrder}/download
+order_invoice_download:
+    path:     /admin/order/invoice/{idOrder}/download
     defaults: { _controller: DyweeOrderBundle:Order:invoiceDownload }
     requirements:
             id: \d+
 
-dywee_order_confirmation_succeed:
+order_confirmation_succeed:
     path:    /order/{reference}/confirmation/success
     defaults: { _controller: DyweeOrderBundle:Basket:confirmationSuccess }
 
-dywee_order_confirmation_cancel:
+order_confirmation_cancel:
     path:    /order/{reference}/confirmation/cancel
     defaults: { _controller: DyweeOrderBundle:Basket:confirmationCancel }
 
-dywee_view_email:
+view_email:
     path:    /view/email/{idOrder}/{number}
     defaults: { _controller: DyweeOrderBundle:Order:viewEmail}
     requirements:
         number: \d+
 
-dywee_offer_table:
-    path:     /admin6833/offer/table
+offer_table:
+    path:     /admin/offer/table
     defaults: { _controller: DyweeOrderBundle:Offer:table }
 
-dywee_offer_add:
-    path:     /admin6833/offer/add
+offer_add:
+    path:     /admin/offer/add
     defaults: { _controller: DyweeOrderBundle:Offer:add }
 
-dywee_offer_view:
-    path:     /admin6833/offer/view/{id}
+offer_view:
+    path:     /admin/offer/view/{id}
     defaults: { _controller: DyweeOrderBundle:Offer:view }
     requirements:
         id: \d+
 
-dywee_offer_update:
-    path:     /admin6833/offer/update/{id}
+offer_update:
+    path:     /admin/offer/update/{id}
     defaults: { _controller: DyweeOrderBundle:Offer:update }
     requirements:
         id: \d+
 
-dywee_offer_delete:
-    path:     /admin6833/offer/delete/{id}
+offer_delete:
+    path:     /admin/offer/delete/{id}
     defaults: { _controller: DyweeOrderBundle:Offer:delete }
     requirements:
             id: \d+
 
-dywee_order_export_csv:
-    path:   /admin6833/order/export/{type}
+order_export_csv:
+    path:   /admin/order/export/{type}
     defaults: { _controller: DyweeOrderBundle:Order:exportToCSV, type: all }
 
-dywee_offer_send:
-    path:     /admin6833/offer/{id}/send
+offer_send:
+    path:     /admin/offer/{id}/send
     defaults: { _controller: DyweeOrderBundle:Offer:sendEmail }
     requirements:
         id: \d+
 
-dywee_offer_print:
-    path:   /admin6833/offer/{id}/print
+offer_print:
+    path:   /admin/offer/{id}/print
     defaults: { _controller: DyweeOrderBundle:Offer:print }
     requirements:
         id: \d+
 
-dywee_offer_rough:
+offer_rough:
     path:   /admin6834/offer/{id}/rough
     defaults: { _controller: DyweeOrderBundle:Offer:rough }
     requirements:
         id: \d+
 
-dywee_order_table_current_month:
-    path:     /admin6833/order/table/current_month/{state}
+order_table_current_month:
+    path:     /admin/order/table/current_month/{state}
     defaults: { _controller: DyweeOrderBundle:Order:currentTable, state: 2 }
     requirements:
         state: \d*
 
-dywee_order_validated:
+order_validated:
     path:     /order/validated
     defaults: { _controller: DyweeOrderBundle:Order:validated }
 
-dywee_order_list:
-    path:     /admin6833/order/list
+order_list:
+    path:     /admin/order/list
     defaults: { _controller: DyweeOrderBundle:OrderAdmin:list }
 
-dywee_order_payment_overview:
-    path:     /admin6833/order/{id}/payment
+order_payment_overview:
+    path:     /admin/order/{id}/payment
     defaults: { _controller: DyweeOrderBundle:OrderAdmin:paymentOverview }
