@@ -300,6 +300,8 @@ class BaseOrder
 
     private $oldState = null;
 
+    private $previousState = null;
+
     /**
      * Get id
      *
@@ -892,12 +894,12 @@ class BaseOrder
     {
         //On retient si le state a changé
         if($this->state != $state)
-            $this->oldState = $this->state;
+            $this->setPreviousState($this->getState());
 
         $this->state = $state;
 
         //Si la commande est marquée comme finalisée on marque comme étant finalisés tous les envois
-        if($state == 9)
+        if($state == self::STATE_FINALIZED)
         {
             foreach($this->getShipments() as $shipment)
                 $shipment->setState(9);
@@ -1670,5 +1672,17 @@ class BaseOrder
                 $this->isVirtual = true;
             else
                 $this->isOnlyVirtual = false;
+    }
+
+    public function setPreviousState($state)
+    {
+        $this->previousState = $state;
+
+        return $this;
+    }
+
+    public function getPreviousState()
+    {
+        return $this->previousState;
     }
 }

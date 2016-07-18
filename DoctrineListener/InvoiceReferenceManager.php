@@ -6,6 +6,8 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\EntityManager;
 use Dywee\CoreBundle\Entity\ParametersManager;
 use Dywee\OrderBundle\Entity\BaseOrder;
+use Dywee\OrderBundle\Entity\OrderReferenceBuilder;
+use Dywee\OrderBundle\Entity\ReferenceIterator;
 use Dywee\ProductBundle\Entity\ProductStat;
 
 class InvoiceReferenceManager {
@@ -35,27 +37,28 @@ class InvoiceReferenceManager {
         $entity = $args->getEntity();
         $em = $args->getEntityManager();
 
-        // On veut que les entités BaseOrder
         if (!$entity instanceof BaseOrder) {
             return;
         }
+
+        //TODO réécrire la fonction de check de référence
         if($entity->getState() >= 2 && $entity->getShippingAddress() != null && $entity->getShippingAddress()->getCountry() != null) {
 
-            $parameterName = $entity->getShippingAddress()->getCountry()->getIso().'OrderIterator';
-            $pr = $em->getRepository('DyweeCoreBundle:ParametersManager');
-            $parameter = $pr->findOneByName($parameterName);
+            $orderReferenceBuilderRepository = $em->getRepository('DyweeOrderBundle:OrderReferenceBuilder');
+            $orderReferenceBuilder = $orderReferenceBuilderRepository->findById(1);
 
-            if ($parameter == null) {
-                $parameter = new ParametersManager();
-                $parameter->setName($parameterName);
-                $value = 1;
-            } else {
-                $value = (int)$parameter->getValue();
-                $value++;
+            // Create default builder if not existing
+            if(!$orderReferenceBuilder)
+            {
+                $orderReferenceBuilder = new OrderReferenceBuilder();
+                $em->persist($orderReferenceBuilder);
             }
 
-            $parameter->setValue($value);
+            // Add iteration
+            $iteratorRepository = $em->getRepository('DyweeOrderBundle:ReferenceIterator');
+            $iterator = $iteratorRepository->findItertor($orderReferenceBuilder, $entity->getShippingAddress()->getCountry()->getIso());
 
+            $iterator = (int) $iterator->getIteration()+1;
 
             //Stat d'achats des produits
             $productStat = new ProductStat();
@@ -68,7 +71,7 @@ class InvoiceReferenceManager {
                 $productStat->setQuantity($orderElement->getQuantity());
             }
 
-            $em->persist($parameter);
+            $em->persist($iterator);
             $em->persist($productStat);
             $em->flush();
         }
@@ -86,27 +89,48 @@ class InvoiceReferenceManager {
 
         if($entity->getState() >= 2 && $entity->getShippingAddress() != null && $entity->getShippingAddress()->getCountry() != null && $entity->getInvoiceReference() == null)
         {
-            $country = $entity->getShippingAddress()->getCountry();
-            $parameterName = $country->getIso().'OrderIterator';
-            $pr = $em->getRepository('DyweeCoreBundle:ParametersManager');
-            $parameter = $pr->findOneByName($parameterName);
+            $orderReferenceBuilderRepository = $em->getRepository('DyweeOrderBundle:OrderReferenceBuilder');
+            $orderReferenceBuilder = $orderReferenceBuilderRepository->findById(1);
 
-            if($parameter == null)
-                $value = 1;
-            else
+            // Create default builder if not existing
+            if(!$orderReferenceBuilder)
             {
-                $value = (int) $parameter->getValue();
-                $value++;
+                $orderReferenceBuilder = new OrderReferenceBuilder();
+                $em->persist($orderReferenceBuilder);
             }
 
-            $finalValue = $value;
+            $reference = '';
 
-            while(strlen($finalValue) < 4)
-                $finalValue = '0'.$finalValue;
+            // Add country reference if needed
+            if($orderReferenceBuilder->getByCountry())
+                $reference = $entity->getShippingAddress()->getCountry()->getIso();
 
-            $entity->setInvoiceReference($country->getIso().' '.$finalValue);
+            // TODO Add prefix
 
-            return $entity;
+            // Add iteration
+            $iteratorRepository = $em->getRepository('DyweeOrderBundle:ReferenceIterator');
+            $iterator = $iteratorRepository->findItertor($orderReferenceBuilder, $entity->getShippingAddress()->getCountry()->getIso());
+
+            if(!$iterator)
+            {
+                $iterator = new ReferenceIterator();
+                if($orderReferenceBuilder->getByCountry())
+                    $iterator->setCountry($entity->getShippingAddress()->getCountry()->getIso());
+
+                $em->persist($iterator);
+            }
+            else
+                $iterator = $iterator[0];
+
+
+            $iteration = (int) $iterator->getIteration()+1;
+
+            while(strlen($iteration) < $orderReferenceBuilder->getDigitNumber())
+                $iteration = '0'.$iteration;
+
+            $reference .= $iteration;
+
+            $entity->setInvoiceReference($reference);
         }
     }
 }

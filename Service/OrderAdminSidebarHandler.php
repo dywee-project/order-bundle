@@ -24,6 +24,11 @@ class OrderAdminSidebarHandler{
                     'label' => 'Gestion des commandes',
                     'route' => $this->router->generate('order_table')
                 ),
+                array(
+                    'icon' => 'fa fa-cog',
+                    'label' => 'Gestion des références facture',
+                    'route' => $this->router->generate('order_reference_update')
+                ),
             )
         );
 

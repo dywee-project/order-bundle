@@ -46,10 +46,10 @@ class BaseOrderType extends AbstractType
             ))
             ->add('deliver',            EntityType::class,       array('class' => 'DyweeShipmentBundle:Deliver', 'property' => 'name'))
             ->add('deliveryInfo',       null,         array('required' => false))
-            ->add('deliveryMethod', ChoiceType::class, array('choices' => array('24R' => 'En point relais', 'HOM' => 'A domicile')))
+            ->add('deliveryMethod',     ChoiceType::class, array('choices' => array('24R' => 'En point relais', 'HOM' => 'A domicile')))
             ->add('deliveryCost')
-            ->add('payementMethod', ChoiceType::class, array('choices' => array(1 => 'Liquidité', 2 => 'Virement', 3 => 'Paypal'), 'required' => false))
-            ->add('payementState', ChoiceType::class, array('choices' => array(0 => 'En attente de paiement', 1 => 'Acompte donné', 2 => 'Payé', 3 => 'Remboursé', 4 => 'Annulé par l\'utilisateur')))
+            ->add('payementMethod',     ChoiceType::class, array('choices' => array(1 => 'Liquidité', 2 => 'Virement', 3 => 'Paypal'), 'required' => false))
+            ->add('payementState',      ChoiceType::class, array('choices' => array(0 => 'En attente de paiement', 1 => 'Acompte donné', 2 => 'Payé', 3 => 'Remboursé', 4 => 'Annulé par l\'utilisateur')))
             ->add('save',               SubmitType::class)
         ;
     }
