@@ -1378,13 +1378,12 @@ class BaseOrder
         foreach($this->getOrderElements() as $orderElement)
         {
             if($orderElement->getProduct()->getId() == $id)
+            {
                 $this->removeOrderElement($orderElement);
-
+                $this->mustRecaculShipments = true;
+                $this->forcePriceCalculation();
+            }
         }
-
-        $this->mustRecaculShipments = true;
-
-        $this->forcePriceCalculation();
 
         return $this;
     }

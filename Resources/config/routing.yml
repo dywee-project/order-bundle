@@ -1,5 +1,4 @@
 order_table:
-    #path:     /admin/order/table/{state}/{page}
     path:     /admin/order/table
     defaults: { _controller: DyweeOrderBundle:OrderAdmin:table, state: 2, page: 1 }
 
@@ -40,14 +39,6 @@ order_invoice_download:
     defaults: { _controller: DyweeOrderBundle:Order:invoiceDownload }
     requirements:
             id: \d+
-
-order_confirmation_succeed:
-    path:    /order/{reference}/confirmation/success
-    defaults: { _controller: DyweeOrderBundle:Basket:confirmationSuccess }
-
-order_confirmation_cancel:
-    path:    /order/{reference}/confirmation/cancel
-    defaults: { _controller: DyweeOrderBundle:Basket:confirmationCancel }
 
 view_email:
     path:    /view/email/{idOrder}/{number}
@@ -108,10 +99,6 @@ order_table_current_month:
     defaults: { _controller: DyweeOrderBundle:Order:currentTable, state: 2 }
     requirements:
         state: \d*
-
-order_validated:
-    path:     /order/validated
-    defaults: { _controller: DyweeOrderBundle:Order:validated }
 
 order_list:
     path:     /admin/order/list
