@@ -1123,7 +1123,7 @@ class BaseOrder
 
         foreach($this->getOrderElements() as $orderElement)
         {
-            if($type == null || $orderElement->getProduct()->getProductType() == $type)
+            if($type == null || $orderElement->getProduct()->getValidatedAt() == $type)
                 $nbre += $orderElement->getQuantity();
         }
 
@@ -1178,6 +1178,9 @@ class BaseOrder
     */
     public function shipmentsCalculation($force = false)
     {
+        //Todo revoir la fonction
+        return $this;
+
         if($this->mustRecaculShipments || $force)
         {
             if(count($this->getShipments()) > 0)
@@ -1185,19 +1188,20 @@ class BaseOrder
                     $this->removeShipment($shipment);
 
             $productShipment = new Shipment();
-            $departureDate = $this->getValidationDate() == null ? new \DateTime() : $this->getValidationDate();
+            $departureDate = $this->getValidatedAt() == null ? new \DateTime() : $this->getValidatedAt();
             $departureDate->modify('+1day');
             $productShipment->setDepartureDate($departureDate);
             $productShipment->setState(0);
 
             foreach($this->getOrderElements() as $orderElement)
             {
-                if($orderElement->getProduct()->getProductType() > 1)
-                {
+                //TODO: checker la condition
+                //if($orderElement->getProduct()->getValidatedAt() > 1)
+                //{
                     for($j = 0; $j < $orderElement->getQuantity(); $j++)
                     {
                         $shipment = new Shipment();
-                        $departureDate = $this->getValidationDate() == null ? new \DateTime() : $this->getValidationDate();
+                        $departureDate = $this->getValidatedAt() == null ? new \DateTime() : $this->getValidatedAt();
                         $departureDate->modify('+1day');
                         $shipment->setDepartureDate($departureDate);
                         $shipment->setState(0);
@@ -1210,11 +1214,11 @@ class BaseOrder
 
                         $this->addShipment($shipment);
 
-                        if($orderElement->getProduct()->getProductType() == 3)
-                        {
+                        //if($orderElement->getProduct()->getValidatedAt() == 3)
+                        //{
                             $shipment->setSendingIndex(1);
 
-                            $departureDate = $this->getValidationDate() == null ? new \DateTime() : $this->getValidationDate();
+                            $departureDate = $this->getValidatedAt) == null ? new \DateTime() : $this->getValidatedAt();
                             $departureDay = (int) $departureDate->format('d');
                             $departureMonth = (int) $departureDate->format('m');
                             $departureYear = (int) $departureDate->format('Y');
@@ -1247,17 +1251,17 @@ class BaseOrder
 
                                 $this->addShipment($shipment);
                             }
-                        }
-                    }
+                        //}
+                    //}
                 }
-                elseif($orderElement->getProduct()->getProductType() == 1)
+                /*elseif($orderElement->getProduct()->getValidatedAt() == 1)
                 {
                     $shipmentElement = new ShipmentElement();
                     $shipmentElement->setQuantity($orderElement->getQuantity());
                     $shipmentElement->setProduct($orderElement->getProduct());
                     $shipmentElement->setWeight(($orderElement->getProduct()->getWeight()*$orderElement->getQuantity()));
                     $productShipment->addShipmentElement($shipmentElement);
-                }
+                }*/
             }
 
             if(count($productShipment->getShipmentElements())>0)
@@ -1326,7 +1330,7 @@ class BaseOrder
         {
             $weight = 0;
             foreach($this->getOrderElements() as $orderElement)
-                if($orderElement->getProduct()->getProductType() == $byType)
+                if($orderElement->getProduct()->getValidatedAt() == $byType)
                     $weight += $orderElement->getProduct()->getWeight() * $orderElement->getQuantity();
             return $weight;
         }
@@ -1516,7 +1520,7 @@ class BaseOrder
         $sameType = true;
         foreach($this->getOrderElements() as $orderElement)
         {
-            $xType = $orderElement->getProduct()->getProductType();
+            $xType = $orderElement->getProduct()->getValidatedAt();
             if(!$wType)$wType = $xType;
             else if($xType != $wType) $sameType = false;
         }

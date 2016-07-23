@@ -220,7 +220,7 @@ class OrderElement
     {
         $this->product = $product;
 
-        $price = $product->getIsPromotion() === true ? $product->getPromotionPrice() : $product->getPrice();
+        $price = $product->IsInPromotion() === true ? $product->getPromotionPrice() : $product->getPrice();
 
         $this->setUnitPrice($price);
         $this->calculateTotalPrice();
