@@ -1,5 +1,6 @@
 <?php
-namespace Dywee\OrderBundle\DoctrineListener;
+namespace Dywee\OrderBundle\Services;
+
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\EntityManager;
 use Dywee\CoreBundle\Entity\ParametersManager;
