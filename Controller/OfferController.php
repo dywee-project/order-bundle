@@ -15,6 +15,7 @@ class OfferController extends Controller
     public function listAction()
     {
         return new Response('Offer:list');
+        //TEST
     }
 
     public function tableAction()
