@@ -129,13 +129,15 @@ class Offer
      */
     private $isPriceTTC = true;
 
+    /*
     /**
      * @var string
      *
      * @ORM\ManyToOne(targetEntity="Dywee\ShipmentBundle\Entity\Deliver")
      * @ORM\JoinColumn(nullable=true)
-     */
+     *
     private $deliver;
+    */
 
     /**
      * @var string

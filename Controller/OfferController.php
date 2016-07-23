@@ -38,7 +38,7 @@ class OfferController extends Controller
 
         $offer = new Offer();
         $offer->setCreatedBy($this->getUser());
-        $offer->setIsPriceTTC($this->container->getParameter('dywee_order_bundle.isPriceTTC'));
+        //$offer->setIsPriceTTC($this->container->getParameter('dywee_order_bundle.isPriceTTC'));
 
         $sellType = $this->container->getParameter('dywee_order_bundle.sellType');
         if($sellType == 'default')
