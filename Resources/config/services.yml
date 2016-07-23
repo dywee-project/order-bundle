@@ -1,19 +1,19 @@
 services:
-    dywee_order.doctrine.notification:
-        class: Dywee\OrderBundle\DoctrineListener\InvoiceReferenceManager
-        arguments: [ ]
-        tags:
-            - { name: doctrine.event_listener, event: prePersist }
-            - { name: doctrine.event_listener, event: preUpdate }
-            - { name: doctrine.event_listener, event: postPersist }
-            - { name: doctrine.event_listener, event: postUpdate }
+    #dywee_order.doctrine.notification:
+    #    class: Dywee\OrderBundle\DoctrineListener\InvoiceReferenceManager
+    #    arguments: [ ]
+    #    tags:
+    #        - { name: doctrine.event_listener, event: prePersist }
+    #        - { name: doctrine.event_listener, event: preUpdate }
+    #        - { name: doctrine.event_listener, event: postPersist }
+    #        - { name: doctrine.event_listener, event: postUpdate }
 
-    dywee_order.doctrine.stockmanager:
-            class: Dywee\OrderBundle\DoctrineListener\StockManager
-            arguments: [ ]
-            tags:
-                - { name: doctrine.event_listener, event: prePersist }
-                - { name: doctrine.event_listener, event: preUpdate }
+    #dywee_order.doctrine.stockmanager:
+    #        class: Dywee\OrderBundle\DoctrineListener\StockManager
+    #        arguments: [ ]
+    #        tags:
+    #            - { name: doctrine.event_listener, event: prePersist }
+    #            - { name: doctrine.event_listener, event: preUpdate }
 
 
     dywee_order.sidebar_handler:
