@@ -12,10 +12,12 @@
             <span id="basket-price">{{ order.priceVatIncl|number_format(2) }}€</span>
         </li>
     </ul>
+    {#
     <div class="col-md-12 col-sm-5">
         <a href="{{ path('dywee_basket_view') }}" class="btn btn-sm btn-default btn-block">{{ 'Voir votre panier'|trans }}</a>
     </div>
     <div class="col-md-12 col-sm-4">
         <a href="{{ path('dywee_cms_view_content', {data: 17})}}"  data-toggle="modal" data-target="#lb1xModal"><small>> {{ 'Voir nos tarifs de livraison'|trans }}</small></a>
     </div>
+    #}
 </div>

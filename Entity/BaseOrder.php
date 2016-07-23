@@ -153,13 +153,15 @@ class BaseOrder
      */
     private $validatedAt;
 
+    /*
     /**
      * @var string
      *
      * @ORM\ManyToOne(targetEntity="Dywee\ShipmentBundle\Entity\Deliver")
      * @ORM\JoinColumn(nullable=true)
-     */
+     *
     private $deliver;
+    */
 
     /**
      * @var string
@@ -270,15 +272,19 @@ class BaseOrder
      */
     private $orderElements;
 
+    /*
     /**
      * @ORM\OneToMany(targetEntity="Dywee\ShipmentBundle\Entity\Shipment", mappedBy="order", cascade={"persist", "remove"})
-     */
+     *
     private $shipments;
+    */
 
+    /*
     /**
      * @ORM\ManyToOne(targetEntity="Dywee\ShipmentBundle\Entity\ShipmentMethod", cascade={"persist"})
-     */
+     *
     private $shippingMethod;
+    */
 
     /**
      * @ORM\Column(name="weight", type="float")
@@ -1218,7 +1224,7 @@ class BaseOrder
                         //{
                             $shipment->setSendingIndex(1);
 
-                            $departureDate = $this->getValidatedAt) == null ? new \DateTime() : $this->getValidatedAt();
+                            $departureDate = $this->getValidatedAt() == null ? new \DateTime() : $this->getValidatedAt();
                             $departureDay = (int) $departureDate->format('d');
                             $departureMonth = (int) $departureDate->format('m');
                             $departureYear = (int) $departureDate->format('Y');
