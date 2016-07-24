@@ -2,10 +2,10 @@
 
 namespace Dywee\OrderBundle\Controller;
 
-use CoreBundle\Controller\ParentController;
 use Dywee\OrderBundle\Entity\OrderReferenceBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Dywee\CoreBundle\Controller\ParentController;
 
 class OrderReferenceBuilderController extends ParentController
 {

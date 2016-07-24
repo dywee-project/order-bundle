@@ -1,10 +1,11 @@
 <?php
 
-namespace Dywee\OrderBundle\Service;
+namespace Dywee\OrderBundle\Services;
 
 use Symfony\Component\Routing\Router;
 
-class OrderAdminSidebarHandler{
+class OrderAdminSidebarHandler
+{
 
     private $router;
 
