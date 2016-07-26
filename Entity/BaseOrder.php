@@ -1301,6 +1301,7 @@ class BaseOrder
             $orderElement->setProduct($product);
             $orderElement->setQuantity($quantity);
             $orderElement->setLocationCoeff($locationCoeff);
+            $orderElement->setUnitPrice($product->getPrice());
 
             $this->addOrderElement($orderElement);
         }

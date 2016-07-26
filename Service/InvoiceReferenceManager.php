@@ -1,5 +1,5 @@
 <?php
-namespace Dywee\OrderBundle\Services;
+namespace Dywee\OrderBundle\Service;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Dywee\OrderBundle\Entity\BaseOrder;

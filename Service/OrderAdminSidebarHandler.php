@@ -1,6 +1,6 @@
 <?php
 
-namespace Dywee\OrderBundle\Services;
+namespace Dywee\OrderBundle\Service;
 
 use Symfony\Component\Routing\Router;
 

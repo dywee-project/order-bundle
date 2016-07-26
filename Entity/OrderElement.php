@@ -3,6 +3,7 @@
 namespace Dywee\OrderBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dywee\ProductBundle\Entity\BaseProduct;
 use Dywee\ProductBundle\Entity\Product;
 
 /**
@@ -28,7 +29,7 @@ class OrderElement
     private $order;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Dywee\ProductBundle\Entity\Product")
+     * @ORM\ManyToOne(targetEntity="Dywee\ProductBundle\Entity\BaseProduct")
      * @ORM\JoinColumn(nullable=false)
      */
     private $product;
@@ -193,7 +194,7 @@ class OrderElement
      * @param \Dywee\OrderBundle\Entity\BaseOrder $order
      * @return OrderElement
      */
-    public function setOrder(\Dywee\OrderBundle\Entity\BaseOrder $order = null)
+    public function setOrder(BaseOrder $order = null)
     {
         $this->order = $order;
 
@@ -213,10 +214,10 @@ class OrderElement
     /**
      * Set product
      *
-     * @param \Dywee\EshopBundle\Entity\Product $product
+     * @param \Dywee\ProductBundle\Entity\BaseProduct $product
      * @return OrderElement
      */
-    public function setProduct(Product $product)
+    public function setProduct(BaseProduct $product)
     {
         $this->product = $product;
 
@@ -236,7 +237,7 @@ class OrderElement
     /**
      * Get product
      *
-     * @return \Dywee\EshopBundle\Entity\Product 
+     * @return \Dywee\ProductBundle\Entity\BaseProduct $product
      */
     public function getProduct()
     {
@@ -270,6 +271,7 @@ class OrderElement
      * Set discountRate
      *
      * @param float $discountRate
+     * @param boolean $fromValue
      * @return OrderElement
      */
     public function setDiscountRate($discountRate, $fromValue = false)
@@ -298,6 +300,7 @@ class OrderElement
      * Set discountValue
      *
      * @param float $discountValue
+     * @param boolean $fromRate
      * @return OrderElement
      */
     public function setDiscountValue($discountValue, $fromRate = false)

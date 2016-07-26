@@ -1,6 +1,6 @@
 services:
     dywee_order.doctrine.invoice_reference:
-        class: Dywee\OrderBundle\Services\InvoiceReferenceManager
+        class: Dywee\OrderBundle\Service\InvoiceReferenceManager
         arguments: [ ]
         tags:
             - { name: doctrine.event_listener, event: prePersist }
@@ -15,13 +15,13 @@ services:
     #            - { name: doctrine.event_listener, event: prePersist }
     #            - { name: doctrine.event_listener, event: preUpdate }
 
-
-    dywee_order.sidebar_handler:
-        class: Dywee\OrderBundle\Services\OrderAdminSidebarHandler
-        arguments: [ '@router' ]
-
     dywee_order.admin_sidebar_listener:
         class: Dywee\OrderBundle\Listener\AdminSidebarBuilderListener
         arguments: [ '@dywee_order.sidebar_handler' ]
         tags:
             - { name: kernel.event_subscriber }
+
+    dywee_order.sidebar_handler:
+        class: Dywee\OrderBundle\Service\OrderAdminSidebarHandler
+        arguments: [ '@router' ]
+
