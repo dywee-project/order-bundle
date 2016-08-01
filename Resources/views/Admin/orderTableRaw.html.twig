@@ -39,13 +39,13 @@
                         {% endif %}
                     </small></td>
                 <td><small>
-                        {% if order.payementState == 0 %}
+                        {% if order.paymentState == 0 %}
                             <span class="label label-info">En attente de paiement</span>
-                        {% elseif order.payementState == 1 %}
+                        {% elseif order.paymentState == 1 %}
                             <span class="label label-primary">Accompte donné</span>
-                        {% elseif order.payementState == 2 %}
+                        {% elseif order.paymentState == 2 %}
                             <span class="label label-success">Payé</span>
-                        {% elseif order.payementState == 3 %}
+                        {% elseif order.paymentState == 3 %}
                             <span class="label label-default">Remboursé</span>
                         {% else %}
                             <span class="label label-danger">Erreur</span>

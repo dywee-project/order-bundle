@@ -2,12 +2,15 @@
 
 namespace Dywee\OrderBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Dywee\AddressBundle\Entity\Address;
 use Dywee\ProductBundle\Entity\BaseProduct;
 use Dywee\ProductBundle\Entity\ProductDownloadable;
+use Dywee\ShipmentBundle\Entity\Deliver;
 use Dywee\ShipmentBundle\Entity\Shipment;
 use Dywee\ShipmentBundle\Entity\ShipmentElement;
+use Dywee\ShipmentBundle\Entity\ShipmentMethod;
 use Dywee\UserBundle\Entity\User;
 
 /**
@@ -180,16 +183,16 @@ class BaseOrder
     /**
      * @var string
      *
-     * @ORM\Column(name="payementMethod", type="smallint", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
-    private $payementMethod;
+    private $paymentMethod;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="payementInfos", type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $payementInfos;
+    private $paymentInfos;
 
     /**
      * @var string
@@ -705,49 +708,49 @@ class BaseOrder
 
 
     /**
-     * Set payementMethod
+     * Set paymentMethod
      *
-     * @param string $payementMethod
+     * @param string $paymentMethod
      * @return BaseOrder
      */
-    public function setPayementMethod($payementMethod)
+    public function setPaymentMethod($paymentMethod)
     {
-        $this->payementMethod = $payementMethod;
+        $this->paymentMethod = $paymentMethod;
 
         return $this;
     }
 
     /**
-     * Get payementMethod
+     * Get paymentMethod
      *
      * @return string
      */
-    public function getPayementMethod()
+    public function getPayeentMethod()
     {
-        return $this->payementMethod;
+        return $this->paymentMethod;
     }
 
     /**
-     * Set payementInfos
+     * Set paymentInfos
      *
-     * @param string $payementInfos
+     * @param string $paymentInfos
      * @return BaseOrder
      */
-    public function setPayementInfos($payementInfos)
+    public function setPaymentInfos($paymentInfos)
     {
-        $this->payementInfos = $payementInfos;
+        $this->paymentInfos = $paymentInfos;
 
         return $this;
     }
 
     /**
-     * Get payementInfos
+     * Get paymentInfos
      *
      * @return string
      */
-    public function getPayementInfos()
+    public function getPaymentInfos()
     {
-        return $this->payementInfos;
+        return $this->payeentInfos;
     }
 
     /**
@@ -1046,8 +1049,8 @@ class BaseOrder
     public function __construct()
     {
         $this->createdAt = new \DateTime();
-        $this->orderElements = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->shipments = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->orderElements = new ArrayCollection();
+        $this->shipments = new ArrayCollection();
         $this->reference = time().'-'.strtoupper(substr(md5(rand().rand()), 0, 4));
     }
 
@@ -1057,7 +1060,7 @@ class BaseOrder
      * @param \Dywee\OrderBundle\Entity\OrderElement $orderElements
      * @return BaseOrder
      */
-    public function addOrderElement(\Dywee\OrderBundle\Entity\OrderElement $orderElements)
+    public function addOrderElement(OrderElement $orderElements)
     {
         $this->orderElements[] = $orderElements;
         $orderElements->setOrder($this);
@@ -1068,9 +1071,9 @@ class BaseOrder
     /**
      * Remove orderElements
      *
-     * @param \Dywee\OrderBundle\Entity\OrderElement $orderElements
+     * @param OrderElement $orderElements
      */
-    public function removeOrderElement(\Dywee\OrderBundle\Entity\OrderElement $orderElements)
+    public function removeOrderElement(OrderElement $orderElements)
     {
         $this->orderElements->removeElement($orderElements);
         $orderElements->setOrder(null);
@@ -1090,10 +1093,10 @@ class BaseOrder
     /**
      * Add shipments
      *
-     * @param \Dywee\ShipmentBundle\Entity\Shipment $shipment
+     * @param Shipment $shipment
      * @return BaseOrder
      */
-    public function addShipment(\Dywee\ShipmentBundle\Entity\Shipment $shipment)
+    public function addShipment(Shipment $shipment)
     {
         $this->shipments[] = $shipment;
         $shipment->setOrder($this);
@@ -1104,9 +1107,9 @@ class BaseOrder
     /**
      * Remove shipments
      *
-     * @param \Dywee\ShipmentBundle\Entity\Shipment $shipments
+     * @param Shipment $shipments
      */
-    public function removeShipment(\Dywee\ShipmentBundle\Entity\Shipment $shipments)
+    public function removeShipment(Shipment $shipments)
     {
         $this->shipments->removeElement($shipments);
         $shipments->setOrder(null);
@@ -1145,8 +1148,8 @@ class BaseOrder
         $isTTC = true;
         // CALCUL DU PRIX
         $price = 0;
-        if($this->getShippingAddress() != null && $this->getShippingAddress()->getCountry() != null)
-            $this->setVatRate($this->getShippingAddress()->getCountry()->getVatRate());
+        if($this->getShippingAddress() != null && $this->getShippingAddress()->getCity()->getCountry() != null)
+            $this->setVatRate($this->getShippingAddress()->getCity()->getCountry()->getVatRate());
         $this->setPriceVatIncl(0);
         foreach($this->getOrderElements() as $orderElement)
             $price += $orderElement->getTotalPrice();
@@ -1362,10 +1365,10 @@ class BaseOrder
     /**
      * Set shippingMethod
      *
-     * @param \Dywee\ShipmentBundle\Entity\ShipmentMethod $shippingMethod
+     * @param ShipmentMethod $shippingMethod
      * @return BaseOrder
      */
-    public function setShippingMethod(\Dywee\ShipmentBundle\Entity\ShipmentMethod $shippingMethod = null)
+    public function setShippingMethod(ShipmentMethod $shippingMethod = null)
     {
         $this->shippingMethod = $shippingMethod;
 
@@ -1375,7 +1378,7 @@ class BaseOrder
     /**
      * Get shippingMethod
      *
-     * @return \Dywee\ShipmentBundle\Entity\ShipmentMethod
+     * @return ShipmentMethod
      */
     public function getShippingMethod()
     {
@@ -1402,10 +1405,10 @@ class BaseOrder
     /**
      * Add deliver
      *
-     * @param \Dywee\ShipmentBundle\Entity\Deliver $deliver
+     * @param Deliver $deliver
      * @return BaseOrder
      */
-    public function addDeliver(\Dywee\ShipmentBundle\Entity\Deliver $deliver)
+    public function addDeliver(Deliver $deliver)
     {
         $this->deliver[] = $deliver;
 
@@ -1415,9 +1418,9 @@ class BaseOrder
     /**
      * Remove deliver
      *
-     * @param \Dywee\ShipmentBundle\Entity\Deliver $deliver
+     * @param Deliver $deliver
      */
-    public function removeDeliver(\Dywee\ShipmentBundle\Entity\Deliver $deliver)
+    public function removeDeliver(Deliver $deliver)
     {
         $this->deliver->removeElement($deliver);
     }
@@ -1694,5 +1697,23 @@ class BaseOrder
     public function getPreviousState()
     {
         return $this->previousState;
+    }
+
+    /**
+     * alias
+     */
+    public function getPrice()
+    {
+        return $this->getTotalPrice();
+    }
+
+    /**
+     * alias
+     * @param $price
+     * @return $this
+     */
+    public function setPrice($price)
+    {
+        return $this->setTotalPrice($price);
     }
 }

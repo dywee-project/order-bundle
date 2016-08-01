@@ -204,7 +204,7 @@ class OrderController extends Controller
 
         $order = $or->findOneBy(
             array(
-                'payementInfos' => $request->query->get('paymentId'),
+                'paymentInfos' => $request->query->get('paymentId'),
                 'reference'     => $reference
             )
         );

@@ -107,13 +107,13 @@
             <!-- accepted payments column -->
             <div class="col-xs-6">
                 <p class="lead">Méthode de paiement:</p>
-                <p>{% if order.payementMethod == 1 %}
+                <p>{% if order.paymentMethod == 1 %}
                         <span class="label label-primary">Liquidité</span>
-                    {% elseif order.payementMethod == 2 %}
+                    {% elseif order.paymentMethod == 2 %}
                         <span class="label label-primary">Virement</span>
-                    {% elseif order.payementMethod == 3 %}
+                    {% elseif order.paymentMethod == 3 %}
                         <img src="{{ asset('bundles/dyweecore/images/credit/paypal2.png') }}" alt="Paypal" />
-                    {% elseif order.payementMethod == 4 %}
+                    {% elseif order.paymentMethod == 4 %}
                         <span class="label label-info">Ogone</span>
                     {% else %}
                         <span class="label label-warning">Non renseigné</span>

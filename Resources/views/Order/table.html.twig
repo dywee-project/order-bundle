@@ -73,8 +73,8 @@
                                     {#{{ knp_pagination_sortable(pagination, 'Receveur', 'o.shippingAddress.lastName') }}#}
                                     Livraison
                                 </th>
-                                <th{% if pagination.isSorted('o.payementState') %} class="sorted"{% endif %}>
-                                    {{ knp_pagination_sortable(pagination, 'Statut paiement', 'o.payementState') }}
+                                <th{% if pagination.isSorted('o.paymentState') %} class="sorted"{% endif %}>
+                                    {{ knp_pagination_sortable(pagination, 'Statut paiement', 'o.paymentState') }}
                                 </th>
                                 <th>Statut</th>
                                 <th><i class="fa fa-gift"></i></th>
@@ -111,13 +111,13 @@
                                         </small>
                                     </td>
                                     <td><small>
-                                            {% if order.payementState == 0 %}
+                                            {% if order.paymentState == 0 %}
                                                 <span class="label label-info">En attente de paiement</span>
-                                            {% elseif order.payementState == 1 %}
+                                            {% elseif order.paymentState == 1 %}
                                                 <span class="label label-primary">Accompte donné</span>
-                                            {% elseif order.payementState == 2 %}
+                                            {% elseif order.paymentState == 2 %}
                                                 <span class="label label-success">Payé</span>
-                                            {% elseif order.payementState == 3 %}
+                                            {% elseif order.paymentState == 3 %}
                                                 <span class="label label-default">Remboursé</span>
                                             {% else %}
                                                 <span class="label label-danger">Erreur</span>

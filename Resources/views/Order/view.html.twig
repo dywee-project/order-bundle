@@ -99,7 +99,7 @@
     {% endif %}
     <div class="row">
         <div class="col-md-6">
-            <div class="panel panel-default" id="payement">
+            <div class="panel panel-default" id="payment">
                 <div class="panel-heading"><h3 class="panel-title">Informations</h3></div>
                 <table class="table table-bordered">
                     <thead>
@@ -140,33 +140,33 @@
                 <div class="panel-heading"><h3 class="panel-title">Paiement</h3> </div>
                 <table class="table table-bordered">
                     <tr>
-                        <th>Statut du payement</th>
+                        <th>Statut du payment</th>
                         <th>Moyen de paiement</th>
                         <th>Accompte</th>
                         <th>Détail paiement</th>
                     </tr>
                     <tr>
                         <td>
-                            {% if order.payementState == 0 %}
+                            {% if order.paymentState == 0 %}
                                 <span class="label label-info">En attente de paiement</span>
-                            {% elseif order.payementState == 1 %}
+                            {% elseif order.paymentState == 1 %}
                                 <span class="label label-primary">Acompte donné</span>
-                            {% elseif order.payementState == 2 %}
+                            {% elseif order.paymentState == 2 %}
                                 <span class="label label-success">Payé</span>
-                            {% elseif order.payementState == 3 %}
+                            {% elseif order.paymentState == 3 %}
                                 <span class="label label-default">Remboursé</span>
                             {% else %}
                                 <span class="label label-danger">Erreur</span>
                             {% endif %}
                         </td>
                         <td>
-                            {% if order.payementMethod == 1 %}
+                            {% if order.paymentMethod == 1 %}
                                 <span class="label label-primary">Liquidité</span>
-                            {% elseif order.payementMethod == 2 %}
+                            {% elseif order.paymentMethod == 2 %}
                                 <span class="label label-primary">Virement</span>
-                            {% elseif order.payementMethod == 3 %}
+                            {% elseif order.paymentMethod == 3 %}
                                 <span class="label label-info">Paypal</span>
-                            {% elseif order.payementMethod == 4 %}
+                            {% elseif order.paymentMethod == 4 %}
                                 <span class="label label-info">Ogone</span>
                             {% else %}
                                 <span class="label label-warning">Non renseigné</span>
@@ -179,7 +179,7 @@
             </div>
         </div>
         <div class="col-md-6">
-            <div class="panel panel-default" id="payement">
+            <div class="panel panel-default" id="payment">
                 <div class="panel-heading"><h3 class="panel-title">Livraison</h3></div>
                 <table class="table table-bordered">
                     <thead>
