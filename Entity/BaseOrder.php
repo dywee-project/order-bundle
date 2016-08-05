@@ -1051,6 +1051,7 @@ class BaseOrder
         $this->createdAt = new \DateTime();
         $this->orderElements = new ArrayCollection();
         $this->shipments = new ArrayCollection();
+        $this->orderStat = new ArrayCollection();
         $this->reference = time().'-'.strtoupper(substr(md5(rand().rand()), 0, 4));
     }
 
@@ -1314,6 +1315,19 @@ class BaseOrder
         $this->mustRecaculShipments = true;
 
         return $this;
+    }
+
+    /**
+     * @param BaseProduct $product
+     * @return int
+     */
+    public function getQuantityForProduct(BaseProduct $product)
+    {
+        foreach($this->getOrderElements() as $key => $orderElement){
+            if ($orderElement->getProduct()->getId() == $product->getId())
+                return $orderElement->getQuantity();
+        }
+        return 0;
     }
 
     /**
