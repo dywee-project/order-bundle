@@ -20,7 +20,7 @@ use Dywee\UserBundle\Entity\User;
  * @ORM\Entity(repositoryClass="Dywee\OrderBundle\Repository\BaseOrderRepository")
  * @ORM\HasLifecycleCallbacks()
  */
-class BaseOrder
+class BaseOrder implements BaseOrderInterface
 {
     const STATE_IN_SESSION = 'order.state_session';
     const STATE_CANCELLED = 'order.state_cancelled';
@@ -325,7 +325,7 @@ class BaseOrder
      * Set isGift
      *
      * @param boolean $isGift
-     * @return BaseOrder
+     * @return BaseOrderInterface
      */
     public function setIsGift($isGift)
     {
@@ -348,7 +348,7 @@ class BaseOrder
      * Set priceVatExcl
      *
      * @param float $priceVatExcl
-     * @return BaseOrder
+     * @return BaseOrderInterface
      */
     public function setPriceVatExcl($priceVatExcl)
     {
@@ -371,7 +371,7 @@ class BaseOrder
      * Set deliveryCost
      *
      * @param float $deliveryCost
-     * @return BaseOrder
+     * @return BaseOrderInterface
      */
     public function setDeliveryCost($deliveryCost)
     {
@@ -406,7 +406,7 @@ class BaseOrder
      * Set vatRate
      *
      * @param string $vatRate
-     * @return BaseOrder
+     * @return BaseOrderInterface
      */
     public function setVatRate($vatRate)
     {
@@ -429,7 +429,7 @@ class BaseOrder
      * Set vatPrice
      *
      * @param float $vatPrice
-     * @return BaseOrder
+     * @return BaseOrderInterface
      */
     public function setVatPrice($vatPrice)
     {
@@ -452,7 +452,7 @@ class BaseOrder
      * Set discountCode
      *
      * @param string $discountCode
-     * @return BaseOrder
+     * @return BaseOrderInterface
      */
     public function setDiscountCode($discountCode)
     {
@@ -475,7 +475,7 @@ class BaseOrder
      * Set discountRate
      *
      * @param float $discountRate
-     * @return BaseOrder
+     * @return BaseOrderInterface
      */
     public function setDiscountRate($discountRate)
     {
@@ -498,7 +498,7 @@ class BaseOrder
      * Set priceVatIncl
      *
      * @param float $priceVatIncl
-     * @return BaseOrder
+     * @return BaseOrderInterface
      */
     public function setPriceVatIncl($priceVatIncl)
     {
@@ -521,7 +521,7 @@ class BaseOrder
      * Set totalPrice
      *
      * @param float $totalPrice
-     * @return BaseOrder
+     * @return BaseOrderInterface
      */
     public function setTotalPrice($totalPrice)
     {
@@ -545,7 +545,7 @@ class BaseOrder
      * Set description
      *
      * @param string $description
-     * @return BaseOrder
+     * @return BaseOrderInterface
      */
     public function setDescription($description)
     {
@@ -568,7 +568,7 @@ class BaseOrder
      * Set createdAt
      *
      * @param \DateTime $creationDate
-     * @return BaseOrder
+     * @return BaseOrderInterface
      */
     public function setCreatedAt(\DateTime $creationDate)
     {
@@ -591,7 +591,7 @@ class BaseOrder
      * Set updatedAt
      *
      * @param \DateTime $updateDate
-     * @return BaseOrder
+     * @return BaseOrderInterface
      */
     public function setUpdatedAt(\DateTime $updateDate)
     {
@@ -614,7 +614,7 @@ class BaseOrder
      * Set validatedAt
      *
      * @param \DateTime $validationDate
-     * @return BaseOrder
+     * @return BaseOrderInterface
      */
     public function setValidatedAt(\DateTime $validationDate)
     {
@@ -641,7 +641,7 @@ class BaseOrder
      * Set deliver
      *
      * @param string $deliver
-     * @return BaseOrder
+     * @return BaseOrderInterface
      */
     public function setDeliver($deliver)
     {
@@ -664,7 +664,7 @@ class BaseOrder
      * Set deliveryMethod
      *
      * @param string $deliveryMethod
-     * @return BaseOrder
+     * @return BaseOrderInterface
      */
     public function setDeliveryMethod($deliveryMethod)
     {
@@ -687,7 +687,7 @@ class BaseOrder
      * Set deliveryInfo
      *
      * @param string $deliveryInfo
-     * @return BaseOrder
+     * @return BaseOrderInterface
      */
     public function setDeliveryInfo($deliveryInfo)
     {
@@ -711,7 +711,7 @@ class BaseOrder
      * Set paymentMethod
      *
      * @param string $paymentMethod
-     * @return BaseOrder
+     * @return BaseOrderInterface
      */
     public function setPaymentMethod($paymentMethod)
     {
@@ -734,7 +734,7 @@ class BaseOrder
      * Set paymentInfos
      *
      * @param string $paymentInfos
-     * @return BaseOrder
+     * @return BaseOrderInterface
      */
     public function setPaymentInfos($paymentInfos)
     {
@@ -757,7 +757,7 @@ class BaseOrder
      * Set paymentState
      *
      * @param string $paymentState
-     * @return BaseOrder
+     * @return BaseOrderInterface
      */
     public function setPaymentState($paymentState)
     {
@@ -780,7 +780,7 @@ class BaseOrder
      * Set reference
      *
      * @param string $reference
-     * @return BaseOrder
+     * @return BaseOrderInterface
      */
     public function setReference($reference)
     {
@@ -803,7 +803,7 @@ class BaseOrder
      * Set invoiceReference
      *
      * @param string $invoiceReference
-     * @return BaseOrder
+     * @return BaseOrderInterface
      */
     public function setInvoiceReference($invoiceReference)
     {
@@ -826,7 +826,7 @@ class BaseOrder
      * Set shippingMessage
      *
      * @param string $shippingMessage
-     * @return BaseOrder
+     * @return BaseOrderInterface
      */
     public function setShippingMessage($shippingMessage)
     {
@@ -851,7 +851,7 @@ class BaseOrder
      * Set locale
      *
      * @param string $locale
-     * @return BaseOrder
+     * @return BaseOrderInterface
      */
     public function setLocale($locale)
     {
@@ -874,7 +874,7 @@ class BaseOrder
      * Set active
      *
      * @param boolean $active
-     * @return BaseOrder
+     * @return BaseOrderInterface
      */
     public function setActive($active)
     {
@@ -897,7 +897,7 @@ class BaseOrder
      * Set state
      *
      * @param integer $state
-     * @return BaseOrder
+     * @return BaseOrderInterface
      */
     public function setState($state)
     {
@@ -933,7 +933,7 @@ class BaseOrder
      * Set billingUser
      *
      * @param \Dywee\UserBundle\Entity\User $billingUser
-     * @return BaseOrder
+     * @return BaseOrderInterface
      */
     public function setBillingUser(User $billingUser = null)
     {
@@ -956,7 +956,7 @@ class BaseOrder
      * Set shippingUser
      *
      * @param User $shippingUser
-     * @return BaseOrder
+     * @return BaseOrderInterface
      */
     public function setShippingUser(User $shippingUser = null)
     {
@@ -979,7 +979,7 @@ class BaseOrder
      * Set billingAddress
      *
      * @param \Dywee\AddressBundle\Entity\Address $billingAddress
-     * @return BaseOrder
+     * @return BaseOrderInterface
      */
     public function setBillingAddress(Address $billingAddress = null)
     {
@@ -1002,7 +1002,7 @@ class BaseOrder
      * Set shippingAddress
      *
      * @param \Dywee\AddressBundle\Entity\Address $shippingAddress
-     * @return BaseOrder
+     * @return BaseOrderInterface
      */
     public function setShippingAddress(Address $shippingAddress = null)
     {
@@ -1025,7 +1025,7 @@ class BaseOrder
      * Set discountValue
      *
      * @param float $discountValue
-     * @return BaseOrder
+     * @return BaseOrderInterface
      */
     public function setDiscountValue($discountValue)
     {
@@ -1059,7 +1059,7 @@ class BaseOrder
      * Add orderElements
      *
      * @param \Dywee\OrderBundle\Entity\OrderElement $orderElements
-     * @return BaseOrder
+     * @return BaseOrderInterface
      */
     public function addOrderElement(OrderElement $orderElements)
     {
@@ -1095,7 +1095,7 @@ class BaseOrder
      * Add shipments
      *
      * @param Shipment $shipment
-     * @return BaseOrder
+     * @return BaseOrderInterface
      */
     public function addShipment(Shipment $shipment)
     {
@@ -1334,7 +1334,7 @@ class BaseOrder
      * Set weight
      *
      * @param float $weight
-     * @return BaseOrder
+     * @return BaseOrderInterface
      */
     public function setWeight($weight)
     {
@@ -1380,7 +1380,7 @@ class BaseOrder
      * Set shippingMethod
      *
      * @param ShipmentMethod $shippingMethod
-     * @return BaseOrder
+     * @return BaseOrderInterface
      */
     public function setShippingMethod(ShipmentMethod $shippingMethod = null)
     {
@@ -1420,7 +1420,7 @@ class BaseOrder
      * Add deliver
      *
      * @param Deliver $deliver
-     * @return BaseOrder
+     * @return BaseOrderInterface
      */
     public function addDeliver(Deliver $deliver)
     {
@@ -1482,7 +1482,7 @@ class BaseOrder
      * Set deposit
      *
      * @param float $deposit
-     * @return BaseOrder
+     * @return BaseOrderInterface
      */
     public function setDeposit($deposit)
     {
@@ -1505,7 +1505,7 @@ class BaseOrder
      * Set endedAt
      *
      * @param \DateTime $endingDate
-     * @return BaseOrder
+     * @return BaseOrderInterface
      */
     public function setEndedAt(\DateTime $endingDate)
     {
@@ -1528,7 +1528,7 @@ class BaseOrder
      * Set duration
      *
      * @param integer $duration
-     * @return BaseOrder
+     * @return BaseOrderInterface
      */
     public function setDuration($duration)
     {
@@ -1563,7 +1563,7 @@ class BaseOrder
      *
      * @param boolean $isPriceTTC
      *
-     * @return BaseOrder
+     * @return BaseOrderInterface
      */
     public function setIsPriceTTC($isPriceTTC)
     {
@@ -1587,7 +1587,7 @@ class BaseOrder
      *
      * @param integer $sellType
      *
-     * @return BaseOrder
+     * @return BaseOrderInterface
      */
     public function setSellType($sellType)
     {
@@ -1621,7 +1621,7 @@ class BaseOrder
      *
      * @param integer $mailStep
      *
-     * @return BaseOrder
+     * @return BaseOrderInterface
      */
     public function setMailStep($mailStep)
     {

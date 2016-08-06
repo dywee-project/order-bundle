@@ -191,10 +191,10 @@ class OrderElement
     /**
      * Set order
      *
-     * @param \Dywee\OrderBundle\Entity\BaseOrder $order
+     * @param BaseOrderInterface $order
      * @return OrderElement
      */
-    public function setOrder(BaseOrder $order = null)
+    public function setOrder(BaseOrderInterface $order = null)
     {
         $this->order = $order;
 
@@ -204,7 +204,7 @@ class OrderElement
     /**
      * Get order
      *
-     * @return \Dywee\OrderBundle\Entity\BaseOrder 
+     * @return BaseOrderInterface
      */
     public function getOrder()
     {
