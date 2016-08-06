@@ -7,7 +7,7 @@
  */
 namespace Dywee\OrderBundle\Entity;
 
-use Dywee\AddressBundle\Entity\Address;
+use Dywee\AddressBundle\Entity\AddressInterface;
 use Dywee\CoreBundle\Model\PersistableInterface;
 use Dywee\ProductBundle\Entity\BaseProduct;
 use Dywee\ShipmentBundle\Entity\Deliver;
@@ -17,7 +17,6 @@ use Dywee\UserBundle\Entity\User;
 
 interface BaseOrderInterface extends PersistableInterface
 {
-
     /**
      * Set isGift
      *
@@ -430,30 +429,30 @@ interface BaseOrderInterface extends PersistableInterface
     /**
      * Set billingAddress
      *
-     * @param \Dywee\AddressBundle\Entity\Address $billingAddress
+     * @param AddressInterface $billingAddress
      * @return BaseOrderInterface
      */
-    public function setBillingAddress(Address $billingAddress = null);
+    public function setBillingAddress(AddressInterface $billingAddress = null);
 
     /**
      * Get billingAddress
      *
-     * @return \Dywee\AddressBundle\Entity\Address
+     * @return AddressInterface
      */
     public function getBillingAddress();
 
     /**
      * Set shippingAddress
      *
-     * @param \Dywee\AddressBundle\Entity\Address $shippingAddress
+     * @param AddressInterface $shippingAddress
      * @return BaseOrderInterface
      */
-    public function setShippingAddress(Address $shippingAddress = null);
+    public function setShippingAddress(AddressInterface $shippingAddress = null);
 
     /**
      * Get shippingAddress
      *
-     * @return \Dywee\AddressBundle\Entity\Address
+     * @return AddressInterface
      */
     public function getShippingAddress();
 
@@ -525,6 +524,7 @@ interface BaseOrderInterface extends PersistableInterface
     public function forcePriceCalculation();
 
     /**
+     * @param boolean $force
      * @ORM\PrePersist
      * @ORM\PreUpdate
      */

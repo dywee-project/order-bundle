@@ -5,6 +5,7 @@ namespace Dywee\OrderBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Dywee\AddressBundle\Entity\Address;
+use Dywee\AddressBundle\Entity\AddressInterface;
 use Dywee\ProductBundle\Entity\BaseProduct;
 use Dywee\ProductBundle\Entity\ProductDownloadable;
 use Dywee\ShipmentBundle\Entity\Deliver;
@@ -976,12 +977,9 @@ class BaseOrder implements BaseOrderInterface
     }
 
     /**
-     * Set billingAddress
-     *
-     * @param \Dywee\AddressBundle\Entity\Address $billingAddress
-     * @return BaseOrderInterface
+     * @inheritdoc
      */
-    public function setBillingAddress(Address $billingAddress = null)
+    public function setBillingAddress(AddressInterface $billingAddress = null)
     {
         $this->billingAddress = $billingAddress;
 
@@ -989,9 +987,7 @@ class BaseOrder implements BaseOrderInterface
     }
 
     /**
-     * Get billingAddress
-     *
-     * @return \Dywee\AddressBundle\Entity\Address
+     * @inheritdoc
      */
     public function getBillingAddress()
     {
@@ -999,12 +995,9 @@ class BaseOrder implements BaseOrderInterface
     }
 
     /**
-     * Set shippingAddress
-     *
-     * @param \Dywee\AddressBundle\Entity\Address $shippingAddress
-     * @return BaseOrderInterface
+     * @inheritdoc
      */
-    public function setShippingAddress(Address $shippingAddress = null)
+    public function setShippingAddress(AddressInterface $shippingAddress = null)
     {
         $this->shippingAddress = $shippingAddress;
 
@@ -1012,9 +1005,7 @@ class BaseOrder implements BaseOrderInterface
     }
 
     /**
-     * Get shippingAddress
-     *
-     * @return \Dywee\AddressBundle\Entity\Address
+     * @inheritdoc
      */
     public function getShippingAddress()
     {
@@ -1022,10 +1013,7 @@ class BaseOrder implements BaseOrderInterface
     }
 
     /**
-     * Set discountValue
-     *
-     * @param float $discountValue
-     * @return BaseOrderInterface
+     * @inheritdoc
      */
     public function setDiscountValue($discountValue)
     {
@@ -1035,14 +1023,13 @@ class BaseOrder implements BaseOrderInterface
     }
 
     /**
-     * Get discountValue
-     *
-     * @return float
+     * @inheritdoc
      */
     public function getDiscountValue()
     {
         return $this->discountValue;
     }
+
     /**
      * Constructor
      */
@@ -1056,10 +1043,7 @@ class BaseOrder implements BaseOrderInterface
     }
 
     /**
-     * Add orderElements
-     *
-     * @param \Dywee\OrderBundle\Entity\OrderElement $orderElements
-     * @return BaseOrderInterface
+     * @inheritdoc
      */
     public function addOrderElement(OrderElement $orderElements)
     {
@@ -1070,9 +1054,7 @@ class BaseOrder implements BaseOrderInterface
     }
 
     /**
-     * Remove orderElements
-     *
-     * @param OrderElement $orderElements
+     * @inheritdoc
      */
     public function removeOrderElement(OrderElement $orderElements)
     {
@@ -1092,10 +1074,7 @@ class BaseOrder implements BaseOrderInterface
     }
 
     /**
-     * Add shipments
-     *
-     * @param Shipment $shipment
-     * @return BaseOrderInterface
+     * @inheritdoc
      */
     public function addShipment(Shipment $shipment)
     {
@@ -1106,9 +1085,7 @@ class BaseOrder implements BaseOrderInterface
     }
 
     /**
-     * Remove shipments
-     *
-     * @param Shipment $shipments
+     * @inheritdoc
      */
     public function removeShipment(Shipment $shipments)
     {
@@ -1117,16 +1094,17 @@ class BaseOrder implements BaseOrderInterface
     }
 
     /**
-     * Get shipments
-     *
-     * @return \Doctrine\Common\Collections\Collection
+     * @inheritdoc
      */
     public function getShipments()
     {
         return $this->shipments;
     }
 
-
+    /**
+     * @param null $type
+     * @return int
+     */
     public function countProducts($type = null)
     {
         $nbre = 0;
@@ -1141,8 +1119,7 @@ class BaseOrder implements BaseOrderInterface
     }
 
     /**
-     * @ORM\PrePersist
-     * @ORM\PreUpdate
+     * @inheritdoc
      */
     public function forcePriceCalculation()
     {
@@ -1284,6 +1261,12 @@ class BaseOrder implements BaseOrderInterface
         return $this;
     }
 
+    /**
+     * @param BaseProduct $product
+     * @param $quantity
+     * @param int $locationCoeff
+     * @return $this
+     */
     public function addProduct(BaseProduct $product, $quantity, $locationCoeff = 1)
     {
         $exist = false;
@@ -1318,8 +1301,7 @@ class BaseOrder implements BaseOrderInterface
     }
 
     /**
-     * @param BaseProduct $product
-     * @return int
+     * @inheritdoc
      */
     public function getQuantityForProduct(BaseProduct $product)
     {
@@ -1331,10 +1313,7 @@ class BaseOrder implements BaseOrderInterface
     }
 
     /**
-     * Set weight
-     *
-     * @param float $weight
-     * @return BaseOrderInterface
+     * @inheritdoc
      */
     public function setWeight($weight)
     {
@@ -1344,9 +1323,7 @@ class BaseOrder implements BaseOrderInterface
     }
 
     /**
-     * Get weight
-     *
-     * @return float
+     * @inheritdoc
      */
     public function getWeight($byType = false)
     {
@@ -1377,10 +1354,7 @@ class BaseOrder implements BaseOrderInterface
     }
 
     /**
-     * Set shippingMethod
-     *
-     * @param ShipmentMethod $shippingMethod
-     * @return BaseOrderInterface
+     * @inheritdoc
      */
     public function setShippingMethod(ShipmentMethod $shippingMethod = null)
     {
@@ -1390,9 +1364,7 @@ class BaseOrder implements BaseOrderInterface
     }
 
     /**
-     * Get shippingMethod
-     *
-     * @return ShipmentMethod
+     * @inheritdoc
      */
     public function getShippingMethod()
     {
@@ -1417,10 +1389,7 @@ class BaseOrder implements BaseOrderInterface
     }
 
     /**
-     * Add deliver
-     *
-     * @param Deliver $deliver
-     * @return BaseOrderInterface
+     * @inheritdoc
      */
     public function addDeliver(Deliver $deliver)
     {
@@ -1430,9 +1399,7 @@ class BaseOrder implements BaseOrderInterface
     }
 
     /**
-     * Remove deliver
-     *
-     * @param Deliver $deliver
+     * @inheritdoc
      */
     public function removeDeliver(Deliver $deliver)
     {
@@ -1479,10 +1446,7 @@ class BaseOrder implements BaseOrderInterface
     }
 
     /**
-     * Set deposit
-     *
-     * @param float $deposit
-     * @return BaseOrderInterface
+     * @inheritdoc
      */
     public function setDeposit($deposit)
     {
@@ -1492,9 +1456,7 @@ class BaseOrder implements BaseOrderInterface
     }
 
     /**
-     * Get deposit
-     *
-     * @return float
+     * @inheritdoc
      */
     public function getDeposit()
     {
@@ -1502,10 +1464,7 @@ class BaseOrder implements BaseOrderInterface
     }
 
     /**
-     * Set endedAt
-     *
-     * @param \DateTime $endingDate
-     * @return BaseOrderInterface
+     * @inheritdoc
      */
     public function setEndedAt(\DateTime $endingDate)
     {
@@ -1515,9 +1474,7 @@ class BaseOrder implements BaseOrderInterface
     }
 
     /**
-     * Get endedAt
-     *
-     * @return \DateTime
+     * @inheritdoc
      */
     public function getEndedAt()
     {
@@ -1525,10 +1482,7 @@ class BaseOrder implements BaseOrderInterface
     }
 
     /**
-     * Set duration
-     *
-     * @param integer $duration
-     * @return BaseOrderInterface
+     * @inheritdoc
      */
     public function setDuration($duration)
     {
@@ -1559,11 +1513,7 @@ class BaseOrder implements BaseOrderInterface
     }
 
     /**
-     * Set isPriceTTC
-     *
-     * @param boolean $isPriceTTC
-     *
-     * @return BaseOrderInterface
+     * @inheritdoc
      */
     public function setIsPriceTTC($isPriceTTC)
     {
@@ -1573,9 +1523,7 @@ class BaseOrder implements BaseOrderInterface
     }
 
     /**
-     * Get isPriceTTC
-     *
-     * @return boolean
+     * @inheritdoc
      */
     public function getIsPriceTTC()
     {
@@ -1583,11 +1531,7 @@ class BaseOrder implements BaseOrderInterface
     }
 
     /**
-     * Set sellType
-     *
-     * @param integer $sellType
-     *
-     * @return BaseOrderInterface
+     * @inheritdoc
      */
     public function setSellType($sellType)
     {
@@ -1595,7 +1539,9 @@ class BaseOrder implements BaseOrderInterface
         return $this;
     }
 
-
+    /**
+     * @inheritdoc
+     */
     public function countSendedShipments()
     {
         $counter = 0;
@@ -1607,6 +1553,9 @@ class BaseOrder implements BaseOrderInterface
         return $counter;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function checkIfIsDone()
     {
         if(count($this->getShipments()) == $this->countSendedShipments()) {
@@ -1617,11 +1566,7 @@ class BaseOrder implements BaseOrderInterface
     }
 
     /**
-     * Set mailStep
-     *
-     * @param integer $mailStep
-     *
-     * @return BaseOrderInterface
+     * @inheritdoc
      */
     public function setMailStep($mailStep)
     {
@@ -1630,16 +1575,16 @@ class BaseOrder implements BaseOrderInterface
     }
 
     /**
-     * Get mailStep
-     *
-     * @return boolean
+     * @inheritdoc
      */
     public function getMailStep()
     {
         return $this->mailStep;
     }
 
-
+    /**
+     * @inheritdoc
+     */
     public function decreaseStock()
     {
         foreach($this->getOrderElements() as $orderElement)
@@ -1648,6 +1593,9 @@ class BaseOrder implements BaseOrderInterface
         return $this;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function refundStock()
     {
         foreach($this->getOrderElements() as $orderElement)
@@ -1656,6 +1604,9 @@ class BaseOrder implements BaseOrderInterface
         return $this;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getOldState()
     {
         return $this->oldState;
