@@ -272,9 +272,14 @@ class BaseOrder implements BaseOrderInterface
     private $shippingAddress;
 
     /**
-     * @ORM\OneToMany(targetEntity="Dywee\OrderBundle\Entity\OrderElement", mappedBy="order", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="OrderElement", mappedBy="order", cascade={"persist", "remove"})
      */
     private $orderElements;
+
+    /**
+     * @ORM\OneToMany(targetEntity="OrderDiscountElement", mappedBy="order")
+     */
+    private $discountElements;
 
     /*
     /**
@@ -1040,6 +1045,7 @@ class BaseOrder implements BaseOrderInterface
         $this->shipments = new ArrayCollection();
         $this->orderStat = new ArrayCollection();
         $this->reference = time().'-'.strtoupper(substr(md5(rand().rand()), 0, 4));
+        $this->discountElements = new ArrayCollection();
     }
 
     /**
@@ -1681,4 +1687,23 @@ class BaseOrder implements BaseOrderInterface
     {
         return $this->setTotalPrice($price);
     }
+
+    public function addDiscountElement(OrderDiscountElement $element)
+    {
+        $this->discountElements[] = $element;
+        $element->setIterator(count($this->discountElements)+1);
+        $element->setOrder($this);
+        return $this;
+    }
+
+    public function getDiscountElements()
+    {
+        return $this->discountElements;
+    }
+
+    public function removeDiscountElement(OrderDiscountElement $element)
+    {
+        return $this->discountElements->removeElement($element);
+    }
+
 }

@@ -33,7 +33,7 @@
                 <i class="fa fa-filter"></i> Filtrer <span class="caret"></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                <li><a href="{{ path('order_table', {state: -1}) }}">En session</a></li>
+                <li><a href="{{ path('order_table', {state: ''}) }}">En session</a></li>
                 <li><a href="{{ path('order_table', {state: 1}) }}">En attente</a></li>
                 <li><a href="{{ path('order_table', {state: 2}) }}">Active</a></li>
                 <li><a href="{{ path('order_table', {state: 3}) }}">Finalisée</a></li>
