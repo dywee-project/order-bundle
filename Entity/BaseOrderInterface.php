@@ -195,13 +195,6 @@ interface BaseOrderInterface extends PersistableInterface
     public function setUpdatedAt(\DateTime $updateDate);
 
     /**
-     * Get updatedAt
-     *
-     * @return \DateTime
-     */
-    public function getUpdatedAt();
-
-    /**
      * Set validatedAt
      *
      * @param \DateTime $validationDate
@@ -210,11 +203,12 @@ interface BaseOrderInterface extends PersistableInterface
     public function setValidatedAt(\DateTime $validationDate);
 
     /**
-     * Get validatedAt
      *
      * @return \DateTime
      */
     public function getValidatedAt();
+
+    public function getUpdatedAt();
 
     /**
      * Set deliver
@@ -517,16 +511,10 @@ interface BaseOrderInterface extends PersistableInterface
 
     public function countProducts($type = null);
 
-    /**
-     * @ORM\PrePersist
-     * @ORM\PreUpdate
-     */
     public function forcePriceCalculation();
 
     /**
      * @param boolean $force
-     * @ORM\PrePersist
-     * @ORM\PreUpdate
      */
     public function shipmentsCalculation($force = false);
 
@@ -555,8 +543,6 @@ interface BaseOrderInterface extends PersistableInterface
 
     /**
      * @return $this
-     * @ORM\PrePersist
-     * @ORM\PreUpdate
      */
     public function weightCalculation();
 
@@ -620,15 +606,13 @@ interface BaseOrderInterface extends PersistableInterface
     public function setEndedAt(\DateTime $endingDate);
 
     /**
-     * Get endedAt
-     *
      * @return \DateTime
      */
     public function getEndedAt();
+    public function getReturningAt();
+    public function getReturnedAt();
 
     /**
-     * Set duration
-     *
      * @param integer $duration
      * @return BaseOrderInterface
      */
@@ -653,14 +637,8 @@ interface BaseOrderInterface extends PersistableInterface
     public function getIsPriceTTC();
 
     /**
-     * Set sellType
-     *
-     * @param integer $sellType
-     *
      * @return BaseOrderInterface
      */
-    public function setSellType($sellType);
-
     public function countSendedShipments();
 
     public function checkIfIsDone();
@@ -706,4 +684,29 @@ interface BaseOrderInterface extends PersistableInterface
      * @return $this
      */
     public function setPrice($price);
+
+
+    /**
+     * @param \Datetime $returningAt
+     * @return BaseOrder
+     */
+    public function setReturningAt($returningAt);
+
+    /**
+     * @param \Datetime $returnedAt
+     * @return BaseOrder
+     */
+
+    public function setReturnedAt($returnedAt);
+
+    /**
+     * @return string
+     */
+    public function getType();
+
+    /**
+     * @param string $type
+     * @return BaseOrder
+     */
+    public function setType($type);
 }

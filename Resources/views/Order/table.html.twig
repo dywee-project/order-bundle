@@ -11,11 +11,11 @@
                 </button>
                 <ul class="dropdown-menu dropdown-menu-right" role="menu">
                     <li><a href="{{ path('order_add') }}?sellType=1"><i class="fa fa-plus"></i> Ajouter une vente</a></li>
-                    <li><a href="{{ path('order_add') }}?sellType=2"><i class="fa fa-plus"></i> Ajouter une location</a></li>
+                    <li><a href="{{ path('order_add', {type: 'rent'}) }}?sellType=2"><i class="fa fa-plus"></i> Ajouter une location</a></li>
                 </ul>
             </div>
         {% elseif sellType == 'rent' %}
-            <a href="{{ path('order_add') }}" class="btn btn-success"><i class="fa fa-plus"></i> Ajouter une location</a>
+            <a href="{{ path('order_add', {type: 'rent'}) }}" class="btn btn-success"><i class="fa fa-plus"></i> Ajouter une location</a>
         {% else %}
             <a href="{{ path('order_add') }}" class="btn btn-success"><i class="fa fa-plus"></i> Ajouter une vente</a>
         {% endif %}
@@ -33,12 +33,11 @@
                 <i class="fa fa-filter"></i> Filtrer <span class="caret"></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                <li><a href="{{ path('order_table', {state: ''}) }}">En session</a></li>
-                <li><a href="{{ path('order_table', {state: 1}) }}">En attente</a></li>
-                <li><a href="{{ path('order_table', {state: 2}) }}">Active</a></li>
-                <li><a href="{{ path('order_table', {state: 3}) }}">Finalisée</a></li>
+                {% for element in states %}
+                    <li><a href="{{ path('order_table', {state: element}) }}">{{ element }}</a></li>
+                {% endfor %}
                 <li class="divider"></li>
-                <li><a href="{{ path('order_table', {state: 1}) }}">Tout lister</a></li>
+                {#<li><a href="{{ path('order_table', {state: 1}) }}">Tout lister</a></li>#}
                 <li><a href="{{ path('order_table_current_month') }}">Mois courant</a></li>
             </ul>
         </div>

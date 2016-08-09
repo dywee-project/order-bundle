@@ -38,9 +38,13 @@ class BaseOrder implements BaseOrderInterface
     const STATE_ERROR = 'order.state_error';
 
     const PAYMENT_STATE_WAITING = 'order_payment.state_waiting';
-    const PAYMENT_WAITING_VALIDATION = 'order_payment.state_waiting';
+    const PAYMENT_WAITING_VALIDATION = 'order_payment.state_waiting_validation';
     const PAYMENT_VALIDATED = 'order_payment.state_validated';
     const PAYMENT_REFUND = 'order_payment.state_refund';
+
+    const TYPE_ONLY_BUY = 'order.type_buy';
+    const TYPE_ONLY_RENT = 'order.type_rent';
+    const TYPE_BUY_AND_RENT = 'order.type_both';
 
 
     /**
@@ -135,14 +139,7 @@ class BaseOrder implements BaseOrderInterface
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $endedAt;
-
+    
     /**
      * @var \DateTime
      *
@@ -156,6 +153,25 @@ class BaseOrder implements BaseOrderInterface
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $validatedAt;
+    
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $endedAt;
+    
+    /**
+     * @var \Datetime
+     * @ORM\Column(type="datetime")
+     */
+    private $returningAt;
+    
+    /**
+     * @var \Datetime
+     * @ORM\Column(type="datetime")
+     */
+    private $returnedAt;
 
     /*
     /**
@@ -309,6 +325,12 @@ class BaseOrder implements BaseOrderInterface
      * @ORM\Column(name="isPriceTTC", type="boolean")
      */
     private $isPriceTTC = true;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", length=15)
+     */
+    private $type = self::TYPE_ONLY_BUY;
 
 
     private $mustRecaculShipments = false;
@@ -1536,14 +1558,6 @@ class BaseOrder implements BaseOrderInterface
         return $this->isPriceTTC;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function setSellType($sellType)
-    {
-        $this->sellType = $sellType;
-        return $this;
-    }
 
     /**
      * @inheritdoc
@@ -1705,5 +1719,78 @@ class BaseOrder implements BaseOrderInterface
     {
         return $this->discountElements->removeElement($element);
     }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getOrderStat()
+    {
+        return $this->orderStat;
+    }
+
+    /**
+     * @param ArrayCollection $orderStat
+     * @return BaseOrder
+     */
+    public function setOrderStat($orderStat)
+    {
+        $this->orderStat = $orderStat;
+        return $this;
+    }
+
+    /**
+     * @return \Datetime
+     */
+    public function getReturningAt()
+    {
+        return $this->returningAt;
+    }
+
+    /**
+     * @param \Datetime $returningAt
+     * @return BaseOrder
+     */
+    public function setReturningAt($returningAt)
+    {
+        $this->returningAt = $returningAt;
+        return $this;
+    }
+
+    /**
+     * @return \Datetime
+     */
+    public function getReturnedAt()
+    {
+        return $this->returnedAt;
+    }
+
+    /**
+     * @param \Datetime $returnedAt
+     * @return BaseOrder
+     */
+    public function setReturnedAt($returnedAt)
+    {
+        $this->returnedAt = $returnedAt;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     * @return BaseOrder
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+        return $this;
+    }
+
 
 }

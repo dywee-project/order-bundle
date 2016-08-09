@@ -38,6 +38,7 @@ class BaseOrderType extends AbstractType
                 'property' => 'formValue',
                 'required' => false,
             ))
+            //TODO interfaçage pour form event. Adapter le champ en fonction du type de commande
             ->add('orderElements',      CollectionType::class,   array(
                 'entry_type'          => OrderElementType::class,
                 'allow_add'     => true,

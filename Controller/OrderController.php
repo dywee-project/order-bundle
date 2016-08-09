@@ -36,7 +36,7 @@ class OrderController extends Controller
         return $this->render('DyweeOrderBundle:Order:view.html.twig', array('order' => $order));
     }
 
-    public function addAction(Request $request)
+    public function addAction($type = null, Request $request)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -44,15 +44,10 @@ class OrderController extends Controller
         $order = new BaseOrder();
         $order->setIsPriceTTC(/*$this->getParameter('order_bundle_is_price_ttc')*/ true);
 
+        if($type == 'rent')
+            $order->setType(BaseOrder::TYPE_ONLY_RENT);
 
-        if(!isset($type) || ($type != null && $type == 1) || $type == null)
-        {
-            $form = $this->get('form.factory')->create(BaseOrderType::class, $order);
-        }
-        else if(($type != null && $type == 2) || $type == null)
-        {
-            $form = $this->get('form.factory')->create(BaseOrderRentType::class, $order);
-        }
+        $form = $this->get('form.factory')->create(BaseOrderType::class, $order);
 
         if($form->handleRequest($request)->isValid())
         {
@@ -67,14 +62,7 @@ class OrderController extends Controller
     public function updateAction(BaseOrder $order, Request $request)
     {
         //Si c'est une commande de vente
-        if($order->getSellType() == 1)
-            $form = $this->get('form.factory')->create(BaseOrderType::class, $order);
-        //Si c'est une commande de location
-        else if($order->getSellType() == 2)
-            $form = $this->get('form.factory')->create(BaseOrderRentType::class, $order);
-        //Dans le cas des anciennes commandes
-        else
-            $form = $this->get('form.factory')->create(BaseOrderType::class, $order->setSellType(1));
+        $form = $this->get('form.factory')->create(BaseOrderType::class, $order);
 
         if($form->handleRequest($request)->isValid())
         {
@@ -99,75 +87,7 @@ class OrderController extends Controller
         return $this->redirect($this->generateUrl('order_admin_table'));
     }
 
-    public function invoiceViewAction(BaseOrder $order)
-    {
-        return $this->render('DyweeOrderBundle:Order:invoice.html.twig', array(
-            'order'  => $order
-        ));
-    }
-
-    public function invoiceDownloadAction(BaseOrder $order)
-    {
-
-            /*$html = $this->renderView('DyweeOrderBundle:Order:invoice.html.twig', array(
-                'order'  => $order
-            ));
-            $pdfGenerator = $this->get('spraed.pdf.generator');
-            $pdfGenerator->generatePDF($html, 'UTF-8');
-
-            return new Response($pdfGenerator->generatePDF($html),
-                200,
-                array(
-                    'Content-Type' => 'application/pdf',
-                    'Content-Disposition' => 'inline; filename="out.pdf"'
-                )
-            );
-
-            */
-            $fileName = str_replace(' ', '_', 'files/invoices/'.$order->getInvoiceReference()).'.pdf';
-
-            if(file_exists($fileName))
-                unlink($fileName);
-
-            if (true)
-            {
-                $bill = $this->renderView('DyweeOrderBundle:Order:invoice.html.twig', array(
-                    'order'  => $order
-                ),
-                    true);
-
-                $this->get('knp_snappy.pdf')->generateFromHtml(
-                    $bill,
-                    $fileName
-                );
-            //}
-
-            //else{
-                $response = new Response();
-
-                // Set headers
-                $response->headers->set('Cache-Control', 'private');
-                $response->headers->set('Content-type', mime_content_type($fileName));
-                $response->headers->set('Content-Disposition', 'attachment; filename="' . basename($fileName) . '";');
-                $response->headers->set('Content-length', filesize($fileName));
-
-                // Send headers before outputting anything
-                $response->sendHeaders();
-
-                $response->setContent(readfile($fileName));
-                /*return new Response(
-                        $this->get('knp_snappy.pdf')->getOutput($this->generateUrl('invoice_view', array('idOrder' => $idOrder), true)),
-                        200,
-                        array(
-                            'Content-Type'          => 'application/pdf',
-                            'Content-Disposition'   => 'attachment; filename="LB1X '.$order->getInvoiceReference().'.pdf"'
-                        )
-                    );
-                }*/
-            }
-    }
-
-    public function exportToCSVAction($type, $data = false)
+    /*public function exportToCSVAction($type, $data = false)
     {
         $em = $this->getDoctrine()->getManager();
         $or = $em->getRepository('DyweeOrderBundle:BaseOrder');
@@ -185,9 +105,9 @@ class OrderController extends Controller
         $response->headers->set('Expires', '0');
 
         return $response;
-    }
+    }*/
 
-    public function currentTableAction($state)
+    /*public function currentTableAction($state)
     {
         $em = $this->getDoctrine()->getManager();
         $or = $em->getRepository('DyweeOrderBundle:BaseOrder');
@@ -195,7 +115,7 @@ class OrderController extends Controller
         $os = $or->findByMonth('current', $state);
 
         return $this->render('DyweeOrderBundle:Order:table.html.twig', array('orderList' => $os));
-    }
+    }*/
 
     public function paypalConfirmationAction($type, $reference, Request $request)
     {
@@ -248,18 +168,6 @@ class OrderController extends Controller
             $execution = new PaymentExecution();
             $execution->setPayerId($request->query->get('PayerID'));
 
-            /*try {
-                // Execute the payment
-                // (See bootstrap.php for more on `ApiContext`)
-                $payment->execute($execution, $apiContext);
-            try {
-                $payment = Payment::get($paymentId, $apiContext);
-            } catch (Exception $ex) {
-                throw $this->createException('Something went wrong (Paypal Exception)');
-            }
-        } catch (Exception $ex) {
-                throw $this->createException('Something went wrong (Paypal Exception)');
-            }*/
 
             if($order->getDeliveryMethod() === '24R')
             {
@@ -324,10 +232,10 @@ class OrderController extends Controller
 
     }
 
+    //TODO kesako??
     public function validatedAction()
     {
         $em = $this->getDoctrine()->getManager();
-        $or = $em->getRepository('DyweeOrderBundle:BaseOrder');
 
         $order = new BaseOrder();
 
@@ -338,8 +246,6 @@ class OrderController extends Controller
 
         $reference = $this->get('session')->get('validatedOrderReference');
 
-        //echo $this->get('session')->get('validatedOrderReference'); exit;
-
         if($reference)
             return $this->render('DyweeOrderBundle:Order:validated.html.twig',
                 array(
@@ -349,21 +255,5 @@ class OrderController extends Controller
             );
 
         else throw $this->createNotFoundException('Commande introuvable');
-
-        return new Response('OrderController:validatedAction');
-    }
-
-    public function invoiceUserViewAction($invoiceReference)
-    {
-        $or = $this->getDoctrine()->getManager()->getRepository('DyweeOrderBundle:BaseOrder');
-        $order = $or->findOneByInvoiceReference($invoiceReference);
-
-        if($order != null)
-        {
-            return $this->render('DyweeOrderBundle:Order:invoice.html.twig', array(
-                'order'  => $order
-            ));
-        }
-        throw $this->createNotFoundException('Commande introuvable');
     }
 }

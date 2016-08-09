@@ -30,7 +30,7 @@ class OrderDiscountElement
     private $iterator;
 
     /**
-     * @ORM\ManyToOne(targetEntity="OrderDiscount", inversedBy="discountElements")
+     * @ORM\ManyToOne(targetEntity="OrderDiscount", inversedBy="elements")
      */
     private $discount;
 
