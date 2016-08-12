@@ -4,10 +4,11 @@ namespace Dywee\OrderBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Dywee\AddressBundle\Entity\Address;
 use Dywee\AddressBundle\Entity\AddressInterface;
 use Dywee\ProductBundle\Entity\BaseProduct;
 use Dywee\ProductBundle\Entity\ProductDownloadable;
+use Dywee\ProductBundle\Entity\RentableProduct;
+use Dywee\ProductBundle\Entity\RentableProductItem;
 use Dywee\ShipmentBundle\Entity\Deliver;
 use Dywee\ShipmentBundle\Entity\Shipment;
 use Dywee\ShipmentBundle\Entity\ShipmentElement;
@@ -163,13 +164,13 @@ class BaseOrder implements BaseOrderInterface
     
     /**
      * @var \Datetime
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $returningAt;
     
     /**
      * @var \Datetime
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $returnedAt;
 
@@ -261,9 +262,9 @@ class BaseOrder implements BaseOrderInterface
     private $deposit = 0;
 
     /**
-     * @var integer
+     * @var string
      *
-     * @ORM\Column(name="state", type="smallint", nullable=true)
+     * @ORM\Column(name="state", type="text")
      */
     private $state = self::STATE_IN_SESSION;
 
@@ -278,12 +279,12 @@ class BaseOrder implements BaseOrderInterface
     private $shippingUser;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Dywee\AddressBundle\Entity\Address", cascade={"persist"})
+     * @ORM\Column(type="object")
      */
     private $billingAddress;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Dywee\AddressBundle\Entity\Address", cascade={"persist"})
+     * @ORM\Column(type="object")
      */
     private $shippingAddress;
 
@@ -1027,7 +1028,6 @@ class BaseOrder implements BaseOrderInterface
     public function setShippingAddress(AddressInterface $shippingAddress = null)
     {
         $this->shippingAddress = $shippingAddress;
-
         return $this;
     }
 
@@ -1188,9 +1188,45 @@ class BaseOrder implements BaseOrderInterface
     }
 
     /**
-    * @ORM\PrePersist
-    * @ORM\PreUpdate
-    */
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function checkBeforeDB()
+    {
+        $this->checkType();
+        $this->weightCalculation();
+        $this->shipmentsCalculation();
+    }
+
+    public function checkType()
+    {
+        $buy = false;
+        $rent = false;
+
+        foreach($this->getOrderElements() as $element)
+        {
+            if($element instanceof RentableProduct || $element instanceof RentableProductItem)
+                $rent = true;
+            else
+                $buy = true;
+
+            if($rent && $buy)
+                break;
+        }
+
+        if($buy)
+        {
+            if($rent)
+                $this->setType(BaseOrder::TYPE_BUY_AND_RENT);
+            else $this->setType(BaseOrder::TYPE_ONLY_BUY);
+        }
+        elseif($rent)
+            $this->setType(BaseOrder::TYPE_BUY_AND_RENT);
+
+        return $this;
+
+    }
+
     public function shipmentsCalculation($force = false)
     {
         //Todo revoir la fonction
@@ -1368,8 +1404,6 @@ class BaseOrder implements BaseOrderInterface
 
     /**
      * @return $this
-     * @ORM\PrePersist
-     * @ORM\PreUpdate
      */
     public function weightCalculation()
     {
@@ -1791,6 +1825,5 @@ class BaseOrder implements BaseOrderInterface
         $this->type = $type;
         return $this;
     }
-
 
 }

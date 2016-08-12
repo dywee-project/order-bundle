@@ -709,4 +709,5 @@ interface BaseOrderInterface extends PersistableInterface
      * @return BaseOrder
      */
     public function setType($type);
+
 }

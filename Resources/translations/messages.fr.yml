@@ -8,7 +8,7 @@ order:
     state_returned: 'Retournée'
 
     state_ready_shipping: 'Pret pour envoi'
-    state_in_shipping: 'En cours d\envoi'
+    state_in_shipping: "En cours d'envoi"
 
     state_customer_error: 'Erreur (client)'
     state_seller_customer: 'Erreur (vendeur)'

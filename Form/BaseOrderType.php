@@ -4,6 +4,7 @@ namespace Dywee\OrderBundle\Form;
 
 use Dywee\AddressBundle\Entity\AddressRepository;
 use Dywee\AddressBundle\Form\AddressType;
+use Dywee\OrderBundle\Entity\BaseOrder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -21,21 +22,28 @@ class BaseOrderType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $choices = array(
+            BaseOrder::STATE_IN_SESSION => BaseOrder::STATE_IN_SESSION,
+            BaseOrder::STATE_WAITING => BaseOrder::STATE_WAITING,
+            BaseOrder::STATE_IN_PROGRESS => BaseOrder::STATE_IN_PROGRESS,
+            BaseOrder::STATE_READY_FOR_SHIPPING => BaseOrder::STATE_READY_FOR_SHIPPING,
+            BaseOrder::STATE_IN_SHIPPING => BaseOrder::STATE_IN_SHIPPING,
+            BaseOrder::STATE_FINALIZED => BaseOrder::STATE_FINALIZED,
+            BaseOrder::STATE_RETURNED => BaseOrder::STATE_RETURNED,
+        );
         $builder
             ->add('discountRate')
             ->add('discountValue')
             ->add('description',        TextareaType::class,     array('required' => false))
-            ->add('state',              'genemu_jqueryselect2_choice',   array(
-                'choices' => array(-1 => 'En session', 0 => 'Annulée', 1 => 'En attente', 2 => 'En cours', 3 => 'Terminée')
+            ->add('state',              ChoiceType::class,   array(
+                'choices' => $choices
             ))
-            ->add('billingAddress',     'genemu_jqueryselect2_entity', array(
+            ->add('billingAddress',     EntityType::class, array(
                 'class' => 'DyweeAddressBundle:Address',
-                'property' => 'formValue',
                 'required' => false,
             ))
-            ->add('shippingAddress',    'genemu_jqueryselect2_entity', array(
+            ->add('shippingAddress',    EntityType::class, array(
                 'class' => 'DyweeAddressBundle:Address',
-                'property' => 'formValue',
                 'required' => false,
             ))
             //TODO interfaçage pour form event. Adapter le champ en fonction du type de commande
@@ -45,12 +53,12 @@ class BaseOrderType extends AbstractType
                 'allow_delete'  => true,
                 'by_reference'  => false
             ))
-            ->add('deliver',            EntityType::class,       array('class' => 'DyweeShipmentBundle:Deliver', 'property' => 'name'))
-            ->add('deliveryInfo',       null,         array('required' => false))
-            ->add('deliveryMethod',     ChoiceType::class, array('choices' => array('24R' => 'En point relais', 'HOM' => 'A domicile')))
-            ->add('deliveryCost')
-            ->add('paymentMethod',     ChoiceType::class, array('choices' => array(1 => 'Liquidité', 2 => 'Virement', 3 => 'Paypal'), 'required' => false))
-            ->add('paymentState',      ChoiceType::class, array('choices' => array(0 => 'En attente de paiement', 1 => 'Acompte donné', 2 => 'Payé', 3 => 'Remboursé', 4 => 'Annulé par l\'utilisateur')))
+            //->add('deliver',            EntityType::class,       array('class' => 'DyweeShipmentBundle:Deliver', 'property' => 'name'))
+            //->add('deliveryInfo',       null,         array('required' => false))
+            //->add('deliveryMethod',     ChoiceType::class, array('choices' => array('24R' => 'En point relais', 'HOM' => 'A domicile')))
+            //->add('deliveryCost')
+            //->add('paymentMethod',     ChoiceType::class, array('choices' => array(1 => 'Liquidité', 2 => 'Virement', 3 => 'Paypal'), 'required' => false))
+            //->add('paymentState',      ChoiceType::class, array('choices' => array(0 => 'En attente de paiement', 1 => 'Acompte donné', 2 => 'Payé', 3 => 'Remboursé', 4 => 'Annulé par l\'utilisateur')))
             ->add('save',               SubmitType::class)
         ;
     }

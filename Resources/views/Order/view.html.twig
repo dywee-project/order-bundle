@@ -9,8 +9,8 @@
 
     <div class="title-heading">
         <div class="pull-right">
-            <a href="{{ path('dywee_order_admin_table') }}" class="btn btn-default"><i class="fa fa-angle-left"></i> Retour à la liste des commandes</a>
-            <a href="{{ path('dywee_order_update', {id: order.id}) }}" class="btn btn-default"><i class="fa fa-pencil"></i> Editer</a>
+            <a href="{{ path('order_table') }}" class="btn btn-default"><i class="fa fa-angle-left"></i> Retour à la liste des commandes</a>
+            <a href="{{ path('order_update', {id: order.id}) }}" class="btn btn-default"><i class="fa fa-pencil"></i> Editer</a>
             <div class="btn-group">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                     Actions <span class="caret"></span>
@@ -111,23 +111,9 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td>{{ order.creationDate|date('d/m/Y à H\\hi') }}</td>
-                        <td>{{ order.validationDate|date('d/m/Y à H\\hi') }}</td>
-                        <td>
-                            {% if order.state == 0 %}
-                                <span class="label label-warning">Annulée</span>
-                            {% elseif order.state == 1 %}
-                                <span class="label label-default">En attente</span>
-                            {% elseif order.state == 2 %}
-                                <span class="label label-success">Active</span>
-                            {% elseif order.state == 3 %}
-                                <span class="label label-info">Terminée</span>
-                            {% elseif order.state == -1 %}
-                                <span class="label label-warning">En session</span>
-                            {% else %}
-                                <span class="label label-danger">Erreur</span>
-                            {% endif %}
-                        </td>
+                        <td>{{ order.createdAt|date('d/m/Y à H\\hi') }}</td>
+                        <td>{{ order.validatedAt|date('d/m/Y à H\\hi') }}</td>
+                        <td>{{ order.state }}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -146,7 +132,7 @@
                         <th>Détail paiement</th>
                     </tr>
                     <tr>
-                        <td>
+                        {#<td>
                             {% if order.paymentState == 0 %}
                                 <span class="label label-info">En attente de paiement</span>
                             {% elseif order.paymentState == 1 %}
@@ -170,10 +156,10 @@
                                 <span class="label label-info">Ogone</span>
                             {% else %}
                                 <span class="label label-warning">Non renseigné</span>
-                            {% endif %}
+                            {% endif %}#}
                         </td>
                         <td>{{ order.deposit|number_format(2) }}€</td>
-                        <td><a href="{{ path('dywee_order_payment_overview', {id: order.id}) }}">Détail paiement</a></td>
+                        <td><a href="#{# path('dywee_order_payment_overview', {id: order.id}) #}">Détail paiement</a></td>
                     </tr>
                 </table>
             </div>
@@ -191,13 +177,14 @@
                     </thead>
                     <tbody>
                         <tr>
-                            {% if order.deliver.name is defined and order.deliveryMethod is defined %}
+                            {#{% if order.deliver.name is defined and order.deliveryMethod is defined %}
                                 <td>{{ order.deliver.name }}</td>
                                 <td>{{ order.deliveryMethod }}</td>
                             {% else %}
                                 <td>NC</td><td>NC</td>
                             {% endif %}
                             <td>{{ order.deliveryInfo }}</td>
+                            #}
                         </tr>
                     </tbody>
                 </table>
@@ -210,19 +197,10 @@
             <div class="panel panel-default">
                 <div class="panel-heading"><h3 class="panel-title">Facturation</h3></div>
                 <div class="panel-body">
+                    {{ dump(order.billingAddress) }}
                     {% if order.billingAddress is not null %}
-                        <p>
-                            {{ order.billingAddress.firstName }} {{ order.billingAddress.lastName }}<br>
-                            {{ order.billingAddress.email }}<br>
-                            {% if order.billingAddress.mobile is not null %}
-                                {{ phone_number_format(order.billingAddress.mobile, 'INTERNATIONAL') }}
-                            {% endif %}
-                        </p>
-
-                        <p>{{ order.billingAddress.address1 }}<br>
-                            {{ order.billingAddress.address2 }}</p>
-                        <p>{{ order.billingAddress.zip }}<br>
-                            {{ order.billingAddress.cityString }}</p>
+                        {% set address = order.shippingAddress %}
+                        {% include 'DyweeAddressBundle:Address:view_wrapped.html.twig' %}
                     {% else %}
                         Non renseigné
                     {% endif %}
@@ -232,21 +210,13 @@
             <div class="panel panel-default">
                 <div class="panel-heading"><h3 class="panel-title">Livraison</h3></div>
                 <div class="panel-body">
-                    {% if order.shippingAddress is not null %}
-                        <p>{{ order.shippingAddress.firstName }} {{ order.shippingAddress.lastName }}<br>
-                            {{ order.shippingAddress.email }}<br>
-                        {% if order.shippingAddress.mobile is not null %}
-                            {{ phone_number_format(order.shippingAddress.mobile, 'INTERNATIONAL') }}
-                        {% endif %}
-                        </p>
-
-                        <p>{{ order.shippingAddress.address1 }}<br>
-                            {{ order.shippingAddress.address2 }}</p>
-                        <p>{{ order.shippingAddress.zip }}<br>
-                            {{ order.shippingAddress.cityString }}</p>
+                    {#{% if order.shippingAddress is not null %}
+                        {% set address = order.billingAddress %}
+                    {% include 'DyweeAddressBundle:Address:view_wrapped.html.twig' %}
                     {% else %}
                         Non renseigné
                     {% endif %}
+                    #}
                 </div>
             </div>
         </div>

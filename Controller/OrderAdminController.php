@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class OrderAdminController extends Controller
 {
-    public function listAction($state = 2, $limit = 10, $offset = 0)
+    public function listAction($state = BaseOrder::STATE_IN_PROGRESS, $limit = 10, $offset = 0)
     {
         $or = $this->getDoctrine()->getManager()->getRepository('DyweeOrderBundle:BaseOrder');
 
@@ -31,12 +31,12 @@ class OrderAdminController extends Controller
         return $this->render('DyweeOrderBundle:Admin:orderTableRaw.html.twig', array('orderList' => $os));
     }
 
-    public function tableAction($state, $page, Request $request)
+    public function tableAction($page, Request $request)
     {
         $or = $this->getDoctrine()->getManager()->getRepository('DyweeOrderBundle:BaseOrder');
 
 
-        $form = $this->get('form.factory')->create(OrderFilterType::class)
+        /*$form = $this->get('form.factory')->create(OrderFilterType::class)
             ->add('chercher', SubmitType::class)
         ;
 
@@ -44,17 +44,17 @@ class OrderAdminController extends Controller
 
         if($form->handleRequest($request)->isValid())
         {
-            $query = $or->FindAllForPagination();
+            $query = $or->findAllForPagination($state);
             // build the query from the given form object
             $this->get('lexik_form_filter.query_builder_updater')->addFilterConditions($form, $query);
 
             $filterActive = true;
         }
-        else $query = $or->FindAllForPagination($state);
+        else */
 
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
-            $query,
+            $or->findAllForPagination($request->query->get('state') ?? BaseOrder::STATE_IN_PROGRESS),
             $request->query->get('page', $page), //page number
             20 // limit per page
         );
@@ -63,10 +63,9 @@ class OrderAdminController extends Controller
 
         $data = array(
             'pagination' => $pagination,
-            'searchForm' => $form->createView(),
-            'filterActive' => $filterActive,
+            //'searchForm' => $form->createView(),
+            //'filterActive' => $filterActive,
             'states' => array(BaseOrder::STATE_IN_SESSION, BaseOrder::STATE_WAITING, BaseOrder::STATE_IN_PROGRESS, BaseOrder::STATE_FINALIZED),
-            'sellType' => 'buy'//$sellType = $this->container->getParameter('order_bundle.sell_type');
         );
 
         return $this->render('DyweeOrderBundle:Order:table.html.twig', $data);

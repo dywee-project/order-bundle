@@ -3,6 +3,7 @@
 namespace Dywee\OrderBundle\Form;
 
 use Dywee\ProductBundle\Repository\ProductRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -19,9 +20,9 @@ class OrderElementType extends AbstractType
     {
         $builder
             ->add('quantity', null, array('empty_data' => 1))
-            ->add('product',    'genemu_jqueryselect2_entity',   array(
+            ->add('product',    EntityType::class,   array(
                 'class'     => 'DyweeProductBundle:Product',
-                'property'  => 'completeName',
+                'choice_label'  => 'completeName',
             ));
             /*->add('beginAt',    'date', array(
                 'input' => 'datetime',

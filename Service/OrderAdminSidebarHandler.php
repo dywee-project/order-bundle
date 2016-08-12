@@ -17,17 +17,18 @@ class OrderAdminSidebarHandler
     public function getSideBarMenuElement()
     {
         $menu = array(
+            'key' => 'order',
             'icon' => 'fa fa-files-o',
-            'label' => 'Commandes',
+            'label' => 'order.sidebar.label',
             'children' => array(
                 array(
                     'icon' => 'fa fa-list-alt',
-                    'label' => 'Gestion des commandes',
+                    'label' => 'order.sidebar.table',
                     'route' => $this->router->generate('order_table')
                 ),
                 array(
                     'icon' => 'fa fa-cog',
-                    'label' => 'Gestion des références facture',
+                    'label' => 'order.sidebar.invoice',
                     'route' => $this->router->generate('order_reference_update')
                 ),
             )

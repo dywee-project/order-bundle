@@ -11,9 +11,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class OrderController extends Controller
 {
-    public function tableAction($state, $page, Request $request)
+    public function tableAction(Request $request)
     {
         $or = $this->getDoctrine()->getManager()->getRepository('DyweeOrderBundle:BaseOrder');
+
+        $state = $request->query->get('state') ?? BaseOrder::STATE_IN_PROGRESS;
 
         $query = $or->FindAllForPagination($state);
 
@@ -24,11 +26,7 @@ class OrderController extends Controller
             20/*limit per page*/
         );
 
-        $sellType = $this->container->getParameter('order_bundle.sell_type');
-        if(!$sellType)
-            $sellType = 'buy';
-
-        return $this->render('DyweeOrderBundle:Order:table.html.twig', array('pagination' => $pagination, 'sellType' => $sellType));
+        return $this->render('DyweeOrderBundle:Order:table.html.twig', array('pagination' => $pagination));
     }
 
     public function viewAction(BaseOrder $order)

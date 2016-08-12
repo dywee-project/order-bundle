@@ -4,21 +4,7 @@
 
 {% block body %}
     <div class="actions-right">
-        {% if sellType == 'both' %}
-            <div class="btn-group">
-                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    <i class="fa fa-plus"></i> Ajouter <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                    <li><a href="{{ path('order_add') }}?sellType=1"><i class="fa fa-plus"></i> Ajouter une vente</a></li>
-                    <li><a href="{{ path('order_add', {type: 'rent'}) }}?sellType=2"><i class="fa fa-plus"></i> Ajouter une location</a></li>
-                </ul>
-            </div>
-        {% elseif sellType == 'rent' %}
-            <a href="{{ path('order_add', {type: 'rent'}) }}" class="btn btn-success"><i class="fa fa-plus"></i> Ajouter une location</a>
-        {% else %}
-            <a href="{{ path('order_add') }}" class="btn btn-success"><i class="fa fa-plus"></i> Ajouter une vente</a>
-        {% endif %}
+        <a href="{{ path('order_add') }}" class="btn btn-success"><i class="fa fa-plus"></i> Ajouter une commande</a>
         <div class="btn-group">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                 <i class="fa fa-download"></i> Exporter <span class="caret"></span>
@@ -34,7 +20,7 @@
             </button>
             <ul class="dropdown-menu dropdown-menu-right" role="menu">
                 {% for element in states %}
-                    <li><a href="{{ path('order_table', {state: element}) }}">{{ element }}</a></li>
+                    <li><a href="{{ path('order_table', {state: element}) }}">{{ element|trans }}</a></li>
                 {% endfor %}
                 <li class="divider"></li>
                 {#<li><a href="{{ path('order_table', {state: 1}) }}">Tout lister</a></li>#}
@@ -46,7 +32,7 @@
     <div class="title-heading">
         <h1 class="text-center">Liste des Commandes ({{ pagination.getTotalItemCount }})</h1>
     </div>
-    {% if pagination.getTotalItemCount > 0 or filterActive == true %}
+    {% if pagination.getTotalItemCount > 0 %}
         <div class="row">
             <div class="col-md-9">
                 <div class="box box-success">
@@ -90,51 +76,39 @@
                             <tbody>
                             {% for order in pagination %}
                                 <tr>
-                                    <td><small>{{ order.id }}</small></td>
-                                    <td><small><a href="{{ path('order_view', {id: order.id}) }}" class="link-unstyled" >{{ order.reference }}</a></small></td>
-                                    <td><small><a href="{{ path('invoice_view', {id: order.id}) }}" class="link-unstyled" >{{ order.invoiceReference }}</a></small></td>
-                                    <td><small>
+                                    <td>{{ loop.index }}</td>
+                                    <td><a href="{{ path('order_view', {id: order.id}) }}" class="link-unstyled" >{{ order.reference }}</a></td>
+                                    <td><a href="{{ path('invoice_view', {id: order.id}) }}" class="link-unstyled" >{{ order.invoiceReference }}</a></td>
+                                    <td>
                                             {% if order.billingAddress is not null %}
                                                 {{ order.billingAddress.lastName }}
                                             {% else %}
                                                 <span class="label label-default">NC</span>
                                             {% endif %}
-                                        </small>
+                                        
                                     </td>
-                                    <td><small>
+                                    <td>
                                             {% if order.shippingAddress is not null %}
                                                 {{ order.shippingAddress.lastName }}
                                             {% else %}
                                                 <span class="label label-default">NC</span>
                                             {% endif %}
-                                        </small>
+                                        
                                     </td>
-                                    <td><small>
-                                            {% if order.paymentState == 0 %}
-                                                <span class="label label-info">En attente de paiement</span>
-                                            {% elseif order.paymentState == 1 %}
-                                                <span class="label label-primary">Accompte donné</span>
-                                            {% elseif order.paymentState == 2 %}
-                                                <span class="label label-success">Payé</span>
-                                            {% elseif order.paymentState == 3 %}
-                                                <span class="label label-default">Remboursé</span>
-                                            {% else %}
-                                                <span class="label label-danger">Erreur</span>
-                                            {% endif %}
-                                        </small>
+                                    <td>
+                                            {{ order.paymentState|trans }}
                                     </td>
-                                    <td><small>
+                                    <td>
                                             {% include 'DyweeOrderBundle:Order:state_label.html.twig' %}
-                                        </small>
                                     </td>
-                                    <td><small>{% if order.isGift == 1 %} <i class="fa fa-gift"></i> {% endif %}</small></td>
-                                    <td><small>{% if order.shippingMessage != '' %} <i class="fa fa-envelope"></i> {% endif %}</small></td>
-                                    <td><small>{{ order.totalPrice|number_format(2) }}€</small></td>
-                                    <td><small>{{ order.creationDate|date('d/m/Y') }}</small></td>
+                                    <td>{% if order.isGift == 1 %} <i class="fa fa-gift"></i> {% endif %}</td>
+                                    <td>{% if order.shippingMessage != '' %} <i class="fa fa-envelope"></i> {% endif %}</td>
+                                    <td>{{ order.totalPrice|number_format(2) }}€</td>
+                                    <td>{{ order.createdAt|date('d/m/Y') }}</td>
                                     <td class="actions"> <a href="{{ path('order_view', {id: order.id}) }}" ><i class="fa fa-eye"></i> </a>
                                         <a href="{{ path('order_update', {id: order.id}) }}"><i class="fa fa-pencil"></i> </a>
                                         <a href="{{ path('invoice_view', {id: order.id}) }}"><i class="fa fa-file-text"></i> </a>
-                                        <a href="{{ path('shipment_table', {idOrder: order.id}) }}"><i class="fa fa-truck"></i> </a>
+                                        {#<a href="{{ path('shipment_table', {idOrder: order.id}) }}"><i class="fa fa-truck"></i> </a>#}
                                         <a href="{{ path('order_delete', {id: order.id}) }}" data-confirm="Êtes-vous sûr de vouloir supprimer cette commande?"><i class="fa fa-trash-o"></i> </a>
 
                                     </td>
@@ -154,7 +128,7 @@
                     {% endif %}
                 </div>
             </div>
-            <div class="col-md-3">
+            {#<div class="col-md-3">
                 <div class="box box-primary">
                     <div class="box-header with-border">
                         <h3 class="box-title"><i class="fa fa-search"></i> Recherche de commande</h3>
@@ -164,7 +138,7 @@
                         {{ form(searchForm) }}
                     </div>
                 </div>
-            </div>
+            </div>#}
         </div>
     {% else %}
         <p>Aucune commande n'a été enregistrée.</p>

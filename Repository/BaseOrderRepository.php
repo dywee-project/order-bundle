@@ -15,11 +15,13 @@ class BaseOrderRepository extends EntityRepository
     public function findAllForPagination($state = null)
     {
         $qb = $this->createQueryBuilder('o');
+
         if($state)
         {
-            $qb->where('o.state = :state and o.totalPrice > 0');
-            $qb->setParameters(array('state' => $state));
+            $qb->where('o.state = :state');
+            $qb->setParameter('state', $state);
         }
+
         $qb->orderBy('o.createdAt', 'desc');
 
         return $qb;

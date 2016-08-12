@@ -99,10 +99,6 @@ class OrderElement
      */
     private $endAt;
 
-    /**
-     * @ORM\Column(name="wording", type="string", length=255, nullable=true)
-     */
-    private $wording;
 
     public function __construct()
     {
@@ -441,26 +437,4 @@ class OrderElement
         }
     }
 
-    /**
-     * Get wording
-     *
-     * @return string
-     */
-    public function getWording()
-    {
-        return $this->wording;
-    }
-
-    /**
-     * Set totalPrice
-     *
-     * @param string $wording
-     * @return OrderElement
-     */
-    public function setWording($wording)
-    {
-        $this->wording = $wording;
-
-        return $this;
-    }
 }
