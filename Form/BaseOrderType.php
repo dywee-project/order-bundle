@@ -9,6 +9,8 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -32,8 +34,8 @@ class BaseOrderType extends AbstractType
             BaseOrder::STATE_RETURNED => BaseOrder::STATE_RETURNED,
         );
         $builder
-            ->add('discountRate')
-            ->add('discountValue')
+            //->add('discountRate')
+            //->add('discountValue')
             ->add('description',        TextareaType::class,     array('required' => false))
             ->add('state',              ChoiceType::class,   array(
                 'choices' => $choices
@@ -46,13 +48,20 @@ class BaseOrderType extends AbstractType
                 'class' => 'DyweeAddressBundle:Address',
                 'required' => false,
             ))
-            //TODO interfaçage pour form event. Adapter le champ en fonction du type de commande
             ->add('orderElements',      CollectionType::class,   array(
                 'entry_type'          => OrderElementType::class,
                 'allow_add'     => true,
                 'allow_delete'  => true,
                 'by_reference'  => false
             ))
+            ->add('orderRentElements',      CollectionType::class,   array(
+                'entry_type'          => OrderElementRentType::class,
+                'allow_add'     => true,
+                'allow_delete'  => true,
+                'by_reference'  => false
+            ))
+            ->add('beginAt',            DateType::class, array('required' => false, 'widget' => 'single_text'))
+            ->add('returningAt',            DateType::class, array('required' => false, 'widget' => 'single_text'))
             //->add('deliver',            EntityType::class,       array('class' => 'DyweeShipmentBundle:Deliver', 'property' => 'name'))
             //->add('deliveryInfo',       null,         array('required' => false))
             //->add('deliveryMethod',     ChoiceType::class, array('choices' => array('24R' => 'En point relais', 'HOM' => 'A domicile')))

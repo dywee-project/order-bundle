@@ -1,24 +1,32 @@
 order:
-    state_session: 'En session'
-    state_cancelled: 'Annulée'
-    state_waiting: 'En attente'
-    state_in_progress: 'En cours'
-    state_finalized: 'Finalisée'
-    state_returning: 'En retour'
-    state_returned: 'Retournée'
+    state:
+        session: En session
+        cancelled: Annulée
+        waiting: En attente
+        in_progress: En cours
+        finalized: Finalisée
+        returning: En retour
+        returned: Retournée
 
-    state_ready_shipping: 'Pret pour envoi'
-    state_in_shipping: "En cours d'envoi"
+        ready_shipping: Pret pour envoi
+        in_shipping: "En cours d'envoi"
 
-    state_customer_error: 'Erreur (client)'
-    state_seller_customer: 'Erreur (vendeur)'
-    state_error: 'Erreur'
+        customer_error: Erreur (client)
+        seller_customer: Erreur (vendeur)
+        error: Erreur
 
-    type_buy: 'Achat'
-    type_rent: 'Location'
-    type_both: 'Achat & Location'
+        waiting: Paiement en attente
+        waiting_validation: Paiement en attente de validation
+        validated: Paiement validé
+        refund: Remboursé
 
-    state_waiting: 'Paiement en attente'
-    state_waiting_validation: 'Paiement en attente de validation'
-    state_validated: 'Paiement validé'
-    state_refund: 'Remboursé'
+    type:
+        buy: Achat
+        rent: Location
+        both: Achat & Location
+    
+    sidebar:
+        label: Gestion des commandes
+        table: Liste des commandes
+        invoice: Gestion des factures
+

@@ -13,15 +13,10 @@
 {% block body %}
     <h1>Modification de la commande {{ order.reference }}</h1>
 
-    {% if form.vars.value.sellType == 1 %}
-        {%  include "DyweeOrderBundle:Order:form.html.twig" %}
-    {% elseif form.vars.value.sellType == 2 %}
-        {%  include "DyweeOrderBundle:Order:formRent.html.twig" %}
-    {% else %}
-        Erreur: aucun type de vente défini
-    {% endif %}
+    {%  include "DyweeOrderBundle:Order:form.html.twig" %}
 {% endblock %}
 
 {% block footerJavascript %}
     <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
+    <script src="{{ asset('bundles/dyweeorder/js/form.js') }}"></script>
 {% endblock %}

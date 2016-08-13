@@ -1,35 +1,11 @@
 {# Dywee\OrderBundle\Resources\View\Order\form.html.twig #}
 
-{% set langDropDown %}
-{#<div class="input-group-btn">
-    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-        <img src="{{ asset('bundles/dyweecore/images/flags/48/fr.png') }}" width="18" />
-        <i class="fa fa-caret-down fa-caret-down-btn-correct"></i>
-    </button>
-    <ul class="dropdown-menu" role="menu">
-        <li><a href="javascript:void(0)" onclick="showLang(1)">
-                <img src="{{ asset('bundles/dyweecore/images/flags/48/fr.png') }}" width="18" /> Français
-            </a>
-        </li>
-        <li><a href="javascript:void(0)" onclick="showLang(2)">
-                <img src="{{ asset('bundles/dyweecore/images/flags/48/en.png') }}" width="18" /> Anglais
-            </a>
-        </li>
-        <li><a href="javascript:void(0)" onclick="showLang(3)">
-                <img src="{{ asset('bundles/dyweecore/images/flags/48/nl.png') }}" width="18" /> Néerlandais
-            </a>
-        </li>
-    </ul>
-</div>#}
-{% endset %}
-
 {% form_theme form 'DyweeOrderBundle:Form:collection_widget_rent.html.twig' %}
 
-{{ form_start(form, {"attr": {"class": "form-horizontal"}}) }}
-
+{{ form_start(form) }}
 {{ form_errors(form) }}
 
-{{ form_widget(form.save, {'attr': {'class': 'btn btn-success pull-right'}, 'label': 'Valider'}) }}
+{{ form_widget(form.save, {'attr': {'class': 'btn-success pull-right'}}) }}
 
 <ul id="descriptions" class="nav nav-tabs">
     <li class="active"><a href="#content" data-toggle="tab"><i class="fa fa-font"></i> Contenu</a></li>
@@ -42,114 +18,58 @@
     <div class="tab-pane fade in active" id="content">
         <div class="row">
             <div class="col-xs-12 col-md-6">
-                <div class="panel panel-default" style="min-height: 220px">
-                    <div class="panel-heading">
-                        <h2 class="panel-title text-center">Description</h2>
+                <div class="box box-default" style="min-height: 220px">
+                    <div class="box-header text-center with-border">
+                        <h2 class="box-title">Description</h2>
                     </div>
-                    <div class="panel-body">
-                        {{ form_errors(form.description) }}
-                        <p>Description: <br />
-                            {{ form_widget(form.description, {attr: {class: "form-control"}}) }}
-                        </p>
+                    <div class="box-body">
+                        {{ form_widget(form.description) }}
                     </div>
                 </div>
             </div>
             <div class="col-xs-12 col-md-6">
-                <div class="panel panel-default text-center" style="min-height: 220px">
-                    <div class="panel-heading">
-                        <h2 class="panel-title">Client</h2>
+                <div class="box box-default text-center with-border" style="min-height: 220px">
+                    <div class="box-header">
+                        <h2 class="box-title">Client</h2>
                     </div>
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">Facturation</label>
-                            <div class="col-sm-10">
-                                {{ form_errors(form.billingAddress) }}
-                                {{ form_widget(form.billingAddress, {attr: {class: "form-control"}}) }}
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">Livraison</label>
-                            <div class="col-sm-10">
-                                {{ form_errors(form.shippingAddress) }}
-                                {{ form_widget(form.shippingAddress, {attr: {class: "form-control"}}) }}
-                            </div>
-                        </div>
+                    <div class="box-body">
+                        {{ form_row(form.billingAddress) }}
+                        {{ form_row(form.shippingAddress) }}
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="panel panel-default">
-            {{ form_widget(form.orderElements) }}
+            <div class="col-md-12">
+                <div class="box box-default">
+                    <div class="box-header text-center with-border">
+                        <h2 class="box-title">Contenu</h2>
+                    </div>
+                    <div id="orderElement-wrapper">
+                        {{ form_widget(form.orderElements) }}
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <div class="tab-pane fade in" id="settings">
-        <div class="col-md-6">
-            <div class="form-group">
-                {{ form_label(form.discountRate, "% de reduc", {"label_attr": {"class": "label-control col-md-3"}}) }}
-                {{ form_errors(form.discountRate) }}
-                <div class="col-md-8">
-                    {{ form_widget(form.discountRate, {attr: {class: "form-control"}}) }}
-                </div>
-            </div>
-            <div class="form-group">
-                {{ form_label(form.discountValue, "valeur de reduc", {"label_attr": {"class": "label-control col-md-3"}}) }}
-                {{ form_errors(form.discountValue) }}
-                <div class="col-md-8">
-                    {{ form_widget(form.discountValue, {attr: {class: "form-control"}}) }}
-                </div>
-            </div>
-            <div class="form-group">
-                {{ form_label(form.deliver, "Livraison", {"label_attr": {"class": "label-control col-md-3"}}) }}
-                {{ form_errors(form.deliver) }}
-                <div class="col-md-8">
-                    {{ form_widget(form.deliver, {attr: {class: "form-control"}}) }}
-                </div>
-            </div>
-            <div class="form-group">
-                {{ form_label(form.deliveryMethod, "Type de livraison", {"label_attr": {"class": "label-control col-md-3"}}) }}
-                {{ form_errors(form.deliveryMethod) }}
-                <div class="col-md-8">
-                    {{ form_widget(form.deliveryMethod, {attr: {class: "form-control"}}) }}
-                </div>
-            </div>
-            <div class="form-group">
-                {{ form_label(form.deliveryInfo, "Info de livraison", {"label_attr": {"class": "label-control col-md-3"}}) }}
-                {{ form_errors(form.deliveryInfo) }}
-                <div class="col-md-8">
-                    {{ form_widget(form.deliveryInfo, {attr: {class: "form-control"}}) }}
-                </div>
-            </div>
-            <div class="form-group">
-                {{ form_label(form.deliveryCost, "Coût de livraison", {"label_attr": {"class": "label-control col-md-3"}}) }}
-                {{ form_errors(form.deliveryCost) }}
-                <div class="col-md-8">
-                    {{ form_widget(form.deliveryCost, {attr: {class: "form-control"}}) }}
-                </div>
-            </div>
-            <div class="form-group">
-                {{ form_label(form.paymentMethod, "Paiement via", {"label_attr": {"class": "label-control col-md-3"}}) }}
-                {{ form_errors(form.paymentMethod) }}
-                <div class="col-md-8">
-                    {{ form_widget(form.paymentMethod, {attr: {class: "form-control"}}) }}
-                </div>
-            </div>
-            <div class="form-group">
-                {{ form_label(form.paymentState, "Statut du paiement", {"label_attr": {"class": "label-control col-md-3"}}) }}
-                {{ form_errors(form.paymentState) }}
-                <div class="col-md-8">
-                    {{ form_widget(form.paymentState, {attr: {class: "form-control"}}) }}
-                </div>
-            </div>
-            <div class="form-group">
-                {{ form_label(form.state, "Statut", {"label_attr": {"class": "label-control col-md-3"}}) }}
-                {{ form_errors(form.state) }}
-                <div class="col-md-8">
-                    {{ form_widget(form.state, {attr: {class: "form-control"}}) }}
+        <div class="row">
+            <div class="col-md-6">
+                <div class="box box-default">
+                    <div class="box-header text-center with-border">
+                        <h2 class="box-title">Paramètres</h2>
+                    </div>
+                    <div class="box-body">
+                        {{ form_row(form.discountRate) }}
+
+                        {{ form_row(form.discountValue) }}
+
+                        {{ form_row(form.state) }}
+                    </div>
                 </div>
             </div>
         </div>
+
     </div>
 
 </div>

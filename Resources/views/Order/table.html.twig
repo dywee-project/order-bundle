@@ -5,7 +5,7 @@
 {% block body %}
     <div class="actions-right">
         <a href="{{ path('order_add') }}" class="btn btn-success"><i class="fa fa-plus"></i> Ajouter une commande</a>
-        <div class="btn-group">
+        {#<div class="btn-group">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                 <i class="fa fa-download"></i> Exporter <span class="caret"></span>
             </button>
@@ -13,7 +13,7 @@
                 <li><a href="#">PDF</a></li>
                 <li><a href="{{ path('order_export_csv', {type: 'current_month'}) }}">Excel</a></li>
             </ul>
-        </div>
+        </div>#}
         <div class="btn-group">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                 <i class="fa fa-filter"></i> Filtrer <span class="caret"></span>
@@ -24,7 +24,7 @@
                 {% endfor %}
                 <li class="divider"></li>
                 {#<li><a href="{{ path('order_table', {state: 1}) }}">Tout lister</a></li>#}
-                <li><a href="{{ path('order_table_current_month') }}">Mois courant</a></li>
+                {#<li><a href="{{ path('order_table_current_month') }}">Mois courant</a></li>#}
             </ul>
         </div>
     </div>
@@ -34,7 +34,7 @@
     </div>
     {% if pagination.getTotalItemCount > 0 %}
         <div class="row">
-            <div class="col-md-9">
+            <div class="col-md-12">
                 <div class="box box-success">
                     {% if pagination.getTotalItemCount > 0 %}
                         <div class="table-responsive">
@@ -58,9 +58,9 @@
                                     {#{{ knp_pagination_sortable(pagination, 'Receveur', 'o.shippingAddress.lastName') }}#}
                                     Livraison
                                 </th>
-                                <th{% if pagination.isSorted('o.paymentState') %} class="sorted"{% endif %}>
+                                {#<th{% if pagination.isSorted('o.paymentState') %} class="sorted"{% endif %}>
                                     {{ knp_pagination_sortable(pagination, 'Statut paiement', 'o.paymentState') }}
-                                </th>
+                                </th>#}
                                 <th>Statut</th>
                                 <th><i class="fa fa-gift"></i></th>
                                 <th><i class="fa fa-enveloppe"></i></th>
@@ -69,6 +69,9 @@
                                 </th>
                                 <th{% if pagination.isSorted('o.creationDate') %} class="sorted"{% endif %}>
                                     {{ knp_pagination_sortable(pagination, 'Commande', 'o.creationDate') }}
+                                </th>
+                                <th{% if pagination.isSorted('o.returningAt') %} class="sorted"{% endif %}>
+                                    {{ knp_pagination_sortable(pagination, 'Retour le', 'o.returningAt') }}
                                 </th>
                                 <th>Actions</th>
                             </tr>
@@ -95,9 +98,9 @@
                                             {% endif %}
                                         
                                     </td>
-                                    <td>
+                                    {#<td>
                                             {{ order.paymentState|trans }}
-                                    </td>
+                                    </td>#}
                                     <td>
                                             {% include 'DyweeOrderBundle:Order:state_label.html.twig' %}
                                     </td>
@@ -105,11 +108,15 @@
                                     <td>{% if order.shippingMessage != '' %} <i class="fa fa-envelope"></i> {% endif %}</td>
                                     <td>{{ order.totalPrice|number_format(2) }}€</td>
                                     <td>{{ order.createdAt|date('d/m/Y') }}</td>
-                                    <td class="actions"> <a href="{{ path('order_view', {id: order.id}) }}" ><i class="fa fa-eye"></i> </a>
-                                        <a href="{{ path('order_update', {id: order.id}) }}"><i class="fa fa-pencil"></i> </a>
-                                        <a href="{{ path('invoice_view', {id: order.id}) }}"><i class="fa fa-file-text"></i> </a>
+                                    <td>{{ order.returningAt|date('d/m/Y') }}</td>
+                                    <td>
+                                        <div class="btn-group btn-group-xs">
+                                            <a href="{{ path('order_view', {id: order.id}) }}" class="btn btn-default"><i class="fa fa-eye"></i> </a>
+                                            <a href="{{ path('order_update', {id: order.id}) }}" class="btn btn-default"><i class="fa fa-pencil"></i> </a>
+                                            <a href="{{ path('invoice_view', {id: order.id}) }}" class="btn btn-default"><i class="fa fa-file-text"></i> </a>
+                                        </div>
                                         {#<a href="{{ path('shipment_table', {idOrder: order.id}) }}"><i class="fa fa-truck"></i> </a>#}
-                                        <a href="{{ path('order_delete', {id: order.id}) }}" data-confirm="Êtes-vous sûr de vouloir supprimer cette commande?"><i class="fa fa-trash-o"></i> </a>
+                                        <a href="{{ path('order_delete', {id: order.id}) }}" class="btn btn-xs btn-danger" data-confirm="Êtes-vous sûr de vouloir supprimer cette commande?"><i class="fa fa-trash-o"></i> </a>
 
                                     </td>
                                 </tr>

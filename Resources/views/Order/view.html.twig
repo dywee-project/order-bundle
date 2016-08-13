@@ -1,6 +1,6 @@
 {# Dywee\OrderBundle\Resources\View\Order\view.html.twig #}
 
-{%  extends "DyweeOrderBundle::admin.html.twig" %}
+{% extends "DyweeOrderBundle::admin.html.twig" %}
 
 {% block body %}
 
@@ -26,6 +26,16 @@
         </div>
         <h1>Détail de la commande {{ order.invoiceReference }}</h1>
     </div>
+    {% if order.description != '' %}
+        <div class="panel panel-default">
+            <div class="panel panel-heading">
+                <h3 class="panel-title">Commentaire/description</h3>
+            </div>
+            <div class="panel-body">
+                {{ order.description }}
+            </div>
+        </div>
+    {% endif %}
     <div class="panel panel-default">
         <div class="panel-heading"><h3 class="panel-title">Récapitulatif de la commande <span class="pull-right">ref: {{ order.reference }}</span></h3></div>
         <table class="table table-bordered">
@@ -36,7 +46,7 @@
                 <th>Produit</th>
                 <th>Prix unitaire</th>
                 {#<th>Dég.</th>#}
-                <th>Nombre de jours</th>
+                <th>Quantité</th>
                 {% if order.containsElementReduction() == true %}<th>Réduction</th>{% endif %}
                 <th>Total</th>
             </tr>
@@ -105,7 +115,10 @@
                     <thead>
                     <tr>
                         <th>Date de la commande</th>
-                        <th>Date du traitement</th>
+                        <th>Date du dernier traitement</th>
+                        {% if order.returningAt is not null %}
+                            <th>Date de retour</th>
+                        {% endif %}
                         <th>Statut</th>
                     </tr>
                     </thead>
@@ -113,14 +126,15 @@
                     <tr>
                         <td>{{ order.createdAt|date('d/m/Y à H\\hi') }}</td>
                         <td>{{ order.validatedAt|date('d/m/Y à H\\hi') }}</td>
-                        <td>{{ order.state }}</td>
+                        {% if order.returningAt is not null %}
+                            <td>{{ order.returningAt|date('d/m/Y') }}</td>
+                        {% endif %}
+                        <td>{{ order.state|trans }}</td>
                     </tr>
                     </tbody>
                 </table>
             </div>
         </div>
-    </div>
-    <div class="row">
         <div class="col-md-6">
             <div class="panel panel-default">
                 <div class="panel-heading"><h3 class="panel-title">Paiement</h3> </div>
@@ -164,32 +178,6 @@
                 </table>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="panel panel-default" id="payment">
-                <div class="panel-heading"><h3 class="panel-title">Livraison</h3></div>
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Livraison</th>
-                            <th>Type</th>
-                            <th>Param</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            {#{% if order.deliver.name is defined and order.deliveryMethod is defined %}
-                                <td>{{ order.deliver.name }}</td>
-                                <td>{{ order.deliveryMethod }}</td>
-                            {% else %}
-                                <td>NC</td><td>NC</td>
-                            {% endif %}
-                            <td>{{ order.deliveryInfo }}</td>
-                            #}
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
     </div>
 
     <div class="row">
@@ -197,10 +185,9 @@
             <div class="panel panel-default">
                 <div class="panel-heading"><h3 class="panel-title">Facturation</h3></div>
                 <div class="panel-body">
-                    {{ dump(order.billingAddress) }}
                     {% if order.billingAddress is not null %}
                         {% set address = order.shippingAddress %}
-                        {% include 'DyweeAddressBundle:Address:view_wrapped.html.twig' %}
+                        {%  include 'DyweeAddressBundle:Address:view_wrapped.html.twig' %}
                     {% else %}
                         Non renseigné
                     {% endif %}
@@ -210,13 +197,12 @@
             <div class="panel panel-default">
                 <div class="panel-heading"><h3 class="panel-title">Livraison</h3></div>
                 <div class="panel-body">
-                    {#{% if order.shippingAddress is not null %}
+                    {% if order.shippingAddress is not null %}
                         {% set address = order.billingAddress %}
                     {% include 'DyweeAddressBundle:Address:view_wrapped.html.twig' %}
                     {% else %}
                         Non renseigné
                     {% endif %}
-                    #}
                 </div>
             </div>
         </div>

@@ -4,6 +4,7 @@ namespace Dywee\OrderBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Dywee\AddressBundle\Entity\Address;
 use Dywee\AddressBundle\Entity\AddressInterface;
 use Dywee\ProductBundle\Entity\BaseProduct;
 use Dywee\ProductBundle\Entity\ProductDownloadable;
@@ -24,28 +25,28 @@ use Dywee\UserBundle\Entity\User;
  */
 class BaseOrder implements BaseOrderInterface
 {
-    const STATE_IN_SESSION = 'order.state_session';
-    const STATE_CANCELLED = 'order.state_cancelled';
-    const STATE_WAITING = 'order.state_waiting';
-    const STATE_IN_PROGRESS = 'order.state_in_progress';
-    const STATE_FINALIZED = 'order.state_finalized';
-    const STATE_RETURNED = 'order.state_returned';
+    const STATE_IN_SESSION = 'order.state.session';
+    const STATE_CANCELLED = 'order.state.cancelled';
+    const STATE_WAITING = 'order.state.waiting';
+    const STATE_IN_PROGRESS = 'order.state.in_progress';
+    const STATE_FINALIZED = 'order.state.finalized';
+    const STATE_RETURNED = 'order.state.returned';
 
-    const STATE_READY_FOR_SHIPPING = 'order.state_ready_shipping';
-    const STATE_IN_SHIPPING = 'order.state_in_shipping';
+    const STATE_READY_FOR_SHIPPING = 'order.state.ready_shipping';
+    const STATE_IN_SHIPPING = 'order.state.in_shipping';
 
-    const STATE_CUSTOMER_ERROR = 'order.state_customer_error';
-    const STATE_SELLER_ERROR = 'order.state_seller_customer';
-    const STATE_ERROR = 'order.state_error';
+    const STATE_CUSTOMER_ERROR = 'order.state.customer_error';
+    const STATE_SELLER_ERROR = 'order.state.seller_customer';
+    const STATE_ERROR = 'order.state.error';
 
-    const PAYMENT_STATE_WAITING = 'order_payment.state_waiting';
-    const PAYMENT_WAITING_VALIDATION = 'order_payment.state_waiting_validation';
-    const PAYMENT_VALIDATED = 'order_payment.state_validated';
-    const PAYMENT_REFUND = 'order_payment.state_refund';
+    const PAYMENT_STATE_WAITING = 'order_payment.state.waiting';
+    const PAYMENT_WAITING_VALIDATION = 'order_payment.state.waiting_validation';
+    const PAYMENT_VALIDATED = 'order_payment.state.validated';
+    const PAYMENT_REFUND = 'order_payment.state.refund';
 
-    const TYPE_ONLY_BUY = 'order.type_buy';
-    const TYPE_ONLY_RENT = 'order.type_rent';
-    const TYPE_BUY_AND_RENT = 'order.type_both';
+    const TYPE_ONLY_BUY = 'order.type.buy';
+    const TYPE_ONLY_RENT = 'order.type.rent';
+    const TYPE_BUY_AND_RENT = 'order.type.both';
 
 
     /**
@@ -164,7 +165,13 @@ class BaseOrder implements BaseOrderInterface
     
     /**
      * @var \Datetime
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $beginAt;
+    
+    /**
+     * @var \Datetime
+     * @ORM\Column(type="date", nullable=true)
      */
     private $returningAt;
     
@@ -279,12 +286,12 @@ class BaseOrder implements BaseOrderInterface
     private $shippingUser;
 
     /**
-     * @ORM\Column(type="object")
+     * @ORM\ManyToOne(targetEntity="Dywee\AddressBundle\Entity\Address", cascade={"persist"})
      */
     private $billingAddress;
 
     /**
-     * @ORM\Column(type="object")
+     * @ORM\ManyToOne(targetEntity="Dywee\AddressBundle\Entity\Address", cascade={"persist"})
      */
     private $shippingAddress;
 
@@ -555,7 +562,8 @@ class BaseOrder implements BaseOrderInterface
     public function setTotalPrice($totalPrice)
     {
         $this->totalPrice = $totalPrice;
-        if($this->totalPrice == 0)$this->setDeliveryCost(0);
+        if($this->totalPrice === 0)
+            $this->setDeliveryCost(0);
 
         return $this;
     }
@@ -647,7 +655,7 @@ class BaseOrder implements BaseOrderInterface
      */
     public function setValidatedAt(\DateTime $validationDate)
     {
-        if($this->validatedAt != null) return $this;
+        if(!$this->validatedAt) return $this;
 
         $this->validatedAt = $validationDate;
 
@@ -779,7 +787,7 @@ class BaseOrder implements BaseOrderInterface
      */
     public function getPaymentInfos()
     {
-        return $this->payeentInfos;
+        return $this->paymentInfos;
     }
 
     /**
@@ -1068,6 +1076,7 @@ class BaseOrder implements BaseOrderInterface
         $this->orderStat = new ArrayCollection();
         $this->reference = time().'-'.strtoupper(substr(md5(rand().rand()), 0, 4));
         $this->discountElements = new ArrayCollection();
+        $this->beginAt = new \DateTime();
     }
 
     /**
@@ -1825,5 +1834,46 @@ class BaseOrder implements BaseOrderInterface
         $this->type = $type;
         return $this;
     }
+
+    public function getOrderRentElements()
+    {
+        $elements = array();
+        foreach($this->getOrderElements() as $element)
+        {
+            if($element->getProduct() instanceof RentableProduct)
+                $elements[] = $element;
+        }
+        return $elements;
+    }
+
+    public function addOrderRentElement(OrderElement $orderElement)
+    {
+        return $this->addOrderElement($orderElement);
+    }
+
+    public function removeOrderRentElement(OrderElement $orderElement)
+    {
+        return $this->removeOrderElement($orderElement);
+    }
+
+    /**
+     * @return \Datetime
+     */
+    public function getBeginAt()
+    {
+        return $this->beginAt;
+    }
+
+    /**
+     * @param \Datetime $beginAt
+     * @return BaseOrder
+     */
+    public function setBeginAt($beginAt)
+    {
+        $this->beginAt = $beginAt;
+        return $this;
+    }
+
+
 
 }
