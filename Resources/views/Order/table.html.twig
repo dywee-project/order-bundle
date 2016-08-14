@@ -22,8 +22,8 @@
                 {% for element in states %}
                     <li><a href="{{ path('order_table', {state: element}) }}">{{ element|trans }}</a></li>
                 {% endfor %}
-                <li class="divider"></li>
-                {#<li><a href="{{ path('order_table', {state: 1}) }}">Tout lister</a></li>#}
+                {#<li class="divider"></li>
+                <li><a href="{{ path('order_table', {state: 1}) }}">Tout lister</a></li>#}
                 {#<li><a href="{{ path('order_table_current_month') }}">Mois courant</a></li>#}
             </ul>
         </div>
@@ -70,8 +70,8 @@
                                 <th{% if pagination.isSorted('o.creationDate') %} class="sorted"{% endif %}>
                                     {{ knp_pagination_sortable(pagination, 'Commande', 'o.creationDate') }}
                                 </th>
-                                <th{% if pagination.isSorted('o.returningAt') %} class="sorted"{% endif %}>
-                                    {{ knp_pagination_sortable(pagination, 'Retour le', 'o.returningAt') }}
+                                <th{% if pagination.isSorted('o.endAt') %} class="sorted"{% endif %}>
+                                    {{ knp_pagination_sortable(pagination, 'Retour le', 'o.endAt') }}
                                 </th>
                                 <th>Actions</th>
                             </tr>
@@ -108,7 +108,7 @@
                                     <td>{% if order.shippingMessage != '' %} <i class="fa fa-envelope"></i> {% endif %}</td>
                                     <td>{{ order.totalPrice|number_format(2) }}€</td>
                                     <td>{{ order.createdAt|date('d/m/Y') }}</td>
-                                    <td>{{ order.returningAt|date('d/m/Y') }}</td>
+                                    <td>{{ order.endAt|date('d/m/Y') }}</td>
                                     <td>
                                         <div class="btn-group btn-group-xs">
                                             <a href="{{ path('order_view', {id: order.id}) }}" class="btn btn-default"><i class="fa fa-eye"></i> </a>

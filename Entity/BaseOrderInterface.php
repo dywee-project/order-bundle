@@ -53,8 +53,6 @@ interface BaseOrderInterface extends PersistableInterface
      * @param float $deliveryCost
      * @return BaseOrderInterface
      */
-    public function setDeliveryCost($deliveryCost);
-
     public function setShippingCost($deliveryCost);
 
     /**
@@ -62,8 +60,6 @@ interface BaseOrderInterface extends PersistableInterface
      *
      * @return float
      */
-    public function getDeliveryCost();
-
     public function getShippingCost();
 
     /**
@@ -209,96 +205,6 @@ interface BaseOrderInterface extends PersistableInterface
     public function getValidatedAt();
 
     public function getUpdatedAt();
-
-    /**
-     * Set deliver
-     *
-     * @param string $deliver
-     * @return BaseOrderInterface
-     */
-    public function setDeliver($deliver);
-
-    /**
-     * Get deliver
-     *
-     * @return string
-     */
-    public function getDeliver();
-
-    /**
-     * Set deliveryMethod
-     *
-     * @param string $deliveryMethod
-     * @return BaseOrderInterface
-     */
-    public function setDeliveryMethod($deliveryMethod);
-
-    /**
-     * Get deliveryMethod
-     *
-     * @return string
-     */
-    public function getDeliveryMethod();
-
-    /**
-     * Set deliveryInfo
-     *
-     * @param string $deliveryInfo
-     * @return BaseOrderInterface
-     */
-    public function setDeliveryInfo($deliveryInfo);
-
-    /**
-     * Get deliveryInfo
-     *
-     * @return string
-     */
-    public function getDeliveryInfo();
-
-    /**
-     * Set paymentMethod
-     *
-     * @param string $paymentMethod
-     * @return BaseOrderInterface
-     */
-    public function setPaymentMethod($paymentMethod);
-
-    /**
-     * Get paymentMethod
-     *
-     * @return string
-     */
-    public function getPayeentMethod();
-
-    /**
-     * Set paymentInfos
-     *
-     * @param string $paymentInfos
-     * @return BaseOrderInterface
-     */
-    public function setPaymentInfos($paymentInfos);
-
-    /**
-     * Get paymentInfos
-     *
-     * @return string
-     */
-    public function getPaymentInfos();
-
-    /**
-     * Set paymentState
-     *
-     * @param string $paymentState
-     * @return BaseOrderInterface
-     */
-    public function setPaymentState($paymentState);
-
-    /**
-     * Get paymentState
-     *
-     * @return string
-     */
-    public function getPaymentState();
 
     /**
      * Set reference
@@ -487,37 +393,17 @@ interface BaseOrderInterface extends PersistableInterface
      */
     public function getOrderElements();
 
-    /**
-     * Add shipments
-     *
-     * @param Shipment $shipment
-     * @return BaseOrderInterface
-     */
-    public function addShipment(Shipment $shipment);
-
-    /**
-     * Remove shipments
-     *
-     * @param Shipment $shipments
-     */
-    public function removeShipment(Shipment $shipments);
-
-    /**
-     * Get shipments
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getShipments();
 
     public function countProducts($type = null);
 
     public function forcePriceCalculation();
 
     /**
-     * @param boolean $force
+     * @param BaseProduct $product
+     * @param int $quantity
+     * @param int $locationCoeff
+     * @return BaseProduct
      */
-    public function shipmentsCalculation($force = false);
-
     public function addProduct(BaseProduct $product, $quantity, $locationCoeff = 1);
 
     /**
@@ -546,37 +432,9 @@ interface BaseOrderInterface extends PersistableInterface
      */
     public function weightCalculation();
 
-    /**
-     * Set shippingMethod
-     *
-     * @param ShipmentMethod $shippingMethod
-     * @return BaseOrderInterface
-     */
-    public function setShippingMethod(ShipmentMethod $shippingMethod = null);
-
-    /**
-     * Get shippingMethod
-     *
-     * @return ShipmentMethod
-     */
-    public function getShippingMethod();
 
     public function removeProduct($product);
 
-    /**
-     * Add deliver
-     *
-     * @param Deliver $deliver
-     * @return BaseOrderInterface
-     */
-    public function addDeliver(Deliver $deliver);
-
-    /**
-     * Remove deliver
-     *
-     * @param Deliver $deliver
-     */
-    public function removeDeliver(Deliver $deliver);
 
     public function setFromOffer($offer);
 
@@ -609,8 +467,6 @@ interface BaseOrderInterface extends PersistableInterface
      * @return \DateTime
      */
     public function getEndedAt();
-    public function getReturningAt();
-    public function getReturnedAt();
 
     /**
      * @param integer $duration
@@ -636,12 +492,6 @@ interface BaseOrderInterface extends PersistableInterface
      */
     public function getIsPriceTTC();
 
-    /**
-     * @return BaseOrderInterface
-     */
-    public function countSendedShipments();
-
-    public function checkIfIsDone();
 
     /**
      * Set mailStep
@@ -663,8 +513,6 @@ interface BaseOrderInterface extends PersistableInterface
 
     public function refundStock();
 
-    public function getOldState();
-
     public function isVirtual($forceRecalcul = false);
 
     public function isOnlyVirtual($forceRecalcul = false);
@@ -685,19 +533,6 @@ interface BaseOrderInterface extends PersistableInterface
      */
     public function setPrice($price);
 
-
-    /**
-     * @param \Datetime $returningAt
-     * @return BaseOrder
-     */
-    public function setReturningAt($returningAt);
-
-    /**
-     * @param \Datetime $returnedAt
-     * @return BaseOrder
-     */
-
-    public function setReturnedAt($returnedAt);
 
     /**
      * @return string

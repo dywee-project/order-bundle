@@ -44,16 +44,16 @@ class OrderElement
     private $oldQuantity;
 
     /**
-     * @var float
+     * @var decimal
      *
-     * @ORM\Column(name="unitPrice", type="float")
+     * @ORM\Column(name="unitPrice", type="decimal", precision=10, scale=2)
      */
     private $unitPrice = 0;
 
     /**
-     * @var float
+     * @var decimal
      *
-     * @ORM\Column(name="TotalPrice", type="float")
+     * @ORM\Column(name="TotalPrice", type="decimal", precision=10, scale=2)
      */
     private $totalPrice = 0;
 
@@ -100,11 +100,6 @@ class OrderElement
     private $endAt;
 
 
-    public function __construct()
-    {
-
-    }
-
     /**
      * Get id
      *
@@ -141,7 +136,7 @@ class OrderElement
     /**
      * Set unitPrice
      *
-     * @param float $unitPrice
+     * @param decimal $unitPrice
      * @return OrderElement
      */
     public function setUnitPrice($unitPrice)
@@ -154,7 +149,7 @@ class OrderElement
     /**
      * Get unitPrice
      *
-     * @return float 
+     * @return decimal
      */
     public function getUnitPrice()
     {
@@ -226,7 +221,8 @@ class OrderElement
 
     public function calculateTotalPrice()
     {
-        $this->setTotalPrice($this->getUnitPrice()*$this->getQuantity()*$this->getLocationCoeff());
+        if($this->getUnitPrice() > 0 && $this->getQuantity() > 0)
+            $this->setTotalPrice($this->getUnitPrice() * $this->getQuantity() * $this->getLocationCoeff());
         return $this;
     }
 

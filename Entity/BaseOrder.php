@@ -6,15 +6,15 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Dywee\AddressBundle\Entity\Address;
 use Dywee\AddressBundle\Entity\AddressInterface;
+use Dywee\CoreBundle\Traits\TimeDelimitableEntity;
 use Dywee\ProductBundle\Entity\BaseProduct;
 use Dywee\ProductBundle\Entity\ProductDownloadable;
 use Dywee\ProductBundle\Entity\RentableProduct;
 use Dywee\ProductBundle\Entity\RentableProductItem;
-use Dywee\ShipmentBundle\Entity\Deliver;
 use Dywee\ShipmentBundle\Entity\Shipment;
 use Dywee\ShipmentBundle\Entity\ShipmentElement;
-use Dywee\ShipmentBundle\Entity\ShipmentMethod;
 use Dywee\UserBundle\Entity\User;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
  * BaseOrder
@@ -47,6 +47,9 @@ class BaseOrder implements BaseOrderInterface
     const TYPE_ONLY_BUY = 'order.type.buy';
     const TYPE_ONLY_RENT = 'order.type.rent';
     const TYPE_BUY_AND_RENT = 'order.type.both';
+
+    use TimestampableEntity;
+    use TimeDelimitableEntity;
 
 
     /**
@@ -138,20 +141,6 @@ class BaseOrder implements BaseOrderInterface
     /**
      * @var \DateTime
      *
-     * @ORM\Column(type="datetime")
-     */
-    private $createdAt;
-    
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $updatedAt;
-
-    /**
-     * @var \DateTime
-     *
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $validatedAt;
@@ -162,24 +151,7 @@ class BaseOrder implements BaseOrderInterface
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $endedAt;
-    
-    /**
-     * @var \Datetime
-     * @ORM\Column(type="date", nullable=true)
-     */
-    private $beginAt;
-    
-    /**
-     * @var \Datetime
-     * @ORM\Column(type="date", nullable=true)
-     */
-    private $returningAt;
-    
-    /**
-     * @var \Datetime
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $returnedAt;
+
 
     /*
     /**
@@ -191,40 +163,6 @@ class BaseOrder implements BaseOrderInterface
     private $deliver;
     */
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="deliveryMethod", type="string", length=255, nullable=true)
-     */
-    private $deliveryMethod;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="deliveryInfo", type="string", length=255, nullable=true)
-     */
-    private $deliveryInfo;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="smallint", nullable=true)
-     */
-    private $paymentMethod;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $paymentInfos;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=255)
-     */
-    private $paymentState = self::PAYMENT_WAITING_VALIDATION;
 
     /**
      * @var string
@@ -343,8 +281,6 @@ class BaseOrder implements BaseOrderInterface
 
     private $mustRecaculShipments = false;
 
-    private $oldState = null;
-
     private $previousState = null;
 
     /**
@@ -405,6 +341,7 @@ class BaseOrder implements BaseOrderInterface
 
     /**
      * Set deliveryCost
+     * @deprecated
      *
      * @param float $deliveryCost
      * @return BaseOrderInterface
@@ -425,6 +362,7 @@ class BaseOrder implements BaseOrderInterface
 
     /**
      * Get deliveryCost
+     * @deprecated
      *
      * @return float
      */
@@ -601,51 +539,6 @@ class BaseOrder implements BaseOrderInterface
         return $this->description;
     }
 
-    /**
-     * Set createdAt
-     *
-     * @param \DateTime $creationDate
-     * @return BaseOrderInterface
-     */
-    public function setCreatedAt(\DateTime $creationDate)
-    {
-        $this->createdAt = $creationDate;
-
-        return $this;
-    }
-
-    /**
-     * Get createdAt
-     *
-     * @return \DateTime
-     */
-    public function getCreatedAt()
-    {
-        return $this->createdAt;
-    }
-
-    /**
-     * Set updatedAt
-     *
-     * @param \DateTime $updateDate
-     * @return BaseOrderInterface
-     */
-    public function setUpdatedAt(\DateTime $updateDate)
-    {
-        $this->updatedAt = $updateDate;
-
-        return $this;
-    }
-
-    /**
-     * Get updatedAt
-     *
-     * @return \DateTime
-     */
-    public function getUpdatedAt()
-    {
-        return $this->updatedAt;
-    }
 
     /**
      * Set validatedAt
@@ -655,8 +548,6 @@ class BaseOrder implements BaseOrderInterface
      */
     public function setValidatedAt(\DateTime $validationDate)
     {
-        if(!$this->validatedAt) return $this;
-
         $this->validatedAt = $validationDate;
 
         $this->shipmentsCalculation();
@@ -674,144 +565,6 @@ class BaseOrder implements BaseOrderInterface
         return $this->validatedAt;
     }
 
-    /**
-     * Set deliver
-     *
-     * @param string $deliver
-     * @return BaseOrderInterface
-     */
-    public function setDeliver($deliver)
-    {
-        $this->deliver = $deliver;
-
-        return $this;
-    }
-
-    /**
-     * Get deliver
-     *
-     * @return string
-     */
-    public function getDeliver()
-    {
-        return $this->deliver;
-    }
-
-    /**
-     * Set deliveryMethod
-     *
-     * @param string $deliveryMethod
-     * @return BaseOrderInterface
-     */
-    public function setDeliveryMethod($deliveryMethod)
-    {
-        $this->deliveryMethod = $deliveryMethod;
-
-        return $this;
-    }
-
-    /**
-     * Get deliveryMethod
-     *
-     * @return string
-     */
-    public function getDeliveryMethod()
-    {
-        return $this->deliveryMethod;
-    }
-
-    /**
-     * Set deliveryInfo
-     *
-     * @param string $deliveryInfo
-     * @return BaseOrderInterface
-     */
-    public function setDeliveryInfo($deliveryInfo)
-    {
-        $this->deliveryInfo = $deliveryInfo;
-
-        return $this;
-    }
-
-    /**
-     * Get deliveryInfo
-     *
-     * @return string
-     */
-    public function getDeliveryInfo()
-    {
-        return $this->deliveryInfo;
-    }
-
-
-    /**
-     * Set paymentMethod
-     *
-     * @param string $paymentMethod
-     * @return BaseOrderInterface
-     */
-    public function setPaymentMethod($paymentMethod)
-    {
-        $this->paymentMethod = $paymentMethod;
-
-        return $this;
-    }
-
-    /**
-     * Get paymentMethod
-     *
-     * @return string
-     */
-    public function getPayeentMethod()
-    {
-        return $this->paymentMethod;
-    }
-
-    /**
-     * Set paymentInfos
-     *
-     * @param string $paymentInfos
-     * @return BaseOrderInterface
-     */
-    public function setPaymentInfos($paymentInfos)
-    {
-        $this->paymentInfos = $paymentInfos;
-
-        return $this;
-    }
-
-    /**
-     * Get paymentInfos
-     *
-     * @return string
-     */
-    public function getPaymentInfos()
-    {
-        return $this->paymentInfos;
-    }
-
-    /**
-     * Set paymentState
-     *
-     * @param string $paymentState
-     * @return BaseOrderInterface
-     */
-    public function setPaymentState($paymentState)
-    {
-        $this->paymentState = $paymentState;
-
-        return $this;
-    }
-
-    /**
-     * Get paymentState
-     *
-     * @return string
-     */
-    public function getPaymentState()
-    {
-        return $this->paymentState;
-    }
 
     /**
      * Set reference
@@ -944,13 +697,14 @@ class BaseOrder implements BaseOrderInterface
 
         $this->state = $state;
 
-        //Si la commande est marquée comme finalisée on marque comme étant finalisés tous les envois
-        if($state == self::STATE_FINALIZED)
+        /*Si la commande est marquée comme finalisée on marque comme étant finalisés tous les envois
+        if($state === self::STATE_FINALIZED)
         {
             foreach($this->getShipments() as $shipment)
                 $shipment->setState(9);
         }
         else $this->mustRecaculShipments = true;
+        */
 
         return $this;
     }
@@ -1070,10 +824,8 @@ class BaseOrder implements BaseOrderInterface
      */
     public function __construct()
     {
-        $this->createdAt = new \DateTime();
         $this->orderElements = new ArrayCollection();
-        $this->shipments = new ArrayCollection();
-        $this->orderStat = new ArrayCollection();
+        //$this->shipments = new ArrayCollection();
         $this->reference = time().'-'.strtoupper(substr(md5(rand().rand()), 0, 4));
         $this->discountElements = new ArrayCollection();
         $this->beginAt = new \DateTime();
@@ -1098,6 +850,8 @@ class BaseOrder implements BaseOrderInterface
         $this->orderElements->removeElement($orderElements);
         $orderElements->setOrder(null);
         $this->mustRecaculShipments = true;
+
+        return $this;
     }
 
     /**
@@ -1110,33 +864,6 @@ class BaseOrder implements BaseOrderInterface
         return $this->orderElements;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function addShipment(Shipment $shipment)
-    {
-        $this->shipments[] = $shipment;
-        $shipment->setOrder($this);
-
-        return $this;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function removeShipment(Shipment $shipments)
-    {
-        $this->shipments->removeElement($shipments);
-        $shipments->setOrder(null);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getShipments()
-    {
-        return $this->shipments;
-    }
 
     /**
      * @param null $type
@@ -1148,7 +875,7 @@ class BaseOrder implements BaseOrderInterface
 
         foreach($this->getOrderElements() as $orderElement)
         {
-            if($type == null || $orderElement->getProduct()->getValidatedAt() == $type)
+            if(!$type || $orderElement->getProduct() instanceof $type)
                 $nbre += $orderElement->getQuantity();
         }
 
@@ -1163,7 +890,7 @@ class BaseOrder implements BaseOrderInterface
         $isTTC = true;
         // CALCUL DU PRIX
         $price = 0;
-        if($this->getShippingAddress() != null && $this->getShippingAddress()->getCity()->getCountry() != null)
+        if($this->getShippingAddress() && $this->getShippingAddress()->getCity()->getCountry())
             $this->setVatRate($this->getShippingAddress()->getCity()->getCountry()->getVatRate());
         $this->setPriceVatIncl(0);
         foreach($this->getOrderElements() as $orderElement)
@@ -1183,13 +910,13 @@ class BaseOrder implements BaseOrderInterface
         }
 
 
-        if($this->getDiscountRate() > 0 || $this->getDiscountValue() > 0)
+        /*if($this->getDiscountRate() > 0 || $this->getDiscountValue() > 0)
         {
             if($this->getDiscountValue() == 0)
                 $this->setDiscountValue($this->getDiscountRate()*$this->getPriceVatExcl()/100);
-            else if($this->getDiscountRate() == 0)
+            elseif($this->getDiscountRate() == 0)
                 $this->setDiscountRate(100*$this->getDiscountValue()/$this->getPriceVatExcl());
-        }
+        }*/
 
         $this->setTotalPrice($this->getPriceVatIncl() + $this->getDeliveryCost() - $this->getDiscountValue());
 
@@ -1203,8 +930,9 @@ class BaseOrder implements BaseOrderInterface
     public function checkBeforeDB()
     {
         $this->checkType();
-        $this->weightCalculation();
+        //$this->weightCalculation();
         $this->shipmentsCalculation();
+        $this->forcePriceCalculation();
     }
 
     public function checkType()
@@ -1368,8 +1096,6 @@ class BaseOrder implements BaseOrderInterface
 
         $this->forcePriceCalculation();
 
-        $this->mustRecaculShipments = true;
-
         return $this;
     }
 
@@ -1398,17 +1124,13 @@ class BaseOrder implements BaseOrderInterface
     /**
      * @inheritdoc
      */
-    public function getWeight($byType = false)
+    public function getWeight($type = null)
     {
-        if(is_numeric($byType))
-        {
-            $weight = 0;
-            foreach($this->getOrderElements() as $orderElement)
-                if($orderElement->getProduct()->getValidatedAt() == $byType)
-                    $weight += $orderElement->getProduct()->getWeight() * $orderElement->getQuantity();
-            return $weight;
-        }
-        else return $this->weight;
+        $weight = 0;
+        foreach($this->getOrderElements() as $orderElement)
+            if(!$type || $orderElement->getProduct() instanceof $type)
+                $weight += $orderElement->getProduct()->getWeight() * $orderElement->getQuantity();
+        return $weight;
     }
 
     /**
@@ -1424,23 +1146,6 @@ class BaseOrder implements BaseOrderInterface
         return $this;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function setShippingMethod(ShipmentMethod $shippingMethod = null)
-    {
-        $this->shippingMethod = $shippingMethod;
-
-        return $this;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getShippingMethod()
-    {
-        return $this->shippingMethod;
-    }
 
     public function removeProduct($product)
     {
@@ -1448,7 +1153,7 @@ class BaseOrder implements BaseOrderInterface
 
         foreach($this->getOrderElements() as $orderElement)
         {
-            if($orderElement->getProduct()->getId() == $id)
+            if($orderElement->getProduct()->getId() === $id)
             {
                 $this->removeOrderElement($orderElement);
                 $this->mustRecaculShipments = true;
@@ -1459,23 +1164,6 @@ class BaseOrder implements BaseOrderInterface
         return $this;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function addDeliver(Deliver $deliver)
-    {
-        $this->deliver[] = $deliver;
-
-        return $this;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function removeDeliver(Deliver $deliver)
-    {
-        $this->deliver->removeElement($deliver);
-    }
 
     public function setFromOffer($offer)
     {
@@ -1483,8 +1171,7 @@ class BaseOrder implements BaseOrderInterface
         $this->setBillingAddress($offer->getAddress());
 
         $this->setPriceVatExcl($offer->getPriceVatExcl());
-        $this->setDeliveryCost($offer->getDeliveryCost());
-        $this->setDeliver($offer->getDeliver());
+        $this->setShippingCost($offer->getDeliveryCost());
         $this->setVatPrice($offer->getVatPrice());
         $this->setVatRate($offer->getVatRate());
         $this->setPriceVatIncl($offer->getPriceVatIncl());
@@ -1605,32 +1292,6 @@ class BaseOrder implements BaseOrderInterface
     /**
      * @inheritdoc
      */
-    public function countSendedShipments()
-    {
-        $counter = 0;
-        foreach($this->getShipments() as $shipment)
-        {
-            if($shipment->getState() == 9)
-                $counter++;
-        }
-        return $counter;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function checkIfIsDone()
-    {
-        if(count($this->getShipments()) == $this->countSendedShipments()) {
-            $this->setState(9);
-            return 0;
-        }
-        else return count($this->getShipments())-$this->countSendedShipments();
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function setMailStep($mailStep)
     {
         $this->mailStep = $mailStep;
@@ -1667,13 +1328,6 @@ class BaseOrder implements BaseOrderInterface
         return $this;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function getOldState()
-    {
-        return $this->oldState;
-    }
 
     private $isVirtual = null;
     private $isOnlyVirtual = null;
@@ -1701,11 +1355,7 @@ class BaseOrder implements BaseOrderInterface
     private function calculVirtualisation()
     {
         $this->isVirtual = false;
-
-        if($this->getOrderElements() < 1)
-            $this->isOnlyVirtual = false;
-        else $this->isOnlyVirtual = true;
-
+        $this->isOnlyVirtual = $this->getOrderElements() > 1;
 
 
         foreach ($this->getOrderElements() as $element)
@@ -1763,59 +1413,6 @@ class BaseOrder implements BaseOrderInterface
         return $this->discountElements->removeElement($element);
     }
 
-    /**
-     * @return ArrayCollection
-     */
-    public function getOrderStat()
-    {
-        return $this->orderStat;
-    }
-
-    /**
-     * @param ArrayCollection $orderStat
-     * @return BaseOrder
-     */
-    public function setOrderStat($orderStat)
-    {
-        $this->orderStat = $orderStat;
-        return $this;
-    }
-
-    /**
-     * @return \Datetime
-     */
-    public function getReturningAt()
-    {
-        return $this->returningAt;
-    }
-
-    /**
-     * @param \Datetime $returningAt
-     * @return BaseOrder
-     */
-    public function setReturningAt($returningAt)
-    {
-        $this->returningAt = $returningAt;
-        return $this;
-    }
-
-    /**
-     * @return \Datetime
-     */
-    public function getReturnedAt()
-    {
-        return $this->returnedAt;
-    }
-
-    /**
-     * @param \Datetime $returnedAt
-     * @return BaseOrder
-     */
-    public function setReturnedAt($returnedAt)
-    {
-        $this->returnedAt = $returnedAt;
-        return $this;
-    }
 
     /**
      * @return string
@@ -1855,25 +1452,5 @@ class BaseOrder implements BaseOrderInterface
     {
         return $this->removeOrderElement($orderElement);
     }
-
-    /**
-     * @return \Datetime
-     */
-    public function getBeginAt()
-    {
-        return $this->beginAt;
-    }
-
-    /**
-     * @param \Datetime $beginAt
-     * @return BaseOrder
-     */
-    public function setBeginAt($beginAt)
-    {
-        $this->beginAt = $beginAt;
-        return $this;
-    }
-
-
 
 }

@@ -28,7 +28,7 @@
     </div>
     {% if order.description != '' %}
         <div class="panel panel-default">
-            <div class="panel panel-heading">
+            <div class="panel-heading">
                 <h3 class="panel-title">Commentaire/description</h3>
             </div>
             <div class="panel-body">
@@ -116,7 +116,7 @@
                     <tr>
                         <th>Date de la commande</th>
                         <th>Date du dernier traitement</th>
-                        {% if order.returningAt is not null %}
+                        {% if order.endAt is not null %}
                             <th>Date de retour</th>
                         {% endif %}
                         <th>Statut</th>
@@ -126,8 +126,8 @@
                     <tr>
                         <td>{{ order.createdAt|date('d/m/Y à H\\hi') }}</td>
                         <td>{{ order.validatedAt|date('d/m/Y à H\\hi') }}</td>
-                        {% if order.returningAt is not null %}
-                            <td>{{ order.returningAt|date('d/m/Y') }}</td>
+                        {% if order.endAt is not null %}
+                            <td>{{ order.endAt|date('d/m/Y') }}</td>
                         {% endif %}
                         <td>{{ order.state|trans }}</td>
                     </tr>
@@ -146,6 +146,9 @@
                         <th>Détail paiement</th>
                     </tr>
                     <tr>
+                        <td colspan="4">Bientot disponible</td>
+                    </tr>
+                    {#<tr>
                         {#<td>
                             {% if order.paymentState == 0 %}
                                 <span class="label label-info">En attente de paiement</span>
@@ -171,10 +174,10 @@
                             {% else %}
                                 <span class="label label-warning">Non renseigné</span>
                             {% endif %}#}
-                        </td>
+                        {#</td>
                         <td>{{ order.deposit|number_format(2) }}€</td>
-                        <td><a href="#{# path('dywee_order_payment_overview', {id: order.id}) #}">Détail paiement</a></td>
-                    </tr>
+                        <td><a href="#{# path('dywee_order_payment_overview', {id: order.id})">Détail paiement</a></td>
+                    </tr>#}
                 </table>
             </div>
         </div>

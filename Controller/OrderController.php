@@ -65,6 +65,7 @@ class OrderController extends Controller
         if($form->handleRequest($request)->isValid())
         {
             $em = $this->getDoctrine()->getManager();
+            $order->forcePriceCalculation();
             $em->persist($order);
             $em->flush();
 
