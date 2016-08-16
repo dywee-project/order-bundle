@@ -200,12 +200,21 @@
             <div class="panel panel-default">
                 <div class="panel-heading"><h3 class="panel-title">Livraison</h3></div>
                 <div class="panel-body">
-                    {% if order.shippingAddress is not null %}
-                        {% set address = order.billingAddress %}
-                    {% include 'DyweeAddressBundle:Address:view_wrapped.html.twig' %}
-                    {% else %}
-                        Non renseigné
-                    {% endif %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p class="h4">Adresse de livraison</p>
+                            {% if order.shippingAddress is not null %}
+                                {% set address = order.billingAddress %}
+                                {% include 'DyweeAddressBundle:Address:view_wrapped.html.twig' %}
+                            {% else %}
+                                Non renseigné
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <p class="h4">Moyen de livraison</p>
+                            <p>{{ order.shippingMethod.name }} ({{ order.shippingMethod.price|number_format(2) }}€)</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

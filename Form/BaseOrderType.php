@@ -62,6 +62,10 @@ class BaseOrderType extends AbstractType
             ))
             ->add('beginAt',            DateType::class, array('required' => false, 'widget' => 'single_text'))
             ->add('endAt',              DateType::class, array('required' => false, 'widget' => 'single_text'))
+            ->add('shippingMethod',     EntityType::class, array(
+                'class' => 'DyweeShipmentBundle:ShipmentMethod',
+                'choice_label' => 'name'
+            ))
             //->add('deliver',            EntityType::class,       array('class' => 'DyweeShipmentBundle:Deliver', 'property' => 'name'))
             //->add('deliveryInfo',       null,         array('required' => false))
             //->add('deliveryMethod',     ChoiceType::class, array('choices' => array('24R' => 'En point relais', 'HOM' => 'A domicile')))

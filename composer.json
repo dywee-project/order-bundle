@@ -18,6 +18,7 @@
     "dywee/product-bundle": "dev-master",
     "dywee/user-bundle": "dev-master",
     "dywee/address-bundle": "dev-master",
+    "dywee/shipment-bundle": "dev-master",
     "genemu/form-bundle": "^3.0@dev"
   },
   "autoload": {

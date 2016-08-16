@@ -243,19 +243,16 @@ class BaseOrder implements BaseOrderInterface
      */
     private $discountElements;
 
-    /*
     /**
      * @ORM\OneToMany(targetEntity="Dywee\ShipmentBundle\Entity\Shipment", mappedBy="order", cascade={"persist", "remove"})
-     *
+     */
     private $shipments;
-    */
 
-    /*
     /**
      * @ORM\ManyToOne(targetEntity="Dywee\ShipmentBundle\Entity\ShipmentMethod", cascade={"persist"})
-     *
+     */
     private $shippingMethod;
-    */
+
 
     /**
      * @ORM\Column(name="weight", type="float")
@@ -825,7 +822,7 @@ class BaseOrder implements BaseOrderInterface
     public function __construct()
     {
         $this->orderElements = new ArrayCollection();
-        //$this->shipments = new ArrayCollection();
+        $this->shipments = new ArrayCollection();
         $this->reference = time().'-'.strtoupper(substr(md5(rand().rand()), 0, 4));
         $this->discountElements = new ArrayCollection();
         $this->beginAt = new \DateTime();
@@ -1452,5 +1449,48 @@ class BaseOrder implements BaseOrderInterface
     {
         return $this->removeOrderElement($orderElement);
     }
+
+    /**
+     * @return mixed
+     */
+    public function getShipments()
+    {
+        return $this->shipments;
+    }
+
+    /**
+     * @param Shipment $shipment
+     * @return BaseOrder
+     */
+    public function addShipment(Shipment $shipment)
+    {
+        $this->shipments[] = $shipment;
+        return $this;
+    }
+
+    public function removeShipment(Shipment $shipment)
+    {
+        $this->shipments->removeElement($shipment);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getShippingMethod()
+    {
+        return $this->shippingMethod;
+    }
+
+    /**
+     * @param mixed $shippingMethod
+     * @return BaseOrder
+     */
+    public function setShippingMethod($shippingMethod)
+    {
+        $this->shippingMethod = $shippingMethod;
+        return $this;
+    }
+
+
 
 }
