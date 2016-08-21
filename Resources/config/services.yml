@@ -25,3 +25,11 @@ services:
         class: Dywee\OrderBundle\Service\OrderAdminSidebarHandler
         arguments: [ '@router' ]
 
+    ####### SHIPMENT ######
+    dywee_order.shipment_calculator:
+        class: Dywee\OrderBundle\Service\ShipmentCalculator
+        arguments: [  ]
+
+    dywee_order.shipment_method:
+        class: Dywee\OrderBundle\Service\ShipmentMethod
+        arguments: [ '@doctrine.orm.entity_manager' ]

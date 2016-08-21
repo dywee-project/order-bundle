@@ -33,6 +33,7 @@ class BaseOrderType extends AbstractType
             BaseOrder::STATE_FINALIZED => BaseOrder::STATE_FINALIZED,
             BaseOrder::STATE_RETURNED => BaseOrder::STATE_RETURNED,
         );
+
         $builder
             //->add('discountRate')
             //->add('discountValue')
@@ -72,7 +73,6 @@ class BaseOrderType extends AbstractType
             //->add('deliveryCost')
             //->add('paymentMethod',     ChoiceType::class, array('choices' => array(1 => 'Liquidité', 2 => 'Virement', 3 => 'Paypal'), 'required' => false))
             //->add('paymentState',      ChoiceType::class, array('choices' => array(0 => 'En attente de paiement', 1 => 'Acompte donné', 2 => 'Payé', 3 => 'Remboursé', 4 => 'Annulé par l\'utilisateur')))
-            ->add('save',               SubmitType::class)
         ;
     }
     

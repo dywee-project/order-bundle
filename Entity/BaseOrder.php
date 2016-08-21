@@ -966,92 +966,7 @@ class BaseOrder implements BaseOrderInterface
         //Todo revoir la fonction
         return $this;
 
-        if($this->mustRecaculShipments || $force)
-        {
-            if(count($this->getShipments()) > 0)
-                foreach($this->getShipments() as $shipment)
-                    $this->removeShipment($shipment);
 
-            $productShipment = new Shipment();
-            $departureDate = $this->getValidatedAt() == null ? new \DateTime() : $this->getValidatedAt();
-            $departureDate->modify('+1day');
-            $productShipment->setDepartureDate($departureDate);
-            $productShipment->setState(0);
-
-            foreach($this->getOrderElements() as $orderElement)
-            {
-                //TODO: checker la condition
-                //if($orderElement->getProduct()->getValidatedAt() > 1)
-                //{
-                    for($j = 0; $j < $orderElement->getQuantity(); $j++)
-                    {
-                        $shipment = new Shipment();
-                        $departureDate = $this->getValidatedAt() == null ? new \DateTime() : $this->getValidatedAt();
-                        $departureDate->modify('+1day');
-                        $shipment->setDepartureDate($departureDate);
-                        $shipment->setState(0);
-
-                        $shipmentElement = new ShipmentElement();
-                        $shipmentElement->setQuantity($orderElement->getQuantity());
-                        $shipmentElement->setProduct($orderElement->getProduct());
-                        $shipmentElement->setWeight(($orderElement->getProduct()->getWeight()*$orderElement->getQuantity()));
-                        $shipment->addShipmentElement($shipmentElement);
-
-                        $this->addShipment($shipment);
-
-                        //if($orderElement->getProduct()->getValidatedAt() == 3)
-                        //{
-                            $shipment->setSendingIndex(1);
-
-                            $departureDate = $this->getValidatedAt() == null ? new \DateTime() : $this->getValidatedAt();
-                            $departureDay = (int) $departureDate->format('d');
-                            $departureMonth = (int) $departureDate->format('m');
-                            $departureYear = (int) $departureDate->format('Y');
-
-                            if($departureDay > 20)
-                                $departureMonth++;
-
-                            $departureDay = 10;
-
-                            for($i=1; $i< $orderElement->getProduct()->getRecurrence(); $i++)
-                            {
-                                $departureMonth++;
-                                if($departureMonth > 12){
-                                    $departureMonth -= 12;
-                                    $departureYear++;
-                                }
-
-                                $shipment = new Shipment();
-
-                                $departure = new \DateTime($departureYear.'/'.$departureMonth.'/'.$departureDay);
-                                $shipment->setDepartureDate($departure);
-                                $shipment->setState(0);
-                                $shipment->setSendingIndex($i+1);
-
-                                $shipmentElement = new ShipmentElement();
-                                $shipmentElement->setQuantity($orderElement->getQuantity());
-                                $shipmentElement->setProduct($orderElement->getProduct());
-                                $shipmentElement->setWeight(($orderElement->getProduct()->getWeight()*$orderElement->getQuantity()));
-                                $shipment->addShipmentElement($shipmentElement);
-
-                                $this->addShipment($shipment);
-                            }
-                        //}
-                    //}
-                }
-                /*elseif($orderElement->getProduct()->getValidatedAt() == 1)
-                {
-                    $shipmentElement = new ShipmentElement();
-                    $shipmentElement->setQuantity($orderElement->getQuantity());
-                    $shipmentElement->setProduct($orderElement->getProduct());
-                    $shipmentElement->setWeight(($orderElement->getProduct()->getWeight()*$orderElement->getQuantity()));
-                    $productShipment->addShipmentElement($shipmentElement);
-                }*/
-            }
-
-            if(count($productShipment->getShipmentElements())>0)
-                $this->addShipment($productShipment);
-        }
         //$shipment->calculWeight();
         $this->forcePriceCalculation();
         $this->mustRecaculShipments = false;
@@ -1473,6 +1388,12 @@ class BaseOrder implements BaseOrderInterface
         $this->shipments->removeElement($shipment);
     }
 
+    public function setShipments($shipments)
+    {
+        $this->shipments = $shipments;
+        return $this;
+    }
+
     /**
      * @return mixed
      */
@@ -1488,6 +1409,8 @@ class BaseOrder implements BaseOrderInterface
     public function setShippingMethod($shippingMethod)
     {
         $this->shippingMethod = $shippingMethod;
+        $this->setShippingCost($shippingMethod->getPrice());
+        $this->forcePriceCalculation();
         return $this;
     }
 

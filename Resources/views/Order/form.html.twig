@@ -5,11 +5,15 @@
 {{ form_start(form) }}
 {{ form_errors(form) }}
 
-{{ form_widget(form.save, {'attr': {'class': 'btn-success pull-right'}}) }}
+<button type="submit" id="base_order_save" name="base_order[save]" class="btn-success pull-right btn"><i class="fa fa-save"></i> Sauvegarder</button>
 
 <ul id="descriptions" class="nav nav-tabs">
     <li class="active"><a href="#content" data-toggle="tab"><i class="fa fa-font"></i> Contenu</a></li>
-    <li><a href="#settings" data-toggle="tab"><i class="fa fa-cog"></i> Paramètres</a></li>
+    <li><a href="#rent" data-toggle="tab"><i class="fa fa-cog"></i> Location</a></li>
+    <li><a href="#discount" data-toggle="tab"><i class="fa fa-percent"></i> Réduction</a></li>
+    <li><a href="#shipping" data-toggle="tab"><i class="fa fa-truck"></i> Livraison</a></li>
+    <li><a href="#payment" data-toggle="tab"><i class="fa fa-truck"></i> Paiement</a></li>
+    <li><a href="#state" data-toggle="tab"><i class="fa fa-cog"></i> Statut</a></li>
 </ul>
 
 <div class="spacer"></div>
@@ -29,7 +33,7 @@
             </div>
             <div class="col-xs-12 col-md-6">
                 <div class="box box-default text-center with-border" style="min-height: 220px">
-                    <div class="box-header">
+                    <div class="box-header with-border">
                         <h2 class="box-title">Client</h2>
                     </div>
                     <div class="box-body">
@@ -52,25 +56,80 @@
         </div>
     </div>
 
-    <div class="tab-pane fade in" id="settings">
+    <div class="tab-pane fade in" id="rent">
         <div class="row">
             <div class="col-md-6">
                 <div class="box box-default">
                     <div class="box-header text-center with-border">
-                        <h2 class="box-title">Paramètres</h2>
+                        <h2 class="box-title">Location</h2>
                     </div>
                     <div class="box-body">
                         {{ form_row(form.beginAt) }}
 
                         {{ form_row(form.endAt) }}
+                    </div>
+                </div>
+            </div>
+        </div>
 
+    </div>
+
+    <div class="tab-pane fade in" id="discount">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="box box-default">
+                    <div class="box-header text-center with-border">
+                        <h2 class="box-title">Réduction</h2>
+                    </div>
+                    <div class="box-body">
+                        <p>En développement</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="tab-pane fade in" id="shipping">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="box box-default">
+                    <div class="box-header text-center with-border">
+                        <h2 class="box-title">Livraison</h2>
+                    </div>
+                    <div class="box-body">
                         {{ form_row(form.shippingMethod) }}
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                        {#
-                        {{ form_row(form.discountRate) }}
+    </div>
 
-                        {{ form_row(form.discountValue) }}
-                        #}
+    <div class="tab-pane fade in" id="payment">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="box box-default">
+                    <div class="box-header text-center with-border">
+                        <h2 class="box-title">Paiement</h2>
+                    </div>
+                    <div class="box-body">
+                        <p>En développement</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="tab-pane fade in" id="state">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="box box-default">
+                    <div class="box-header text-center with-border">
+                        <h2 class="box-title">Statut</h2>
+                    </div>
+                    <div class="box-body">
                         {{ form_row(form.state) }}
                     </div>
                 </div>
