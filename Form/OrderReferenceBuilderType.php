@@ -29,7 +29,6 @@ class OrderReferenceBuilderType extends AbstractType
             ->add('suffix',         TextType::class,        array('required' => false))
             ->add('byCountry',      CheckboxType::class,    array('required' => false))
             ->add('digitNumber',    NumberType::class)
-            ->add('valider',        SubmitType::class)
         ;
     }
     

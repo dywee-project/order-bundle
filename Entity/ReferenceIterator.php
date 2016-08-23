@@ -87,5 +87,11 @@ class ReferenceIterator
     {
         return $this->country;
     }
+
+    public function iterate()
+    {
+        $this->iteration++;
+        return $this;
+    }
 }
 

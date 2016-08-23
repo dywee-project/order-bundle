@@ -1414,6 +1414,24 @@ class BaseOrder implements BaseOrderInterface
         return $this;
     }
 
+    public $justGotInvoice = false;
+
+    //TODO savoir quand on a besoin de valider, est-ce que c'est dès qu'on a un paiement, ou que la commande passe en active?
+    public function isElligibleForInvoice()
+    {
+        if($this->getInvoiceReference() || !$this->getBillingAddress() || !$this->getShippingAddress() || !$this->getBillingAddress()->getCountry() || !$this->getShippingAddress()->getCountry())
+            return false;
+
+        //$from = array(self::STATE_IN_SESSION, self::STATE_ERROR);
+        $to = array(self::STATE_WAITING, self::STATE_IN_PROGRESS, self::STATE_READY_FOR_SHIPPING, self::STATE_IN_SHIPPING, self::STATE_FINALIZED);
+
+        if(!in_array($this->getState(), $to, true))
+            return false;
+
+        //TODO gérer paiement
+
+        return true;
+    }
 
 
 }

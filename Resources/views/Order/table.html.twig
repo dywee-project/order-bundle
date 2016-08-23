@@ -81,7 +81,7 @@
                                 <tr>
                                     <td>{{ loop.index }}</td>
                                     <td><a href="{{ path('order_view', {id: order.id}) }}" class="link-unstyled" >{{ order.reference }}</a></td>
-                                    <td><a href="{{ path('invoice_view', {id: order.id}) }}" class="link-unstyled" >{{ order.invoiceReference }}</a></td>
+                                    <td><a href="{{ path('invoice_admin_view', {id: order.id}) }}" class="link-unstyled" >{{ order.invoiceReference }}</a></td>
                                     <td>
                                             {% if order.billingAddress is not null %}
                                                 {{ order.billingAddress.lastName }}

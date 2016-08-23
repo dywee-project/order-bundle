@@ -3,15 +3,17 @@
 namespace Dywee\OrderBundle\Controller;
 
 use Dywee\OrderBundle\Entity\BaseOrder;
-use Dywee\OrderBundle\Form\BaseOrderType;
 use Dywee\OrderBundle\Form\BaseOrderRentType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Response;
 
-class OrderController extends Controller
+class InvoiceController extends Controller
 {
 
+    /**
+     * @Route(name="invoice_admin_view", path="admin/invoice/{id}")
+     */
     public function viewAction(BaseOrder $order)
     {
         return $this->render('DyweeOrderBundle:Order:invoice.html.twig', array(

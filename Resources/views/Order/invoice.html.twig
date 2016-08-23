@@ -4,7 +4,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>AdminLTE 2 | Invoice</title>
+    <title>Dywee | Invoice</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.4 -->
@@ -32,7 +32,7 @@
             <div class="col-xs-12">
                 <h2 class="page-header">
                     <img src="{{ asset('bundles/dyweecore/images/logo.png') }}" alt="La Belgique Une Fois" width="100" /> La Belgique une fois
-                    <small class="pull-right">Date: {{ order.validationDate|date('d/m/Y') }}</small>
+                    <small class="pull-right">Date: {{ order.validatedAt|date('d/m/Y') }}</small>
                 </h2>
             </div><!-- /.col -->
         </div>
@@ -52,15 +52,8 @@
             </div><!-- /.col -->
             <div class="col-sm-4 invoice-col">
                 <p>A l'attention de</p>
-                <address>
-                    <strong>{{ order.billingAddress.firstName }} {{ order.billingAddress.lastName }}</strong><br>
-                    {{ order.billingAddress.address1 }}<br>
-                    {% if order.billingAddress.address2 != '' %}{{ order.billingAddress.address2 }}<br>{% endif %}
-                    {{ order.billingAddress.zip }} {{ order.billingAddress.cityString }}<br>
-                    {{ order.billingAddress.country.iso }} {{ order.billingAddress.country.name }}<br>
-                    <i class="fa fa-phone"></i> {{ phone_number_format(order.billingAddress.mobile, 'INTERNATIONAL') }}<br/>
-                    <i class="fa fa-at"></i> {{ order.billingAddress.email }}
-                </address>
+                {% set address = order.billingAddress %}
+                {% include 'DyweeAddressBundle:Address:view_wrapped.html.twig' %}
 
                 <p></p>
 
@@ -107,24 +100,9 @@
             <!-- accepted payments column -->
             <div class="col-xs-6">
                 <p class="lead">Méthode de paiement:</p>
-                <p>{% if order.paymentMethod == 1 %}
-                        <span class="label label-primary">Liquidité</span>
-                    {% elseif order.paymentMethod == 2 %}
-                        <span class="label label-primary">Virement</span>
-                    {% elseif order.paymentMethod == 3 %}
-                        <img src="{{ asset('bundles/dyweecore/images/credit/paypal2.png') }}" alt="Paypal" />
-                    {% elseif order.paymentMethod == 4 %}
-                        <span class="label label-info">Ogone</span>
-                    {% else %}
-                        <span class="label label-warning">Non renseigné</span>
-                    {% endif %}</p>
 
 
-                {% if order.shippingAddress.country.id == 1 %}
-                    <div><p class="text-muted text-center well well-sm no-shadow" style="margin-top: 10px;">La TVA est déclarée et acquitée à l'Administration française par notre mandataire fiscal en France, la sarl A.VAT.S sarl, 3087 Rue de la Gare, F-59299 Boescheppe.<br>
-                            Notre numéro fiscal en France : FR 91 799 728 522
-                        </p></div>
-                {% endif %}
+
             </div><!-- /.col -->
             <div class="col-xs-6">
                 <p class="lead">Total</p>
@@ -155,10 +133,6 @@
             </div><!-- /.col -->
         </div><!-- /.row -->
         <hr>
-        <p class="text-center"><small>BELFIUS  -  IBAN BE11 0688 9837 7348  -  BIC  GKCCBEBB <br>
-                TVA 0541 953 252 – RPM NIVELLES</small></p>
-
-        <p class="text-center"><small>http://www.labelgiqueunefois.com</small></p>
     </section><!-- /.content -->
 </div><!-- ./wrapper -->
 

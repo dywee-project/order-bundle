@@ -3,21 +3,21 @@
 namespace Dywee\OrderBundle\Controller;
 
 use Dywee\OrderBundle\Entity\OrderReferenceBuilder;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Dywee\CoreBundle\Controller\ParentController;
 
 class OrderReferenceBuilderController extends ParentController
 {
+    protected $bundleName = 'Dywee\OrderBundle';
+    protected $entityName = 'OrderReferenceBuilder';
+    protected $tableViewName = 'order_table';
 
     /**
-     * @param $id
-     * @param Request $request
-     * @param null $parameters
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      * @Route(name="order_reference_update", path="admin/order/reference/update")
      */
-    public function myUpdateAction(Request $request, $parameters = null)
+    public function updateAction($id = null, Request $request, $parameters = null)
     {
         $em = $this->getDoctrine()->getManager();
         $orderReferenceBuilderRepository = $em->getRepository('DyweeOrderBundle:OrderReferenceBuilder');

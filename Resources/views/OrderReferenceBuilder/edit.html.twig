@@ -7,7 +7,15 @@
 {% endblock %}
 
 {% block body %}
-    <h1>Modification des génération de référence facture</h1>
+    <div class="col-md-6">
+        <div class="box box-default">
+            <div class="box-header with-border">
+                <h2 class="box-title">Modification des génération de référence facture</h2>
+            </div>
+            <div class="box-body">
+                {% include "DyweeOrderBundle:OrderReferenceBuilder:form.html.twig" %}
+            </div>
+        </div>
+    </div>
 
-    {% include "DyweeOrderBundle:OrderReferenceBuilder:form.html.twig" %}
 {% endblock %}
