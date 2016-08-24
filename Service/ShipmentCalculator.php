@@ -3,6 +3,9 @@
 namespace Dywee\OrderBundle\Service;
 
 use Dywee\OrderBundle\Entity\BaseOrder;
+use Dywee\ProductBundle\Entity\ProductDownloadable;
+use Dywee\ProductBundle\Entity\ProductPack;
+use Dywee\ProductBundle\Entity\ProductSubscription;
 use Dywee\ShipmentBundle\Entity\Shipment;
 use Dywee\ShipmentBundle\Entity\ShipmentElement;
 
@@ -19,22 +22,45 @@ class ShipmentCalculator
         $departureDate = $order->getValidatedAt() ?? new \DateTime();
 
         $shipment->setDepartureAt($departureDate);
-        $shipment->setState(Shipment::STATE_NOT_PREPARED);
 
-        //TODO gérer abonnement
-        //TODO gérer produits téléchargeables
         //TODO gérer règles de poids max par colis
 
 
         foreach($order->getOrderElements() as $orderElement)
         {
-            for($j = 0; $j < $orderElement->getQuantity(); $j++) {
+            $product = $orderElement->getProduct();
+            //On gère les abonnements
+            if($product instanceof ProductSubscription)
+            {
+                for($i = 0; $i < $product->getRecurrence(); $i++)
+                {
+                    $shipmentForSubscription = new Shipment();
+                    $shipmentElementForSubscription = new ShipmentElement();
+                    $shipmentForSubscription->setSendingIndex($i+1)->addShipmentElement($shipmentElementForSubscription);
+
+                    $departure = clone $departureDate;
+                    if($i > 0)
+                        $departure->modify('+'.$product->getRecurrence(). ' ' . $product->getRecurrenceUnit());
+
+                    $shipmentForSubscription->setDepartureAt($departure);
+
+                    $shipmentElementForSubscription->setQuantity($orderElement->getQuantity());
+                    $shipmentElementForSubscription->setProduct($product);
+                    $shipmentElementForSubscription->setWeight($product->getWeight() * $orderElement->getQuantity());
+
+                    $order->addShipment($shipmentForSubscription);
+                }
+            }
+            else if(!$product instanceof ProductDownloadable){
+
                 $shipmentElement = new ShipmentElement();
+
                 $shipmentElement->setQuantity($orderElement->getQuantity());
-                $shipmentElement->setProduct($orderElement->getProduct());
-                $shipmentElement->setWeight($orderElement->getProduct()->getWeight() * $orderElement->getQuantity());
+                $shipmentElement->setProduct($product);
+                $shipmentElement->setWeight($product->getWeight() * $orderElement->getQuantity());
                 $shipment->addShipmentElement($shipmentElement);
             }
+
         }
 
         $order->addShipment($shipment);
