@@ -2,15 +2,33 @@
 
 namespace Dywee\OrderBundle\Service;
 
+use Doctrine\ORM\Event\LifecycleEventArgs;
 use Dywee\OrderBundle\Entity\BaseOrder;
 use Dywee\ProductBundle\Entity\ProductDownloadable;
-use Dywee\ProductBundle\Entity\ProductPack;
 use Dywee\ProductBundle\Entity\ProductSubscription;
 use Dywee\ShipmentBundle\Entity\Shipment;
 use Dywee\ShipmentBundle\Entity\ShipmentElement;
 
 class ShipmentCalculator
 {
+    public function preUpdate(LifecycleEventArgs $args)
+    {
+        $entity = $args->getEntity();
+        if(!$entity instanceof BaseOrder)
+            return;
+
+        return $this->calculateShipments($entity);
+    }
+
+    public function prePersist(LifecycleEventArgs $args)
+    {
+        $entity = $args->getEntity();
+        if(!$entity instanceof BaseOrder)
+            return;
+
+        return $this->calculateShipments($entity);
+    }
+
     public function calculateShipments(BaseOrder $order)
     {
         if(count($order->getOrderElements()) == 0)
@@ -32,7 +50,7 @@ class ShipmentCalculator
             //On gère les abonnements
             if($product instanceof ProductSubscription)
             {
-                for($i = 0; $i < $product->getRecurrence(); $i++)
+                for($i = 0; $i < $product->getMaxShipment(); $i++)
                 {
                     $shipmentForSubscription = new Shipment();
                     $shipmentElementForSubscription = new ShipmentElement();
@@ -64,6 +82,8 @@ class ShipmentCalculator
         }
 
         $order->addShipment($shipment);
+        $order->forcePriceCalculation();
+        return $order;
     }
 }
 

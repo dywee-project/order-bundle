@@ -3,15 +3,20 @@
 namespace Dywee\OrderBundle\Service;
 
 use Doctrine\ORM\EntityManager;
+use Dywee\AddressBundle\Entity\Country;
+use Dywee\ShipmentBundle\Entity\Shipment;
 
 class ShipmentMethod
 {
     protected $em;
     protected $error;
+    protected $shipmentMethods = array();
+    protected $shipmentMethodRepository;
 
     public function __construct(EntityManager $entityManager)
     {
         $this->em = $entityManager;
+        $this->shipmentMethodRepository = $this->em->getRepository('DyweeShipmentBundle:ShipmentMethod');
     }
 
     public function calculateForOrder($order)
@@ -22,34 +27,73 @@ class ShipmentMethod
             $this->error = 'shipmentMethod.error.no_shipping_address';
             return false;
         }
+
         $country = $order->getShippingAddress()->getCity()->getCountry();
-        $shipmentMethodRepository = $this->em->getRepository('DyweeShipmentBundle:ShipmentMethod');
 
         foreach($order->getShipments() as $shipment)
         {
-            $weight = $shipment->getWeight();
-            $shipments = $shipmentMethodRepository->findForCheckout($country, $weight);
+            $this->getAvailableShipmentMethods($shipment, $country);
 
-            if(count($shipments) < 1){
+            $shipmentMethods = array();
+
+            if(count($this->shipmentMethods) < 1){
                 $this->error = 'shipmentMethod.error.no_method_found';
                 return false;
             }
-            elseif(count($shipments) == 1)
-            {
-                $shipmentMethods[$shipments[0]->getNameWithPrice()] = $shipments[0]->getId();
+            elseif(count($this->shipmentMethods) === 1) {
+                if(array_key_exists($this->shipmentMethods[0]->getId(), $shipmentMethods))
+                    $shipmentMethods[$shipmentMethods[0]->getId()]['total'] += $shipmentMethods[0]->getPrice();
+                else
+                    $shipmentMethods[$this->shipmentMethods[0]->getId()] = array(
+                        'shipment' => $this->shipmentMethods[0],
+                        'total' => $this->shipmentMethods[0]->getPrice()
+                    );
             }
             else{
-                foreach($shipments as $shipmentMethod)
+                foreach($this->shipmentMethods as $shipmentMethod)
                 {
-                    $shipmentMethods[$shipmentMethod->getNameWithPrice()] = $shipmentMethod->getId();
+                    if(array_key_exists($shipmentMethod->getId(), $shipmentMethods))
+                        $shipmentMethods[$shipmentMethod->getId()]['total'] += $shipmentMethod->getPrice();
+                else
+                    $shipmentMethods[$shipmentMethod->getId()] = array(
+                        'shipment' => $shipmentMethod,
+                        'total' => $shipmentMethod->getPrice()
+                    );
                 }
             }
+
+
         }
-        return $shipmentMethods;
+
+        $toDisplay = array();
+        $shipments = count($order->getShipments());
+
+        foreach($shipmentMethods as $shipmentMethod){
+            if($shipments === 1)
+                $toDisplay[$shipmentMethod['shipment']->getNameWithPrice()] = $shipmentMethod['shipment']->getId();
+            else
+                $toDisplay[$shipmentMethod['shipment']->getNameWithPrice(). ' par envoi'] = $shipmentMethod['shipment']->getId();
+        }
+
+        return $toDisplay;
     }
 
     public function getError()
     {
         return $this->error;
+    }
+
+    protected function getAvailableShipmentMethods(Shipment $shipment, Country $country)
+    {
+        $weight = $shipment->getWeight();
+        $shipmentMethods = $this->shipmentMethodRepository->findForCheckout($country, $weight);
+
+        if(count($this->shipmentMethods) == 0)
+            $this->shipmentMethods = $shipmentMethods;
+        else{
+            //TODO virer ceux qu'on ne peut pas utiliser
+        }
+
+        return $this->shipmentMethods;
     }
 }

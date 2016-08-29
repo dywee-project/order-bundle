@@ -71,28 +71,28 @@ class BaseOrder implements BaseOrderInterface
     /**
      * @var float
      *
-     * @ORM\Column(name="priceVatExcl", type="float")
+     * @ORM\Column(name="priceVatExcl", type="decimal", precision=5, scale=2)
      */
     private $priceVatExcl = 0;
 
     /**
      * @var float
      *
-     * @ORM\Column(name="deliveryCost", type="float")
+     * @ORM\Column(name="deliveryCost", type="decimal", precision=5, scale=2)
      */
     private $deliveryCost = 0;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="vatRate", type="float")
+     * @ORM\Column(name="vatRate", type="decimal", precision=5, scale=2)
      */
     private $vatRate = 0;
 
     /**
      * @var float
      *
-     * @ORM\Column(name="vatPrice", type="float")
+     * @ORM\Column(name="vatPrice", type="decimal", precision=5, scale=2)
      */
     private $vatPrice = 0;
 
@@ -106,28 +106,28 @@ class BaseOrder implements BaseOrderInterface
     /**
      * @var float
      *
-     * @ORM\Column(name="discountRate", type="float", nullable=true)
+     * @ORM\Column(name="discountRate", type="decimal", precision=5, scale=2, nullable=true)
      */
     private $discountRate;
 
     /**
      * @var float
      *
-     * @ORM\Column(name="discountValue", type="float", nullable=true)
+     * @ORM\Column(name="discountValue", type="decimal", precision=5, scale=2, nullable=true)
      */
     private $discountValue;
 
     /**
      * @var float
      *
-     * @ORM\Column(name="priceVatIncl", type="float")
+     * @ORM\Column(name="priceVatIncl", type="decimal", precision=5, scale=2)
      */
     private $priceVatIncl = 0;
 
     /**
      * @var float
      *
-     * @ORM\Column(name="totalPrice", type="float")
+     * @ORM\Column(name="totalPrice", type="decimal", precision=5, scale=2)
      */
     private $totalPrice = 0;
 
@@ -144,7 +144,7 @@ class BaseOrder implements BaseOrderInterface
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $validatedAt;
-    
+
     /**
      * @var \DateTime
      *
@@ -497,7 +497,7 @@ class BaseOrder implements BaseOrderInterface
     public function setTotalPrice($totalPrice)
     {
         $this->totalPrice = $totalPrice;
-        if($this->totalPrice === 0)
+        if ($this->totalPrice === 0)
             $this->setDeliveryCost(0);
 
         return $this;
@@ -619,8 +619,6 @@ class BaseOrder implements BaseOrderInterface
     {
         $this->shippingMessage = $shippingMessage;
 
-        $this->shipmentsCalculation();
-
         return $this;
     }
 
@@ -689,7 +687,7 @@ class BaseOrder implements BaseOrderInterface
     public function setState($state)
     {
         //On retient si le state a changé
-        if($this->state != $state)
+        if ($this->state != $state)
             $this->setPreviousState($this->getState());
 
         $this->state = $state;
@@ -823,7 +821,7 @@ class BaseOrder implements BaseOrderInterface
     {
         $this->orderElements = new ArrayCollection();
         $this->shipments = new ArrayCollection();
-        $this->reference = time().'-'.strtoupper(substr(md5(rand().rand()), 0, 4));
+        $this->reference = time() . '-' . strtoupper(substr(md5(rand() . rand()), 0, 4));
         $this->discountElements = new ArrayCollection();
         $this->beginAt = new \DateTime();
     }
@@ -870,9 +868,8 @@ class BaseOrder implements BaseOrderInterface
     {
         $nbre = 0;
 
-        foreach($this->getOrderElements() as $orderElement)
-        {
-            if(!$type || $orderElement->getProduct() instanceof $type)
+        foreach ($this->getOrderElements() as $orderElement) {
+            if (!$type || $orderElement->getProduct() instanceof $type)
                 $nbre += $orderElement->getQuantity();
         }
 
@@ -887,20 +884,18 @@ class BaseOrder implements BaseOrderInterface
         $isTTC = true;
         // CALCUL DU PRIX
         $price = 0;
-        if($this->getShippingAddress() && $this->getShippingAddress()->getCity()->getCountry())
+        if ($this->getShippingAddress() && $this->getShippingAddress()->getCity()->getCountry())
             $this->setVatRate($this->getShippingAddress()->getCity()->getCountry()->getVatRate());
         $this->setPriceVatIncl(0);
-        foreach($this->getOrderElements() as $orderElement)
+        foreach ($this->getOrderElements() as $orderElement)
             $price += $orderElement->getTotalPrice();
 
 
-        if($isTTC)
-        {
+        if ($isTTC) {
             $this->setPriceVatIncl($price);
-            $this->setPriceVatExcl($price/(1 + $this->getVatRate()/100));
-            $this->setVatPrice($this->getPriceVatIncl()-$this->getPriceVatExcl());
-        }
-        else{
+            $this->setPriceVatExcl($price / (1 + $this->getVatRate() / 100));
+            $this->setVatPrice($this->getPriceVatIncl() - $this->getPriceVatExcl());
+        } else {
             /*$this->setPriceVatExcl($price);
             $this->setVatPrice($this->getPriceVatExcl()*$this->getVatRate()/100);
             $this->setPriceVatIncl($this->getPriceVatExcl()+$this->getVatPrice());*/
@@ -915,8 +910,17 @@ class BaseOrder implements BaseOrderInterface
                 $this->setDiscountRate(100*$this->getDiscountValue()/$this->getPriceVatExcl());
         }*/
 
-        $this->setTotalPrice($this->getPriceVatIncl() + $this->getDeliveryCost() - $this->getDiscountValue());
+        $this->calculShippingCost();
 
+        $this->setTotalPrice($this->getPriceVatIncl() + $this->getShippingCost() - $this->getDiscountValue());
+
+        return $this;
+    }
+
+    public function calculShippingCost()
+    {
+        //TODO le shipping cost doit être calculé via le prix d'envoi de chaque shippingMethod de chaque orderElement
+        $this->setShippingCost($this->getShippingMethod()->getPrice() * count($this->getShipments()));
         return $this;
     }
 
@@ -928,7 +932,6 @@ class BaseOrder implements BaseOrderInterface
     {
         $this->checkType();
         //$this->weightCalculation();
-        $this->shipmentsCalculation();
         $this->forcePriceCalculation();
     }
 
@@ -937,41 +940,25 @@ class BaseOrder implements BaseOrderInterface
         $buy = false;
         $rent = false;
 
-        foreach($this->getOrderElements() as $element)
-        {
-            if($element instanceof RentableProduct || $element instanceof RentableProductItem)
+        foreach ($this->getOrderElements() as $element) {
+            if ($element instanceof RentableProduct || $element instanceof RentableProductItem)
                 $rent = true;
             else
                 $buy = true;
 
-            if($rent && $buy)
+            if ($rent && $buy)
                 break;
         }
 
-        if($buy)
-        {
-            if($rent)
+        if ($buy) {
+            if ($rent)
                 $this->setType(BaseOrder::TYPE_BUY_AND_RENT);
             else $this->setType(BaseOrder::TYPE_ONLY_BUY);
-        }
-        elseif($rent)
+        } elseif ($rent)
             $this->setType(BaseOrder::TYPE_BUY_AND_RENT);
 
         return $this;
 
-    }
-
-    public function shipmentsCalculation($force = false)
-    {
-        //Todo revoir la fonction
-        return $this;
-
-
-        //$shipment->calculWeight();
-        $this->forcePriceCalculation();
-        $this->mustRecaculShipments = false;
-
-        return $this;
     }
 
     /**
@@ -984,18 +971,17 @@ class BaseOrder implements BaseOrderInterface
     {
         $exist = false;
         //Check si le produit a déjà été commandé une fois
-        foreach($this->getOrderElements() as $key => $orderElement) {
+        foreach ($this->getOrderElements() as $key => $orderElement) {
             if ($orderElement->getProduct()->getId() == $product->getId()) {
                 //Si oui on augmente la quantité
                 $orderElement->setQuantity($orderElement->getQuantity() + $quantity);
-                if($orderElement->getQuantity() <= 0)$this->removeOrderElement($orderElement);
+                if ($orderElement->getQuantity() <= 0) $this->removeOrderElement($orderElement);
                 $exist = $key;
             }
         }
 
         //Sinon on l'ajoute
-        if(!is_numeric($exist))
-        {
+        if (!is_numeric($exist)) {
             $orderElement = new OrderElement();
 
             $orderElement->setProduct($product);
@@ -1016,7 +1002,7 @@ class BaseOrder implements BaseOrderInterface
      */
     public function getQuantityForProduct(BaseProduct $product)
     {
-        foreach($this->getOrderElements() as $key => $orderElement){
+        foreach ($this->getOrderElements() as $key => $orderElement) {
             if ($orderElement->getProduct()->getId() == $product->getId())
                 return $orderElement->getQuantity();
         }
@@ -1039,8 +1025,8 @@ class BaseOrder implements BaseOrderInterface
     public function getWeight($type = null)
     {
         $weight = 0;
-        foreach($this->getOrderElements() as $orderElement)
-            if(!$type || $orderElement->getProduct() instanceof $type)
+        foreach ($this->getOrderElements() as $orderElement)
+            if (!$type || $orderElement->getProduct() instanceof $type)
                 $weight += $orderElement->getProduct()->getWeight() * $orderElement->getQuantity();
         return $weight;
     }
@@ -1051,8 +1037,8 @@ class BaseOrder implements BaseOrderInterface
     public function weightCalculation()
     {
         $weight = 0;
-        foreach($this->getOrderElements() as $key => $orderElement) {
-            $weight += $orderElement->getProduct()->getWeight()*$orderElement->getQuantity();
+        foreach ($this->getOrderElements() as $key => $orderElement) {
+            $weight += $orderElement->getProduct()->getWeight() * $orderElement->getQuantity();
         }
         $this->setWeight($weight);
         return $this;
@@ -1063,10 +1049,8 @@ class BaseOrder implements BaseOrderInterface
     {
         $id = is_numeric($product) ? $product : $product->getId();
 
-        foreach($this->getOrderElements() as $orderElement)
-        {
-            if($orderElement->getProduct()->getId() === $id)
-            {
+        foreach ($this->getOrderElements() as $orderElement) {
+            if ($orderElement->getProduct()->getId() === $id) {
                 $this->removeOrderElement($orderElement);
                 $this->mustRecaculShipments = true;
                 $this->forcePriceCalculation();
@@ -1077,41 +1061,10 @@ class BaseOrder implements BaseOrderInterface
     }
 
 
-    public function setFromOffer($offer)
-    {
-        $this->setShippingAddress($offer->getAddress());
-        $this->setBillingAddress($offer->getAddress());
-
-        $this->setPriceVatExcl($offer->getPriceVatExcl());
-        $this->setShippingCost($offer->getDeliveryCost());
-        $this->setVatPrice($offer->getVatPrice());
-        $this->setVatRate($offer->getVatRate());
-        $this->setPriceVatIncl($offer->getPriceVatIncl());
-        $this->setDiscountRate($offer->getDiscountRate());
-        $this->setDiscountValue($offer->getDiscountValue());
-        $this->setTotalPrice($offer->getTotalPrice());
-        $this->setState(1);
-
-        foreach($offer->getOfferElements() as $offerElement)
-        {
-            $orderElement = new OrderElement();
-            $orderElement->setProduct($offerElement->getProduct());
-            $orderElement->setQuantity($offerElement->getQuantity());
-            $orderElement->setDuration($offerElement->getDuration());
-            $orderElement->setLocationCoeff($offerElement->getLocationCoeff());
-            $orderElement->setUnitPrice($offerElement->getUnitPrice());
-            $orderElement->setTotalPrice($offerElement->getTotalPrice());
-            $orderElement->setDiscountRate($offerElement->getDiscountRate(), false);
-            $orderElement->setDiscountValue($offerElement->getDiscountValue(), false);
-
-            $this->addOrderElement($orderElement);
-        }
-    }
-
     public function containsElementReduction()
     {
-        foreach($this->orderElements as $orderElement)
-            if($orderElement->getDiscountValue() > 0)return true;
+        foreach ($this->orderElements as $orderElement)
+            if ($orderElement->getDiscountValue() > 0) return true;
         return false;
     }
 
@@ -1166,20 +1119,17 @@ class BaseOrder implements BaseOrderInterface
     {
         $wType = false;
         $sameType = true;
-        foreach($this->getOrderElements() as $orderElement)
-        {
+        foreach ($this->getOrderElements() as $orderElement) {
             $xType = $orderElement->getProduct()->getValidatedAt();
-            if(!$wType)$wType = $xType;
-            else if($xType != $wType) $sameType = false;
+            if (!$wType) $wType = $xType;
+            else if ($xType != $wType) $sameType = false;
         }
-        if($sameType)
-        {
-            if(is_numeric($type))
+        if ($sameType) {
+            if (is_numeric($type))
                 return $type == $wType;
 
             else return true;
-        }
-        else return false;
+        } else return false;
     }
 
     /**
@@ -1223,7 +1173,7 @@ class BaseOrder implements BaseOrderInterface
      */
     public function decreaseStock()
     {
-        foreach($this->getOrderElements() as $orderElement)
+        foreach ($this->getOrderElements() as $orderElement)
             $orderElement->getProduct()->decreaseStock($orderElement->getQuantity());
 
         return $this;
@@ -1234,7 +1184,7 @@ class BaseOrder implements BaseOrderInterface
      */
     public function refundStock()
     {
-        foreach($this->getOrderElements() as $orderElement)
+        foreach ($this->getOrderElements() as $orderElement)
             $orderElement->getProduct()->refundStock($orderElement->getQuantity());
 
         return $this;
@@ -1246,7 +1196,7 @@ class BaseOrder implements BaseOrderInterface
 
     public function isVirtual($forceRecalcul = false)
     {
-        if($this->isVirtual && !$forceRecalcul)
+        if ($this->isVirtual && !$forceRecalcul)
             return $this->isVirtual;
 
         $this->calculVirtualisation();
@@ -1256,7 +1206,7 @@ class BaseOrder implements BaseOrderInterface
 
     public function isOnlyVirtual($forceRecalcul = false)
     {
-        if($this->isOnlyVirtual && !$forceRecalcul)
+        if ($this->isOnlyVirtual && !$forceRecalcul)
             return $this->isVirtual;
 
         $this->calculVirtualisation();
@@ -1310,7 +1260,7 @@ class BaseOrder implements BaseOrderInterface
     public function addDiscountElement(OrderDiscountElement $element)
     {
         $this->discountElements[] = $element;
-        $element->setIterator(count($this->discountElements)+1);
+        $element->setIterator(count($this->discountElements) + 1);
         $element->setOrder($this);
         return $this;
     }
@@ -1347,9 +1297,8 @@ class BaseOrder implements BaseOrderInterface
     public function getOrderRentElements()
     {
         $elements = array();
-        foreach($this->getOrderElements() as $element)
-        {
-            if($element->getProduct() instanceof RentableProduct)
+        foreach ($this->getOrderElements() as $element) {
+            if ($element->getProduct() instanceof RentableProduct)
                 $elements[] = $element;
         }
         return $elements;
@@ -1409,7 +1358,7 @@ class BaseOrder implements BaseOrderInterface
     public function setShippingMethod($shippingMethod)
     {
         $this->shippingMethod = $shippingMethod;
-        $this->setShippingCost($shippingMethod->getPrice());
+        $this->calculShippingCost();
         $this->forcePriceCalculation();
         return $this;
     }
@@ -1419,19 +1368,17 @@ class BaseOrder implements BaseOrderInterface
     //TODO savoir quand on a besoin de valider, est-ce que c'est dès qu'on a un paiement, ou que la commande passe en active?
     public function isElligibleForInvoice()
     {
-        if($this->getInvoiceReference() || !$this->getBillingAddress() || !$this->getShippingAddress() || !$this->getBillingAddress()->getCountry() || !$this->getShippingAddress()->getCountry())
+        if ($this->getInvoiceReference() || !$this->getBillingAddress() || !$this->getShippingAddress() || !$this->getBillingAddress()->getCountry() || !$this->getShippingAddress()->getCountry())
             return false;
 
         //$from = array(self::STATE_IN_SESSION, self::STATE_ERROR);
-        $to = array(self::STATE_WAITING, self::STATE_IN_PROGRESS, self::STATE_READY_FOR_SHIPPING, self::STATE_IN_SHIPPING, self::STATE_FINALIZED);
+        $to = array(self::STATE_IN_PROGRESS, self::STATE_READY_FOR_SHIPPING, self::STATE_IN_SHIPPING, self::STATE_FINALIZED);
 
-        if(!in_array($this->getState(), $to, true))
+        if (!in_array($this->getState(), $to, true))
             return false;
 
         //TODO gérer paiement
 
         return true;
     }
-
-
 }

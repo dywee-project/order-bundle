@@ -27,7 +27,7 @@ class ReferenceIterator
      *
      * @ORM\Column(name="iteration", type="smallint")
      */
-    private $iteration = 0;
+    private $iteration = 1;
 
     /**
      * @ORM\OneToOne(targetEntity="Dywee\AddressBundle\Entity\Country")

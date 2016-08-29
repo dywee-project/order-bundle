@@ -436,8 +436,6 @@ interface BaseOrderInterface extends PersistableInterface
     public function removeProduct($product);
 
 
-    public function setFromOffer($offer);
-
     public function containsElementReduction();
 
     /**

@@ -39,7 +39,6 @@ class InvoiceReferenceManager {
         }
 
         if($entity->isElligibleForInvoice()) {
-            echo '<p>Iterator</p>';
             $country = $entity->getShippingAddress()->getCountry();
 
             $orderReferenceBuilderRepository = $em->getRepository('DyweeOrderBundle:OrderReferenceBuilder');
@@ -80,7 +79,7 @@ class InvoiceReferenceManager {
                 $iterator->setCountry($country);
             }
 
-            $iteration = $iterator->iterate()->getIteration();
+            $iteration = $iterator->getIteration();
 
             // Conform to digit number
             while(strlen($iteration) < $orderReferenceBuilder->getDigitNumber())
