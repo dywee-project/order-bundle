@@ -152,18 +152,6 @@ class BaseOrder implements BaseOrderInterface
      */
     private $endedAt;
 
-
-    /*
-    /**
-     * @var string
-     *
-     * @ORM\ManyToOne(targetEntity="Dywee\ShipmentBundle\Entity\Deliver")
-     * @ORM\JoinColumn(nullable=true)
-     *
-    private $deliver;
-    */
-
-
     /**
      * @var string
      *
@@ -275,8 +263,12 @@ class BaseOrder implements BaseOrderInterface
      */
     private $type = self::TYPE_ONLY_BUY;
 
+    /**
+     * @var boolean
+     * @ORM\Column(type="boolean")
+     */
+    private $mustRecalculShipments = false;
 
-    private $mustRecaculShipments = false;
 
     private $previousState = null;
 
@@ -833,6 +825,7 @@ class BaseOrder implements BaseOrderInterface
     {
         $this->orderElements[] = $orderElements;
         $orderElements->setOrder($this);
+        $this->mustRecalculShipments = true;
 
         return $this;
     }
@@ -920,7 +913,9 @@ class BaseOrder implements BaseOrderInterface
     public function calculShippingCost()
     {
         //TODO le shipping cost doit être calculé via le prix d'envoi de chaque shippingMethod de chaque orderElement
-        $this->setShippingCost($this->getShippingMethod()->getPrice() * count($this->getShipments()));
+        if($this->getShippingMethod())
+            $this->setShippingCost($this->getShippingMethod()->getPrice() * count($this->getShipments()));
+        else $this->setShippingCost(null);
         return $this;
     }
 
@@ -993,6 +988,7 @@ class BaseOrder implements BaseOrderInterface
         }
 
         $this->forcePriceCalculation();
+        $this->mustRecalculShipments = true;
 
         return $this;
     }
@@ -1009,15 +1005,6 @@ class BaseOrder implements BaseOrderInterface
         return 0;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function setWeight($weight)
-    {
-        $this->weight = $weight;
-
-        return $this;
-    }
 
     /**
      * @inheritdoc
@@ -1040,7 +1027,7 @@ class BaseOrder implements BaseOrderInterface
         foreach ($this->getOrderElements() as $key => $orderElement) {
             $weight += $orderElement->getProduct()->getWeight() * $orderElement->getQuantity();
         }
-        $this->setWeight($weight);
+        $this->weight = $weight;
         return $this;
     }
 
@@ -1329,17 +1316,21 @@ class BaseOrder implements BaseOrderInterface
     public function addShipment(Shipment $shipment)
     {
         $this->shipments[] = $shipment;
+        $shipment->setOrder($this);
+        $this->mustRecalculShipments = true;
         return $this;
     }
 
     public function removeShipment(Shipment $shipment)
     {
         $this->shipments->removeElement($shipment);
+        $this->mustRecalculShipments = true;
     }
 
     public function setShipments($shipments)
     {
         $this->shipments = $shipments;
+        $this->mustRecalculShipments = true;
         return $this;
     }
 
@@ -1380,5 +1371,19 @@ class BaseOrder implements BaseOrderInterface
         //TODO gérer paiement
 
         return true;
+    }
+
+    public function mustRecalculShipments()
+    {
+        $return = $this->mustRecalculShipments;
+        if(!$return && count($this->getShipments()) == 0 && count($this->getOrderElements()) > 0)
+            return true;
+        return $this->mustRecalculShipments;
+    }
+
+    public function RecalculShipmentsFinished()
+    {
+        $this->mustRecalculShipments = false;
+        return $this;
     }
 }

@@ -412,13 +412,6 @@ interface BaseOrderInterface extends PersistableInterface
      */
     public function getQuantityForProduct(BaseProduct $product);
 
-    /**
-     * Set weight
-     *
-     * @param float $weight
-     * @return BaseOrderInterface
-     */
-    public function setWeight($weight);
 
     /**
      * Get weight
