@@ -4,6 +4,7 @@ namespace Dywee\OrderBundle\Service;
 
 use Doctrine\ORM\EntityManager;
 use Dywee\AddressBundle\Entity\Country;
+use Dywee\OrderBundle\Entity\BaseOrder;
 use Dywee\ShipmentBundle\Entity\Shipment;
 
 class ShipmentMethod
@@ -19,7 +20,7 @@ class ShipmentMethod
         $this->shipmentMethodRepository = $this->em->getRepository('DyweeShipmentBundle:ShipmentMethod');
     }
 
-    public function calculateForOrder($order)
+    public function calculateForOrder(BaseOrder $order)
     {
         $shipmentMethods = array();
         if(!$order->getShippingAddress())
@@ -61,8 +62,6 @@ class ShipmentMethod
                     );
                 }
             }
-
-
         }
 
         $toDisplay = array();

@@ -28,7 +28,7 @@ services:
     ####### SHIPMENT ######
     dywee_order.shipment_calculator:
         class: Dywee\OrderBundle\Service\ShipmentCalculator
-        arguments: [  ]
+        #arguments: [ '@dywee_order.shipment_rule_manager' ]
         tags:
             - { name: doctrine.event_listener, event: prePersist }
             - { name: doctrine.event_listener, event: preUpdate }
@@ -36,3 +36,7 @@ services:
     dywee_order.shipment_method:
         class: Dywee\OrderBundle\Service\ShipmentMethod
         arguments: [ '@doctrine.orm.entity_manager' ]
+
+    dywee_order.shipment_rule_manager:
+        class: Dywee\OrderBundle\Service\ShipmentRuleManager
+        arguments: ['@doctrine.orm.entity_manager']

@@ -11,12 +11,21 @@ use Dywee\ShipmentBundle\Entity\ShipmentElement;
 
 class ShipmentCalculator
 {
+    protected $shipmentRuleManager;
+    protected $em;
+
+    /*public function __construct(ShipmentRuleManager $ruleManager)
+    {
+        $this->shipmentRuleManager = $ruleManager;
+    }*/
+
     public function preUpdate(LifecycleEventArgs $args)
     {
         $entity = $args->getEntity();
         if(!$entity instanceof BaseOrder)
             return;
 
+        $this->em = $args->getEntityManager();
         return $this->calculateShipments($entity);
     }
 
@@ -26,13 +35,16 @@ class ShipmentCalculator
         if(!$entity instanceof BaseOrder)
             return;
 
+        $this->em = $args->getEntityManager();
         return $this->calculateShipments($entity);
     }
 
     public function calculateShipments(BaseOrder $order)
     {
-        if(count($order->getOrderElements()) == 0)
+        if(!$order->mustRecalculShipments())
             return;
+
+        $this->shipmentRuleManager = new ShipmentRuleManager($this->em);
 
         $order->setShipments(array());
 
@@ -40,8 +52,6 @@ class ShipmentCalculator
         $departureDate = $order->getValidatedAt() ?? new \DateTime();
 
         $shipment->setDepartureAt($departureDate);
-
-        //TODO gérer règles de poids max par colis
 
 
         foreach($order->getOrderElements() as $orderElement)
@@ -81,9 +91,11 @@ class ShipmentCalculator
 
         }
 
+
         $order->addShipment($shipment);
+        $this->shipmentRuleManager->handleOrder($order);
         $order->forcePriceCalculation();
-        return $order;
+        $order->recalculShipmentsFinished();
     }
 }
 

@@ -18,7 +18,7 @@ class OrderAdminSidebarHandler
     {
         $menu = array(
             'key' => 'order',
-            'icon' => 'fa fa-files-o',
+            'icon' => 'fa fa-shopping-cart',
             'label' => 'order.sidebar.label',
             'children' => array(
                 array(
