@@ -56,7 +56,7 @@ class OrderAdminController extends Controller
         $pagination = $paginator->paginate(
             $or->findAllForPagination($request->query->get('state') ?? BaseOrder::STATE_IN_PROGRESS),
             $request->query->get('page', $page), //page number
-            20 // limit per page
+            40 // limit per page
         );
 
 

@@ -36,69 +36,119 @@
             </div>
         </div>
     {% endif %}
-    <div class="panel panel-default">
-        <div class="panel-heading"><h3 class="panel-title">Récapitulatif de la commande <span class="pull-right">ref: {{ order.reference }}</span></h3></div>
-        <table class="table table-bordered">
-            <thead>
-            <tr>
-                {#<th>Dates</th>
-                <th>Jours</th>#}
-                <th>Produit</th>
-                <th>Prix unitaire</th>
-                {#<th>Dég.</th>#}
-                <th>Quantité</th>
-                {% if order.containsElementReduction() == true %}<th>Réduction</th>{% endif %}
-                <th>Total</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for orderElement in order.orderElements %}
-                <tr>
-                    {#<td><small>Du {{ orderElement.beginAt|date('d/m/Y') }}<br>Au {{ orderElement.endAt|date('d/m/Y') }}</small></td>
-                    <td>{{ orderElement.duration }}</td>#}
-                    <td>{{ orderElement.product.name }}</td>
-                    <td>{{ orderElement.unitPrice|number_format(2) }}€</td>
-                    <td>{{ orderElement.quantity }}</td>
-                    {#<td>{{ orderElement.locationCoeff }}</td>#}
-                    {% if order.containsElementReduction() == true %}
-                        <td>
-                            {% if orderElement.discountValue > 0 %}{{ orderElement.discountRate }}%{% endif %}
-                        </td>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-heading"><h3 class="panel-title">Récapitulatif de la commande <span class="pull-right">ref: {{ order.reference }}</span></h3></div>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        {#<th>Dates</th>
+                        <th>Jours</th>#}
+                        <th>Produit</th>
+                        <th>Prix unitaire</th>
+                        {#<th>Dég.</th>#}
+                        <th>Quantité</th>
+                        {% if order.containsElementReduction() == true %}<th>Réduction</th>{% endif %}
+                        <th>Total</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for orderElement in order.orderElements %}
+                        <tr>
+                            {#<td>Du {{ orderElement.beginAt|date('d/m/Y') }}<br>Au {{ orderElement.endAt|date('d/m/Y') }}</td>
+                            <td>{{ orderElement.duration }}</td>#}
+                            <td>{{ orderElement.product.name }}</td>
+                            <td>{{ orderElement.unitPrice|number_format(2) }}€</td>
+                            <td>{{ orderElement.quantity }}</td>
+                            {#<td>{{ orderElement.locationCoeff }}</td>#}
+                            {% if order.containsElementReduction() == true %}
+                                <td>
+                                    {% if orderElement.discountValue > 0 %}{{ orderElement.discountRate }}%{% endif %}
+                                </td>
+                            {% endif %}
+                            <td>{{ orderElement.totalPrice|number_format(2) }}€</td>
+                        </tr>
+                    {% endfor %}
+                    <tr class="active">
+                        <td colspan="{{ firstTableColspan }}">Prix HTT</td>
+                        <td colspan="{{ lastTableColspan }}">{{ order.PriceVatExcl|number_format(2) }}€</td>
+                    </tr>
+                    {% if order.DiscountValue > 0 %}
+                        <tr>
+                            <td colspan="{{ firstTableColspan }}">Réduction</td>
+                            <td colspan="{{ lastTableColspan }}">- {{ order.discountValue|number_format(2) }}€ ({{ order.discountRate }}% de réduction)</td>
+                        </tr>
                     {% endif %}
-                    <td>{{ orderElement.totalPrice|number_format(2) }}€</td>
-                </tr>
-            {% endfor %}
-            <tr class="active">
-                <td colspan="{{ firstTableColspan }}">Prix HTT</td>
-                <td colspan="{{ lastTableColspan }}">{{ order.PriceVatExcl|number_format(2) }}€</td>
-            </tr>
-            {% if order.DiscountValue > 0 %}
-                <tr>
-                    <td colspan="{{ firstTableColspan }}">Réduction</td>
-                    <td colspan="{{ lastTableColspan }}">- {{ order.discountValue|number_format(2) }}€ ({{ order.discountRate }}% de réduction)</td>
-                </tr>
-            {% endif %}
-            <tr>
-                <td colspan="{{ firstTableColspan }}">TVA</td>
-                <td colspan="{{ lastTableColspan }}">{{ order.vatPrice|number_format(2) }}€ ({{ order.vatRate }}%)</td>
-            </tr>
-            <tr class="active">
-                <td colspan="{{ firstTableColspan }}">Prix TTC </td>
-                <td colspan="{{ lastTableColspan }}">{{ order.PriceVatIncl|number_format(2) }}€</td>
-            </tr>
-            {% if order.deliveryCost > 0 %}
-                <tr>
-                    <td colspan="{{ firstTableColspan }}">Frais de transport (TTC)</td>
-                    <td colspan="{{ lastTableColspan }}">{{ order.deliveryCost|number_format(2) }}€</td>
-                </tr>
-            {% endif %}
-            <tr class="success">
-                <td colspan="{{ firstTableColspan }}">Total TTC</td>
-                <td colspan="{{ lastTableColspan }}">{{ order.totalPrice|number_format(2) }}€</td>
-            </tr>
-            </tbody>
-        </table>
+                    <tr>
+                        <td colspan="{{ firstTableColspan }}">TVA</td>
+                        <td colspan="{{ lastTableColspan }}">{{ order.vatPrice|number_format(2) }}€ ({{ order.vatRate }}%)</td>
+                    </tr>
+                    <tr class="active">
+                        <td colspan="{{ firstTableColspan }}">Prix TTC </td>
+                        <td colspan="{{ lastTableColspan }}">{{ order.PriceVatIncl|number_format(2) }}€</td>
+                    </tr>
+                    {% if order.shippingCost > 0 %}
+                        <tr>
+                            <td colspan="{{ firstTableColspan }}">Frais de transport (TTC)</td>
+                            <td colspan="{{ lastTableColspan }}">{{ order.deliveryCost|number_format(2) }}€</td>
+                        </tr>
+                    {% endif %}
+                    <tr class="success">
+                        <td colspan="{{ firstTableColspan }}">Total TTC</td>
+                        <td colspan="{{ lastTableColspan }}">{{ order.totalPrice|number_format(2) }}€</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h2 class="panel-title">Liste des envois</h2>
+                </div>
+                {% if order.getShipments|length > 0 %}
+                    <table class="table table-stripped table-hover">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Index</th>
+                            <th>date d'envoi</th>
+                            <th>Produits</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for shipment in order.getShipments %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>{{ shipment.sendingIndex }}</td>
+                                <td>{{ shipment.departureAt|date('d/m/Y') }}</td>
+                                <td>{{ shipment.countElements }}</td>
+                                <td>{% include 'DyweeShipmentBundle:Shipment:state.html.twig' %}</td>
+                                <td>
+                                    <div class="btn-group btn-group-xs">
+                                        <a href="{{ path('shipment_view', {id: shipment.id, referer: true}) }}"><i class="faf fa-eye"></i> </a>
+                                        <a href="{{ path('shipment_edit', {id: shipment.id, referer: true}) }}"><i class="faf fa-pencil"></i> </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <div class="panel-body">
+                        <p>Pas d'envoi trouvé</p>
+                    </div>
+                {% endif %}
+                <div class="panel-body">
+                    <a href="#" class="btn btn-default btn-block disabled"><i class="fa fa-refresh"></i> Recalculer les envois</a>
+                </div>
+            </div>
+        </div>
     </div>
+
     {% if not order.shippingMessage == '' %}
         <div class="panel panel-default">
             <div class="panel-heading"><h3 class="panel-title">{{ 'Message pour la livraison'|trans }}</h3></div>
@@ -184,37 +234,43 @@
     </div>
 
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="panel panel-default">
-                <div class="panel-heading"><h3 class="panel-title">Facturation</h3></div>
+                <div class="panel-heading"><h3 class="panel-title">Adresse de Facturation</h3></div>
                 <div class="panel-body">
                     {% if order.billingAddress is not null %}
                         {% set address = order.shippingAddress %}
                         {%  include 'DyweeAddressBundle:Address:view_wrapped.html.twig' %}
+                        <p><a href="{{ path('address_admin_update', {id: address.id}) }}" class="btn btn-default btn-block"><i class="fa fa-pencil"></i> Modifier</a> </p>
                     {% else %}
-                        Non renseigné
+                        {{ 'address.notDefined'|trans }}
                     {% endif %}
                 </div>
             </div></div>
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="panel panel-default">
-                <div class="panel-heading"><h3 class="panel-title">Livraison</h3></div>
+                <div class="panel-heading"><h3 class="panel-title">Adresse de livraison</h3></div>
                 <div class="panel-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <p class="h4">Adresse de livraison</p>
-                            {% if order.shippingAddress is not null %}
-                                {% set address = order.billingAddress %}
-                                {% include 'DyweeAddressBundle:Address:view_wrapped.html.twig' %}
-                            {% else %}
-                                Non renseigné
-                            {% endif %}
-                        </div>
-                        <div class="col-md-6">
-                            <p class="h4">Moyen de livraison</p>
-                            <p>{{ order.shippingMethod.name }} ({{ order.shippingMethod.price|number_format(2) }}€)</p>
-                        </div>
-                    </div>
+                    {% if order.shippingAddress is not null %}
+                        {% set address = order.billingAddress %}
+                        {% include 'DyweeAddressBundle:Address:view_wrapped.html.twig' %}
+                        <p><a href="{{ path('address_admin_update', {id: address.id}) }}" class="btn btn-default btn-block"><i class="fa fa-pencil"></i> Modifier</a> </p>
+                    {% else %}
+                        {{ 'address.notDefined'|trans }}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading"><h3 class="panel-title">Moyen de livraison</h3></div>
+                <div class="panel-body">
+                    {% if order.shippingMethod %}
+                        <p>{{ order.shippingMethod.name }} ({{ order.shippingMethod.price|number_format(2) }}€)</p>
+                    {% else %}
+                        <p>Pas de méthode de livraison renseignée</p>
+                    {% endif %}
+                    <p>Etat: Bientôt disponible</p>
                 </div>
             </div>
         </div>

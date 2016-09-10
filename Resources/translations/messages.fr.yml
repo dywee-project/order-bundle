@@ -9,7 +9,7 @@ order:
         returned: Retournée
 
         ready_shipping: Pret pour envoi
-        in_shipping: "En cours d'envoi"
+        in_shipping: En cours d'envoi
 
         customer_error: Erreur (client)
         seller_customer: Erreur (vendeur)
@@ -19,6 +19,9 @@ order:
         waiting_validation: Paiement en attente de validation
         validated: Paiement validé
         refund: Remboursé
+
+    dashboard:
+        table: Dernières commandes
 
     type:
         buy: Achat
@@ -30,3 +33,4 @@ order:
         table: Liste des commandes
         invoice: Gestion des factures
 
+    noOrder: Pas de commandes

@@ -49,10 +49,11 @@ class ShipmentCalculator
         $order->setShipments(array());
 
         $shipment = new Shipment();
+
+        //TODO add contrainte sur date d'envoi, utiliser les event pour faire un calendrier d'envoi
         $departureDate = $order->getValidatedAt() ?? new \DateTime();
 
         $shipment->setDepartureAt($departureDate);
-
 
         foreach($order->getOrderElements() as $orderElement)
         {

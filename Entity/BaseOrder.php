@@ -351,7 +351,7 @@ class BaseOrder implements BaseOrderInterface
 
     /**
      * Get deliveryCost
-     * @deprecated
+     * @deprecated use shippingCost instead
      *
      * @return float
      */
@@ -1317,6 +1317,8 @@ class BaseOrder implements BaseOrderInterface
     {
         $this->shipments[] = $shipment;
         $shipment->setOrder($this);
+        if($this->getShippingMethod())
+            $shipment->setShippingMethod($this->getShippingMethod());
         $this->mustRecalculShipments = true;
         return $this;
     }
@@ -1349,6 +1351,8 @@ class BaseOrder implements BaseOrderInterface
     public function setShippingMethod($shippingMethod)
     {
         $this->shippingMethod = $shippingMethod;
+        foreach($this->getShipments() as $shipment)
+            $shipment->setShippingMethod($this->getShippingMethod());
         $this->calculShippingCost();
         $this->forcePriceCalculation();
         return $this;

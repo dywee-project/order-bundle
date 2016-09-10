@@ -27,7 +27,7 @@ class OrderAdminSidebarHandler
                     'route' => $this->router->generate('order_table')
                 ),
                 array(
-                    'icon' => 'fa fa-cog',
+                    'icon' => 'fa fa-cogs',
                     'label' => 'order.sidebar.invoice',
                     'route' => $this->router->generate('order_reference_update')
                 ),

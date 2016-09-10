@@ -107,7 +107,7 @@ class ShipmentRuleManager{
 
                         while($rest >= $max)
                         {
-                            $shipmentElementToAdd = clone $shipmentElement;
+                            $shipmentElementToAdd = new ShipmentElement();
                             $shipmentElementToAdd
                                 ->setProduct($shipmentElement->getProduct())
                                 ->setQuantity($max - $shipmentToAdd->countElements())
@@ -117,7 +117,7 @@ class ShipmentRuleManager{
                             $shipmentToAdd->canBeReconciliated(false);
                             $rest -= $shipmentToAdd->countElements();
                             $this->order->addShipment($shipmentToAdd);
-                            $shipmentToAdd = clone $shipmentToAdd;
+                            $shipmentToAdd = clone $shipment;
                         }
 
                         if($rest > 0)

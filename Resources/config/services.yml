@@ -15,6 +15,15 @@ services:
     #            - { name: doctrine.event_listener, event: prePersist }
     #            - { name: doctrine.event_listener, event: preUpdate }
 
+
+
+
+    ###########################
+    #                         #
+    #         SIDEBAR         #
+    #                         #
+    ###########################
+
     dywee_order.admin_sidebar_listener:
         class: Dywee\OrderBundle\Listener\AdminSidebarBuilderListener
         arguments: [ '@dywee_order.sidebar_handler' ]
@@ -25,7 +34,30 @@ services:
         class: Dywee\OrderBundle\Service\OrderAdminSidebarHandler
         arguments: [ '@router' ]
 
-    ####### SHIPMENT ######
+    ###########################
+    #                         #
+    #        DASHBOARD        #
+    #                         #
+    ###########################
+
+    dywee_order.admin_dashboard_listener:
+        class: Dywee\OrderBundle\Listener\AdminDashboardBuilderListener
+        arguments: [ '@dywee_order.dashboard_handler' ]
+        tags:
+            - { name: kernel.event_subscriber }
+
+    dywee_order.dashboard_handler:
+        class: Dywee\OrderBundle\Service\OrderAdminDashboardHandler
+        arguments: [ '@router' ]
+
+
+
+    ###########################
+    #                         #
+    #         SHIPMENT        #
+    #                         #
+    ###########################
+
     dywee_order.shipment_calculator:
         class: Dywee\OrderBundle\Service\ShipmentCalculator
         #arguments: [ '@dywee_order.shipment_rule_manager' ]

@@ -23,7 +23,7 @@ class OrderController extends Controller
         $pagination = $paginator->paginate(
             $query,
             $request->query->get('page', $page)/*page number*/,
-            20/*limit per page*/
+            30/*limit per page*/
         );
 
         return $this->render('DyweeOrderBundle:Order:table.html.twig', array('pagination' => $pagination));
