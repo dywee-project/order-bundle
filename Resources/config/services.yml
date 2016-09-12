@@ -40,14 +40,14 @@ services:
     #                         #
     ###########################
 
-    dywee_order.admin_dashboard_listener:
-        class: Dywee\OrderBundle\Listener\AdminDashboardBuilderListener
-        arguments: [ '@dywee_order.dashboard_handler' ]
+    dywee_order_cms.admin_dashboard_listener:
+        class: Dywee\OrderCMSBundle\Listener\AdminDashboardBuilderListener
+        arguments: [ '@dywee_order_cms.dashboard_handler' ]
         tags:
             - { name: kernel.event_subscriber }
 
-    dywee_order.dashboard_handler:
-        class: Dywee\OrderBundle\Service\OrderAdminDashboardHandler
+    dywee_order_cms.dashboard_handler:
+        class: Dywee\OrderCMSBundle\Service\OrderCMSAdminDashboardHandler
         arguments: [ '@router' ]
 
 
