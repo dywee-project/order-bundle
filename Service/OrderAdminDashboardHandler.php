@@ -18,6 +18,11 @@ class OrderAdminDashboardHandler
     {
         $elements = array(
             'key' => 'order',
+            'cards' => array(
+                array(
+                    'controller' => 'DyweeOrderBundle:Dashboard:card'
+                )
+            ),
             'boxes' => array(
                 array(
                     'column' => 'col-md-8',

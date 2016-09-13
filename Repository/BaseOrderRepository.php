@@ -3,6 +3,7 @@
 namespace Dywee\OrderBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Dywee\OrderBundle\Entity\BaseOrder;
 
 /**
  * BaseOrderRepository
@@ -39,14 +40,14 @@ class BaseOrderRepository extends EntityRepository
             ;
     }
 
-    public function countByState($state = 2)
+    public function countByState($state = BaseOrder::STATE_IN_PROGRESS)
     {
         $qb = $this->createQueryBuilder('o')
             ->select('COUNT(o)')
             ->where('o.state = :state')
             ->setParameter('state', $state);
 
-        return $qb->getQuery()->getSingleResult();
+        return $qb->getQuery()->getSingleScalarResult();
     }
 
     public function findByMonth($month, $state)
