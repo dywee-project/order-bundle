@@ -237,7 +237,7 @@ class BaseOrder implements BaseOrderInterface
     private $shipments;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Dywee\ShipmentBundle\Entity\ShipmentMethod", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Dywee\ShipmentBundle\Entity\ShippingMethod", cascade={"persist"})
      */
     private $shippingMethod;
 

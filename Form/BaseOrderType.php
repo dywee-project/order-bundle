@@ -64,7 +64,7 @@ class BaseOrderType extends AbstractType
             ->add('beginAt',            DateType::class, array('required' => false, 'widget' => 'single_text'))
             ->add('endAt',              DateType::class, array('required' => false, 'widget' => 'single_text'))
             ->add('shippingMethod',     EntityType::class, array(
-                'class' => 'DyweeShipmentBundle:ShipmentMethod',
+                'class' => 'DyweeShipmentBundle:ShippingMethod',
                 'choice_label' => 'name'
             ))
             //->add('deliver',            EntityType::class,       array('class' => 'DyweeShipmentBundle:Deliver', 'property' => 'name'))

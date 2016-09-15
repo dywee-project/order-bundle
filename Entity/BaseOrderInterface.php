@@ -1,18 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Olivier
- * Date: 6/08/16
- * Time: 09:58
- */
+
 namespace Dywee\OrderBundle\Entity;
 
 use Dywee\AddressBundle\Entity\AddressInterface;
 use Dywee\CoreBundle\Model\PersistableInterface;
 use Dywee\ProductBundle\Entity\BaseProduct;
-use Dywee\ShipmentBundle\Entity\Deliver;
-use Dywee\ShipmentBundle\Entity\Shipment;
-use Dywee\ShipmentBundle\Entity\ShipmentMethod;
 use Dywee\UserBundle\Entity\User;
 
 interface BaseOrderInterface extends PersistableInterface

@@ -4,10 +4,11 @@ namespace Dywee\OrderBundle\Service;
 
 use Doctrine\ORM\EntityManager;
 use Dywee\AddressBundle\Entity\Country;
+use Dywee\AddressBundle\Entity\CountryInterface;
 use Dywee\OrderBundle\Entity\BaseOrder;
 use Dywee\ShipmentBundle\Entity\Shipment;
 
-class ShipmentMethod
+class ShippingMethod
 {
     protected $em;
     protected $error;
@@ -17,7 +18,7 @@ class ShipmentMethod
     public function __construct(EntityManager $entityManager)
     {
         $this->em = $entityManager;
-        $this->shipmentMethodRepository = $this->em->getRepository('DyweeShipmentBundle:ShipmentMethod');
+        $this->shipmentMethodRepository = $this->em->getRepository('DyweeShipmentBundle:ShippingMethod');
     }
 
     public function calculateForOrder(BaseOrder $order)
@@ -82,7 +83,7 @@ class ShipmentMethod
         return $this->error;
     }
 
-    protected function getAvailableShipmentMethods(Shipment $shipment, Country $country)
+    protected function getAvailableShipmentMethods(Shipment $shipment, CountryInterface $country)
     {
         $weight = $shipment->getWeight();
         $shipmentMethods = $this->shipmentMethodRepository->findForCheckout($country, $weight);
