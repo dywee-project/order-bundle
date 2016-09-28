@@ -17,7 +17,7 @@
                 </button>
                 <ul class="dropdown-menu dropdown-menu-right" role="menu">
                     <li><a href="#" class="disabled"><i class="fa fa-file-pdf-o"></i> Facture</a></li>
-                    <li><a href="#" class="disabled"><i class="fa fa-file-pdf-o"></i> Note d'envoi</a></li>
+                    {#<li><a href="#" class="disabled"><i class="fa fa-file-pdf-o"></i> Note d'envoi</a></li>#}
                     {#<li><a href="#" class="disabled"><i class="fa fa-file-excel-o"></i> Excel</a></li>#}
                 </ul>
             </div>
@@ -129,8 +129,8 @@
                                 <td>{% include 'DyweeShipmentBundle:Shipment:state.html.twig' %}</td>
                                 <td>
                                     <div class="btn-group btn-group-xs">
-                                        <a href="{{ path('shipment_view', {id: shipment.id, referer: true}) }}"><i class="faf fa-eye"></i> </a>
-                                        <a href="{{ path('shipment_edit', {id: shipment.id, referer: true}) }}"><i class="faf fa-pencil"></i> </a>
+                                        <a href="{{ path('shipment_view', {id: shipment.id, referer: true}) }}" class="btn btn-default"><i class="faf fa-eye"></i> </a>
+                                        <a href="{{ path('shipment_edit', {id: shipment.id, referer: true}) }}" class="btn btn-default"><i class="faf fa-pencil"></i> </a>
                                     </div>
                                 </td>
                             </tr>
@@ -270,7 +270,6 @@
                     {% else %}
                         <p>Pas de méthode de livraison renseignée</p>
                     {% endif %}
-                    <p>Etat: Bientôt disponible</p>
                 </div>
             </div>
         </div>

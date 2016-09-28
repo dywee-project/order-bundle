@@ -7,13 +7,52 @@
 {% endblock %}
 
 {% block body %}
-    <div class="col-md-6">
-        <div class="box box-default">
-            <div class="box-header with-border">
-                <h2 class="box-title">Modification des génération de référence facture</h2>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h1 class="box-title">Modification des génération de référence facture</h1>
+                </div>
+                <div class="box-body">
+                    {% include "DyweeOrderBundle:OrderReferenceBuilder:form.html.twig" %}
+                </div>
             </div>
-            <div class="box-body">
-                {% include "DyweeOrderBundle:OrderReferenceBuilder:form.html.twig" %}
+        </div>
+
+        <div class="col-md-6">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h2 class="box-title">Itérateurs</h2>
+                </div>
+                {% if referenceIterators|length > 0 %}
+                    <table class="table table-stripped table-minified table-hover">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Pays</th>
+                            <th>Prochaine intération</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for referenceIterator in referenceIterators %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>{{ referenceIterator.country.name }}</td>
+                                <td>{{ referenceIterator.iteration }}</td>
+                                <td>
+                                    <div class="btn-group btn-group-xs">
+                                        <a href="#" class="btn btn-default"><i class="fa fa-eye"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+                <div class="box-body">
+                    <p>Si le pays ne figure pas dans la liste, l'itération associée sera automatiquement créée lors de la première facture pour ce pays</p>
+                </div>
             </div>
         </div>
     </div>

@@ -231,7 +231,6 @@ class OrderController extends Controller
 
     }
 
-    //TODO kesako??
     public function validatedAction()
     {
         $em = $this->getDoctrine()->getManager();

@@ -2,6 +2,7 @@
 
 namespace Dywee\OrderBundle\Service;
 
+use Dywee\OrderBundle\Entity\BaseOrder;
 use Symfony\Component\Routing\Router;
 
 class OrderAdminSidebarHandler
@@ -24,12 +25,12 @@ class OrderAdminSidebarHandler
                 array(
                     'icon' => 'fa fa-list-alt',
                     'label' => 'order.sidebar.table',
-                    'route' => $this->router->generate('order_table')
+                    'route' => $this->router->generate('order_table', array('state' => BaseOrder::STATE_IN_PROGRESS))
                 ),
                 array(
                     'icon' => 'fa fa-cogs',
                     'label' => 'order.sidebar.invoice',
-                    'route' => $this->router->generate('order_reference_update')
+                    'route' => $this->router->generate('order_reference')
                 ),
             )
         );

@@ -54,7 +54,7 @@ class OrderAdminController extends Controller
 
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
-            $or->findAllForPagination($request->query->get('state') ?? BaseOrder::STATE_IN_PROGRESS),
+            $or->findAllForPagination($request->query->get('state')),
             $request->query->get('page', $page), //page number
             40 // limit per page
         );
@@ -65,6 +65,7 @@ class OrderAdminController extends Controller
             'pagination' => $pagination,
             //'searchForm' => $form->createView(),
             //'filterActive' => $filterActive,
+            'activeState' => $request->query->get('state'),
             'states' => array(BaseOrder::STATE_IN_SESSION, BaseOrder::STATE_WAITING, BaseOrder::STATE_IN_PROGRESS, BaseOrder::STATE_FINALIZED),
         );
 

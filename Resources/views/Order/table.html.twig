@@ -1,68 +1,66 @@
 {# Dywee\OrderBundle\Resources\View\Order\table.html.twig #}
 
-{%  extends "DyweeOrderBundle::admin.html.twig" %}
+{% extends "DyweeOrderBundle::admin.html.twig" %}
 
 {% block body %}
-    <div class="actions-right">
-        <a href="{{ path('order_add') }}" class="btn btn-success"><i class="fa fa-plus"></i> Ajouter une commande</a>
-        {#<div class="btn-group">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                <i class="fa fa-download"></i> Exporter <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                <li><a href="#">PDF</a></li>
-                <li><a href="{{ path('order_export_csv', {type: 'current_month'}) }}">Excel</a></li>
-            </ul>
-        </div>#}
-        <div class="btn-group">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                <i class="fa fa-filter"></i> Filtrer <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                {% for element in states %}
-                    <li><a href="{{ path('order_table', {state: element}) }}">{{ element|trans }}</a></li>
-                {% endfor %}
-                {#<li class="divider"></li>
-                <li><a href="{{ path('order_table', {state: 1}) }}">Tout lister</a></li>#}
-                {#<li><a href="{{ path('order_table_current_month') }}">Mois courant</a></li>#}
-            </ul>
-        </div>
-    </div>
 
-    <div class="title-heading">
-        <h1 class="text-center">Liste des Commandes ({{ pagination.getTotalItemCount }})</h1>
-    </div>
-    {% if pagination.getTotalItemCount > 0 %}
-        <div class="row">
-            <div class="col-md-12">
-                <div class="box box-success">
-                    {% if pagination.getTotalItemCount > 0 %}
-                        {% include 'DyweeOrderBundle:Order:miniTable.html.twig' %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <div class="box-tools">
+                        <a href="{{ path('order_add') }}" class="btn btn-success btn-box-tool"><i
+                                    class="fa fa-plus"></i>
+                            Ajouter une commande</a>
+                        {#<div class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-download"></i> Exporter <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                <li><a href="#">PDF</a></li>
+                                <li><a href="{{ path('order_export_csv', {type: 'current_month'}) }}">Excel</a></li>
+                            </ul>
+                        </div>#}
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default btn-box-tool dropdown-toggle"
+                                    data-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-filter"></i>
+                                {% if activeState is not null %}
+                                    {{ activeState|trans }}
+                                {% else %}
+                                    Filtrer
+                                {% endif %}
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                {% for element in states %}
+                                    <li><a href="{{ path('order_table', {state: element}) }}">{{ element|trans }}</a>
+                                    </li>
+                                {% endfor %}
+                                <li class="divider"></li>
+                                <li><a href="{{ path('order_table') }}">{{ 'order.noFilter'|trans }}</a></li>
+                                {#<li><a href="{{ path('order_table_current_month') }}">Mois courant</a></li>#}
+                            </ul>
+                        </div>
+                    </div>
+                    <h1 class="box-title">Liste des Commandes</h1>
+                </div>
+                {% if pagination.getTotalItemCount > 0 %}
+                    {% include 'DyweeOrderBundle:Order:miniTable.html.twig' %}
 
                     <div class="navigation text-center">
                         {{ knp_pagination_render(pagination) }}
                     </div>
-                    {% else %}
-                        <div class="box-body">
-                            <p>Aucune commande ne répond à ces critères</p>
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-            {#<div class="col-md-3">
-                <div class="box box-primary">
-                    <div class="box-header with-border">
-                        <h3 class="box-title"><i class="fa fa-search"></i> Recherche de commande</h3>
-                    </div><!-- /.box-header -->
+                {% else %}
                     <div class="box-body">
-                        {% form_theme searchForm 'bootstrap_3_layout.html.twig' %}
-                        {{ form(searchForm) }}
+                        <p>Vous n'avez pas encore de commande.</p>
+                        <p><a href="{{ path('order_add') }}" class="btn btn-success"><i class="fa fa-plus"></i> Ajouter
+                                une
+                                commande manuellement</a></p>
                     </div>
-                </div>
-            </div>#}
+                {% endif %}
+            </div>
         </div>
-    {% else %}
-        <p>Aucune commande n'a été enregistrée.</p>
-        <p><a href="{{ path('order_add') }}" class="btn btn-success"><i class="fa fa-plus"></i> Ajouter une commande manuellement</a></p>
-    {% endif %}
+    </div>
+
 {% endblock %}

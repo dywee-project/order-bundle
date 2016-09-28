@@ -88,7 +88,7 @@ class ShippingMethod
         $weight = $shipment->getWeight();
         $shipmentMethods = $this->shipmentMethodRepository->findForCheckout($country, $weight);
 
-        if(count($this->shipmentMethods) == 0)
+        if(count($this->shipmentMethods) === 0)
             $this->shipmentMethods = $shipmentMethods;
         else{
             //TODO virer ceux qu'on ne peut pas utiliser

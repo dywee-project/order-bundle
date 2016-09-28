@@ -877,7 +877,7 @@ class BaseOrder implements BaseOrderInterface
         $isTTC = true;
         // CALCUL DU PRIX
         $price = 0;
-        if ($this->getShippingAddress() && $this->getShippingAddress()->getCity()->getCountry())
+        if ($this->getShippingAddress() && $this->getShippingAddress()->getCity() && $this->getShippingAddress()->getCity()->getCountry())
             $this->setVatRate($this->getShippingAddress()->getCity()->getCountry()->getVatRate());
         $this->setPriceVatIncl(0);
         foreach ($this->getOrderElements() as $orderElement)
