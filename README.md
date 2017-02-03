@@ -4,7 +4,7 @@
 
 just run
 ```bash
-$ composer require dywee/core-bundle
+$ composer require dywee/order-bundle
 ```
 
 add the bundle to the kernel
