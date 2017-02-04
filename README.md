@@ -10,7 +10,15 @@ $ composer require dywee/order-bundle
 add the bundle to the kernel
 ```php
 new Dywee\OrderBundle\DyweeOrderBundle(),
+```yml
+dywee_order:
+    resource: "@DyweeOrderBundle/Controller"
+    type: annotation
+    prefix:   /
 ```
+
+add the routing part
+
 
 This bundle comes with a little configuration 
 
