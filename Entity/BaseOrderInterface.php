@@ -5,7 +5,7 @@ namespace Dywee\OrderBundle\Entity;
 use Dywee\AddressBundle\Entity\AddressInterface;
 use Dywee\CoreBundle\Model\PersistableInterface;
 use Dywee\ProductBundle\Entity\BaseProduct;
-use Dywee\UserBundle\Entity\User;
+use Dywee\UserBundle\Entity\UserInterface;
 
 interface BaseOrderInterface extends PersistableInterface
 {
@@ -291,30 +291,30 @@ interface BaseOrderInterface extends PersistableInterface
     /**
      * Set billingUser
      *
-     * @param \Dywee\UserBundle\Entity\User $billingUser
+     * @param UserInterface $billingUser
      * @return BaseOrderInterface
      */
-    public function setBillingUser(User $billingUser = null);
+    public function setBillingUser(UserInterface $billingUser = null);
 
     /**
      * Get billingUser
      *
-     * @return \Dywee\UserBundle\Entity\User
+     * @return UserInterface
      */
     public function getBillingUser();
 
     /**
      * Set shippingUser
      *
-     * @param User $shippingUser
+     * @param UserInterface $shippingUser
      * @return BaseOrderInterface
      */
-    public function setShippingUser(User $shippingUser = null);
+    public function setShippingUser(UserInterface $shippingUser = null);
 
     /**
      * Get shippingUser
      *
-     * @return \Dywee\UserBundle\Entity\User
+     * @return UserInterface
      */
     public function getShippingUser();
 

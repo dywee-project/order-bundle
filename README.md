@@ -17,7 +17,22 @@ dywee_order:
     prefix:   /
 ```
 
+import the services in the `config.yml`
+
+```yml
+import:
+    ... 
+    - { resource: "@DyweeOrderBundle/Resources/config/services.yml" }
+```
+
 add the routing part
+
+```yml
+dywee_order:
+    resource: "@DyweeOrderBundle/Controller"
+    type: annotation
+    prefix:   /
+```
 
 
 This bundle comes with a little configuration 

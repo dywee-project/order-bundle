@@ -24,15 +24,26 @@ services:
     #                         #
     ###########################
 
+    dywee_order.sidebar_handler:
+        class: Dywee\OrderBundle\Service\AdminSidebarHandler
+        arguments: [ '@router' ]
+
     dywee_order.admin_sidebar_listener:
         class: Dywee\OrderBundle\Listener\AdminSidebarBuilderListener
         arguments: [ '@dywee_order.sidebar_handler' ]
         tags:
             - { name: kernel.event_subscriber }
 
-    dywee_order.sidebar_handler:
-        class: Dywee\OrderBundle\Service\OrderAdminSidebarHandler
+    dywee_order.admin_dashboard_listener2:
+        class: Dywee\OrderBundle\Listener\AdminDashboardBuilderListener
+        arguments: [ '@dywee_order.dashboard_handler2' ]
+        tags:
+            - { name: kernel.event_subscriber }
+
+    dywee_order.dashboard_handler2:
+        class: Dywee\OrderBundle\Service\AdminDashboardHandler
         arguments: [ '@router' ]
+
 
     ###########################
     #                         #
@@ -40,14 +51,14 @@ services:
     #                         #
     ###########################
 
-    dywee_order_cms.admin_dashboard_listener:
-        class: Dywee\OrderCMSBundle\Listener\AdminDashboardBuilderListener
-        arguments: [ '@dywee_order_cms.dashboard_handler' ]
+    dywee_order.admin_dashboard_listener:
+        class: Dywee\OrderBundle\Listener\AdminDashboardBuilderListener
+        arguments: [ '@dywee_order.dashboard_handler' ]
         tags:
             - { name: kernel.event_subscriber }
 
-    dywee_order_cms.dashboard_handler:
-        class: Dywee\OrderCMSBundle\Service\OrderCMSAdminDashboardHandler
+    dywee_order.dashboard_handler:
+        class: Dywee\OrderBundle\Service\AdminDashboardHandler
         arguments: [ '@router' ]
 
 

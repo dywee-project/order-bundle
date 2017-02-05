@@ -4,7 +4,6 @@ namespace Dywee\OrderBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Dywee\AddressBundle\Entity\Address;
 use Dywee\AddressBundle\Entity\AddressInterface;
 use Dywee\CoreBundle\Traits\TimeDelimitableEntity;
 use Dywee\ProductBundle\Entity\BaseProduct;
@@ -12,8 +11,7 @@ use Dywee\ProductBundle\Entity\ProductDownloadable;
 use Dywee\ProductBundle\Entity\RentableProduct;
 use Dywee\ProductBundle\Entity\RentableProductItem;
 use Dywee\ShipmentBundle\Entity\Shipment;
-use Dywee\ShipmentBundle\Entity\ShipmentElement;
-use Dywee\UserBundle\Entity\User;
+use Dywee\UserBundle\Entity\UserInterface;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
@@ -202,12 +200,12 @@ class BaseOrder implements BaseOrderInterface
     private $state = self::STATE_IN_SESSION;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Dywee\UserBundle\Entity\User", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User", cascade={"persist"})
      */
     private $billingUser;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Dywee\UserBundle\Entity\User", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User", cascade={"persist"})
      */
     private $shippingUser;
 
@@ -710,10 +708,10 @@ class BaseOrder implements BaseOrderInterface
     /**
      * Set billingUser
      *
-     * @param \Dywee\UserBundle\Entity\User $billingUser
+     * @param UserInterface
      * @return BaseOrderInterface
      */
-    public function setBillingUser(User $billingUser = null)
+    public function setBillingUser(UserInterface $billingUser = null)
     {
         $this->billingUser = $billingUser;
 
@@ -723,7 +721,7 @@ class BaseOrder implements BaseOrderInterface
     /**
      * Get billingUser
      *
-     * @return \Dywee\UserBundle\Entity\User
+     * @return UserInterface
      */
     public function getBillingUser()
     {
@@ -733,10 +731,10 @@ class BaseOrder implements BaseOrderInterface
     /**
      * Set shippingUser
      *
-     * @param User $shippingUser
+     * @param UserInterface $shippingUser
      * @return BaseOrderInterface
      */
-    public function setShippingUser(User $shippingUser = null)
+    public function setShippingUser(UserInterface $shippingUser = null)
     {
         $this->shippingUser = $shippingUser;
 
@@ -746,7 +744,7 @@ class BaseOrder implements BaseOrderInterface
     /**
      * Get shippingUser
      *
-     * @return \Dywee\UserBundle\Entity\User
+     * @return UserInterface
      */
     public function getShippingUser()
     {

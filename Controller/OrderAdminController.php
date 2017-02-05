@@ -7,6 +7,7 @@ use Dywee\OrderBundle\Entity\OrderElement;
 use Dywee\OrderBundle\Filter\OrderFilterType;
 use Dywee\OrderBundle\Form\BaseOrderType;
 use Dywee\OrderBundle\Form\BaseOrderRentType;
+use FOS\RestBundle\Controller\Annotations\Route;
 use PayPal\Api\Payment;
 use PayPal\Api\PaymentExecution;
 use PayPal\Auth\OAuthTokenCredential;
@@ -16,9 +17,19 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+//TODO use FosRest Route, Response
+
 class OrderAdminController extends Controller
 {
-    public function listAction($state = BaseOrder::STATE_IN_PROGRESS, $limit = 10, $offset = 0)
+    /**
+     * @Route(name="order_adminList", path="admin/orders")
+     *
+     * @param string $state
+     * @param int $limit
+     * @param int $offset
+     * @return Response
+     */
+    public function adminListAction($state = BaseOrder::STATE_IN_PROGRESS, $limit = 50, $offset = 0)
     {
         $or = $this->getDoctrine()->getManager()->getRepository('DyweeOrderBundle:BaseOrder');
 
@@ -72,6 +83,12 @@ class OrderAdminController extends Controller
         return $this->render('DyweeOrderBundle:Order:table.html.twig', $data);
     }
 
+    /**
+     * @Route(name="order_adminView", path="admin/order/{id}")
+     *
+     * @param BaseOrder $order
+     * @return Response
+     */
     public function viewAction(BaseOrder $order)
     {
         return $this->render('DyweeOrderBundle:Order:view.html.twig', array('order' => $order));
