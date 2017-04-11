@@ -3,7 +3,6 @@
 namespace Dywee\OrderBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Dywee\UserBundle\Entity\UserInterface;
 
 /**
  * Offer
@@ -664,10 +663,10 @@ class Offer
     /**
      * Set createdBy
      *
-     * @param UserInterface $createdBy
+     * @param \Dywee\UserBundle\Entity\User $createdBy
      * @return Offer
      */
-    public function setCreatedBy(UserInterface $createdBy = null)
+    public function setCreatedBy(\Dywee\UserBundle\Entity\User $createdBy = null)
     {
         $this->createdBy = $createdBy;
 

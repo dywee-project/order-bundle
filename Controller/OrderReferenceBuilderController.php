@@ -12,7 +12,7 @@ class OrderReferenceBuilderController extends ParentController
 {
     protected $bundleName = 'Dywee\OrderBundle';
     protected $entityName = 'OrderReferenceBuilder';
-    protected $tableViewName = 'order_adminList';
+    protected $tableViewName = 'order_table';
 
     /**
      * @Route(name="order_reference", path="admin/order/reference/update")

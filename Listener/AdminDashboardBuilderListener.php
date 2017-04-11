@@ -4,15 +4,14 @@ namespace Dywee\OrderBundle\Listener;
 
 use Dywee\CoreBundle\DyweeCoreEvent;
 use Dywee\CoreBundle\Event\AdminDashboardBuilderEvent;
-use Dywee\OrderBundle\Service\AdminDashboardHandler;
+use Dywee\OrderBundle\Service\OrderAdminDashboardHandler;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 
-class AdminDashboardBuilderListener implements EventSubscriberInterface
-{
+class AdminDashboardBuilderListener implements EventSubscriberInterface{
     private $orderAdminDashboardHandler;
 
-    public function __construct(AdminDashboardHandler $orderAdminDashboardHandler)
+    public function __construct(OrderAdminDashboardHandler $orderAdminDashboardHandler)
     {
         $this->orderAdminDashboardHandler = $orderAdminDashboardHandler;
     }

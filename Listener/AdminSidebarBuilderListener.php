@@ -4,15 +4,14 @@ namespace Dywee\OrderBundle\Listener;
 
 use Dywee\CoreBundle\DyweeCoreEvent;
 use Dywee\CoreBundle\Event\AdminSidebarBuilderEvent;
-use Dywee\OrderBundle\Service\AdminSidebarHandler;
+use Dywee\OrderBundle\Service\OrderAdminSidebarHandler;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 
-class AdminSidebarBuilderListener implements EventSubscriberInterface
-{
+class AdminSidebarBuilderListener implements EventSubscriberInterface{
     private $orderAdminSidebarHandler;
 
-    public function __construct(AdminSidebarHandler $orderAdminSidebarHandler)
+    public function __construct(OrderAdminSidebarHandler $orderAdminSidebarHandler)
     {
         $this->orderAdminSidebarHandler = $orderAdminSidebarHandler;
     }

@@ -1,3 +1,29 @@
+order_table:
+    path:     /admin/order/table
+    defaults: { _controller: DyweeOrderBundle:OrderAdmin:table, state: 2, page: 1 }
+
+order_add:
+    path:     /admin/order/add
+    defaults: { _controller: DyweeOrderBundle:Order:add }
+
+order_view:
+    path:     /admin/order/view/{id}
+    defaults: { _controller: DyweeOrderBundle:Order:view }
+    requirements:
+        id: \d+
+
+order_update:
+    path:     /admin/order/update/{id}
+    defaults: { _controller: DyweeOrderBundle:Order:update }
+    requirements:
+            id: \d+
+
+order_delete:
+    path:     /admin/order/delete/{id}
+    defaults: { _controller: DyweeOrderBundle:Order:delete }
+    requirements:
+            id: \d+
+
 invoice_view:
     path:     /invoice/{id}/view
     defaults: { _controller: DyweeOrderBundle:Order:invoiceView }

@@ -4,15 +4,15 @@ namespace Dywee\OrderBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Dywee\AddressBundle\Entity\AddressInterface;
 use Dywee\CoreBundle\Traits\TimeDelimitableEntity;
 use Dywee\ProductBundle\Entity\BaseProduct;
 use Dywee\ProductBundle\Entity\ProductDownloadable;
 use Dywee\ProductBundle\Entity\RentableProduct;
 use Dywee\ProductBundle\Entity\RentableProductItem;
 use Dywee\ShipmentBundle\Entity\Shipment;
-use Dywee\UserBundle\Entity\UserInterface;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Sylius\Component\Core\Repository\AddressRepositoryInterface;
+use Sylius\Component\User\Model\UserInterface;
 
 /**
  * BaseOrder
@@ -32,6 +32,7 @@ class BaseOrder implements BaseOrderInterface
 
     const STATE_READY_FOR_SHIPPING = 'order.state.ready_shipping';
     const STATE_IN_SHIPPING = 'order.state.in_shipping';
+    const STATE_SHIPPED = 'order.state.shipped';
 
     const STATE_CUSTOMER_ERROR = 'order.state.customer_error';
     const STATE_SELLER_ERROR = 'order.state.seller_customer';
@@ -41,6 +42,7 @@ class BaseOrder implements BaseOrderInterface
     const PAYMENT_WAITING_VALIDATION = 'order_payment.state.waiting_validation';
     const PAYMENT_VALIDATED = 'order_payment.state.validated';
     const PAYMENT_REFUND = 'order_payment.state.refund';
+    const PAYMENT_PARTIALLY_PAID = 'order_payment.state.partially_paid';
 
     const TYPE_ONLY_BUY = 'order.type.buy';
     const TYPE_ONLY_RENT = 'order.type.rent';
@@ -200,21 +202,25 @@ class BaseOrder implements BaseOrderInterface
     private $state = self::STATE_IN_SESSION;
 
     /**
-     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User", cascade={"persist"})
+     * @var UserInterface
+     * @ORM\ManyToOne(targetEntity="Dywee\UserBundle\Entity\User", cascade={"persist"})
      */
     private $billingUser;
 
     /**
-     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User", cascade={"persist"})
+     * @var UserInterface
+     * @ORM\ManyToOne(targetEntity="Dywee\UserBundle\Entity\User", cascade={"persist"})
      */
     private $shippingUser;
 
     /**
+     * @var AddressRepositoryInterface
      * @ORM\ManyToOne(targetEntity="Dywee\AddressBundle\Entity\Address", cascade={"persist"})
      */
     private $billingAddress;
 
     /**
+     * @var AddressRepositoryInterface
      * @ORM\ManyToOne(targetEntity="Dywee\AddressBundle\Entity\Address", cascade={"persist"})
      */
     private $shippingAddress;
@@ -298,7 +304,7 @@ class BaseOrder implements BaseOrderInterface
      *
      * @return boolean
      */
-    public function getIsGift()
+    public function isGift()
     {
         return $this->isGift;
     }
@@ -488,7 +494,7 @@ class BaseOrder implements BaseOrderInterface
     {
         $this->totalPrice = $totalPrice;
         if ($this->totalPrice === 0)
-            $this->setDeliveryCost(0);
+            $this->setShippingCost(0);
 
         return $this;
     }
@@ -536,9 +542,7 @@ class BaseOrder implements BaseOrderInterface
     public function setValidatedAt(\DateTime $validationDate)
     {
         $this->validatedAt = $validationDate;
-
-        $this->shipmentsCalculation();
-
+        
         return $this;
     }
 
@@ -708,10 +712,10 @@ class BaseOrder implements BaseOrderInterface
     /**
      * Set billingUser
      *
-     * @param UserInterface
+     * @param \Dywee\UserBundle\Entity\User $billingUser
      * @return BaseOrderInterface
      */
-    public function setBillingUser(UserInterface $billingUser = null)
+    public function setBillingUser(User $billingUser = null)
     {
         $this->billingUser = $billingUser;
 
@@ -721,7 +725,7 @@ class BaseOrder implements BaseOrderInterface
     /**
      * Get billingUser
      *
-     * @return UserInterface
+     * @return \Dywee\UserBundle\Entity\User
      */
     public function getBillingUser()
     {
@@ -731,10 +735,10 @@ class BaseOrder implements BaseOrderInterface
     /**
      * Set shippingUser
      *
-     * @param UserInterface $shippingUser
+     * @param User $shippingUser
      * @return BaseOrderInterface
      */
-    public function setShippingUser(UserInterface $shippingUser = null)
+    public function setShippingUser(User $shippingUser = null)
     {
         $this->shippingUser = $shippingUser;
 
@@ -744,7 +748,7 @@ class BaseOrder implements BaseOrderInterface
     /**
      * Get shippingUser
      *
-     * @return UserInterface
+     * @return \Dywee\UserBundle\Entity\User
      */
     public function getShippingUser()
     {

@@ -5,7 +5,7 @@ namespace Dywee\OrderBundle\Service;
 use Dywee\OrderBundle\Entity\BaseOrder;
 use Symfony\Component\Routing\Router;
 
-class AdminSidebarHandler
+class OrderAdminSidebarHandler
 {
 
     private $router;
@@ -25,7 +25,7 @@ class AdminSidebarHandler
                 array(
                     'icon' => 'fa fa-list-alt',
                     'label' => 'order.sidebar.table',
-                    'route' => $this->router->generate('order_adminList', array('state' => BaseOrder::STATE_IN_PROGRESS))
+                    'route' => $this->router->generate('order_table', array('state' => BaseOrder::STATE_IN_PROGRESS))
                 ),
                 array(
                     'icon' => 'fa fa-cogs',

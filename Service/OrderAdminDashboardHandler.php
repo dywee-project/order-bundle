@@ -4,7 +4,7 @@ namespace Dywee\OrderBundle\Service;
 
 use Symfony\Component\Routing\Router;
 
-class AdminDashboardHandler
+class OrderAdminDashboardHandler
 {
 
     private $router;

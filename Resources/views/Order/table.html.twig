@@ -34,11 +34,11 @@
                             </button>
                             <ul class="dropdown-menu dropdown-menu-right" role="menu">
                                 {% for element in states %}
-                                    <li><a href="{{ path('order_adminList', {state: element}) }}">{{ element|trans }}</a>
+                                    <li><a href="{{ path('order_table', {state: element}) }}">{{ element|trans }}</a>
                                     </li>
                                 {% endfor %}
                                 <li class="divider"></li>
-                                <li><a href="{{ path('order_adminList') }}">{{ 'order.noFilter'|trans }}</a></li>
+                                <li><a href="{{ path('order_table') }}">{{ 'order.noFilter'|trans }}</a></li>
                                 {#<li><a href="{{ path('order_table_current_month') }}">Mois courant</a></li>#}
                             </ul>
                         </div>
