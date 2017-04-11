@@ -11,7 +11,7 @@ use Dywee\ProductBundle\Entity\RentableProduct;
 use Dywee\ProductBundle\Entity\RentableProductItem;
 use Dywee\ShipmentBundle\Entity\Shipment;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
-use Sylius\Component\Core\Repository\AddressRepositoryInterface;
+use Sylius\Component\Addressing\Model\AddressInterface;
 use Sylius\Component\User\Model\UserInterface;
 
 /**
@@ -214,13 +214,13 @@ class BaseOrder implements BaseOrderInterface
     private $shippingUser;
 
     /**
-     * @var AddressRepositoryInterface
+     * @var AddressInterface
      * @ORM\ManyToOne(targetEntity="Dywee\AddressBundle\Entity\Address", cascade={"persist"})
      */
     private $billingAddress;
 
     /**
-     * @var AddressRepositoryInterface
+     * @var AddressInterface
      * @ORM\ManyToOne(targetEntity="Dywee\AddressBundle\Entity\Address", cascade={"persist"})
      */
     private $shippingAddress;
@@ -712,10 +712,10 @@ class BaseOrder implements BaseOrderInterface
     /**
      * Set billingUser
      *
-     * @param \Dywee\UserBundle\Entity\User $billingUser
+     * @param UserInterface $billingUser
      * @return BaseOrderInterface
      */
-    public function setBillingUser(User $billingUser = null)
+    public function setBillingUser(UserInterface $billingUser = null)
     {
         $this->billingUser = $billingUser;
 
@@ -725,7 +725,7 @@ class BaseOrder implements BaseOrderInterface
     /**
      * Get billingUser
      *
-     * @return \Dywee\UserBundle\Entity\User
+     * @return UserInterface
      */
     public function getBillingUser()
     {
@@ -735,10 +735,10 @@ class BaseOrder implements BaseOrderInterface
     /**
      * Set shippingUser
      *
-     * @param User $shippingUser
+     * @param UserInterface $shippingUser
      * @return BaseOrderInterface
      */
-    public function setShippingUser(User $shippingUser = null)
+    public function setShippingUser(UserInterface $shippingUser = null)
     {
         $this->shippingUser = $shippingUser;
 
@@ -748,7 +748,7 @@ class BaseOrder implements BaseOrderInterface
     /**
      * Get shippingUser
      *
-     * @return \Dywee\UserBundle\Entity\User
+     * @return UserInterface
      */
     public function getShippingUser()
     {
