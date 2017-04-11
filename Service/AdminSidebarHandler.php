@@ -5,7 +5,7 @@ namespace Dywee\OrderBundle\Service;
 use Dywee\OrderBundle\Entity\BaseOrder;
 use Symfony\Component\Routing\Router;
 
-class OrderAdminSidebarHandler
+class AdminSidebarHandler
 {
 
     private $router;

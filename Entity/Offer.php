@@ -3,6 +3,8 @@
 namespace Dywee\OrderBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Sylius\Component\Addressing\Model\AddressInterface;
+use Sylius\Component\User\Model\UserInterface;
 
 /**
  * Offer
@@ -154,7 +156,7 @@ class Offer
     private $deliveryInfo;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Dywee\UserBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User")
      */
     private $createdBy;
 
@@ -492,10 +494,10 @@ class Offer
     /**
      * Set address
      *
-     * @param \Dywee\AddressBundle\Entity\Address $address
+     * @param AddressInterface $address
      * @return Offer
      */
-    public function setAddress(\Dywee\AddressBundle\Entity\Address $address = null)
+    public function setAddress(AddressInterface $address = null)
     {
         $this->address = $address;
 
@@ -663,10 +665,10 @@ class Offer
     /**
      * Set createdBy
      *
-     * @param \Dywee\UserBundle\Entity\User $createdBy
+     * @param UserInterface $createdBy
      * @return Offer
      */
-    public function setCreatedBy(\Dywee\UserBundle\Entity\User $createdBy = null)
+    public function setCreatedBy(UserInterface $createdBy = null)
     {
         $this->createdBy = $createdBy;
 
@@ -676,7 +678,7 @@ class Offer
     /**
      * Get createdBy
      *
-     * @return \Dywee\UserBundle\Entity\User 
+     * @return UserInterface
      */
     public function getCreatedBy()
     {

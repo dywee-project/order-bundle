@@ -203,23 +203,23 @@ class BaseOrder implements BaseOrderInterface
 
     /**
      * @var UserInterface
-     * @ORM\ManyToOne(targetEntity="Dywee\UserBundle\Entity\User", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User", cascade={"persist"})
      */
     private $billingUser;
 
     /**
      * @var UserInterface
-     * @ORM\ManyToOne(targetEntity="Dywee\UserBundle\Entity\User", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User", cascade={"persist"})
      */
     private $shippingUser;
 
-    /**
+    /*
      * @var AddressInterface
      * @ORM\ManyToOne(targetEntity="Dywee\AddressBundle\Entity\Address", cascade={"persist"})
      */
     private $billingAddress;
 
-    /**
+    /*
      * @var AddressInterface
      * @ORM\ManyToOne(targetEntity="Dywee\AddressBundle\Entity\Address", cascade={"persist"})
      */
