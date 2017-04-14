@@ -3,6 +3,7 @@
 namespace Dywee\OrderBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dywee\CoreBundle\Model\ProductInterface;
 use Dywee\ProductBundle\Entity\Product;
 
 /**
@@ -29,7 +30,7 @@ class OfferElement
     private $offer;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Dywee\ProductBundle\Entity\Product")
+     * @ORM\ManyToOne(targetEntity="Dywee\CoreBundle\Model\ProductInterface")
      * @ORM\JoinColumn(nullable=false)
      */
     private $product;
@@ -84,14 +85,14 @@ class OfferElement
     private $duration = 1;
 
     /**
-     * @var integer
+     * @var \DateTime
      *
      * @ORM\Column(name="beginAt", type="datetime", nullable=true)
      */
     private $beginAt;
 
     /**
-     * @var integer
+     * @var \DateTime
      *
      * @ORM\Column(name="endAt", type="datetime", nullable=true)
      */
@@ -100,7 +101,7 @@ class OfferElement
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -111,6 +112,7 @@ class OfferElement
      * Set quantity
      *
      * @param integer $quantity
+     *
      * @return OfferElement
      */
     public function setQuantity($quantity)
@@ -123,7 +125,7 @@ class OfferElement
     /**
      * Get quantity
      *
-     * @return integer 
+     * @return integer
      */
     public function getQuantity()
     {
@@ -134,6 +136,7 @@ class OfferElement
      * Set unitPrice
      *
      * @param float $unitPrice
+     *
      * @return OfferElement
      */
     public function setUnitPrice($unitPrice)
@@ -146,7 +149,7 @@ class OfferElement
     /**
      * Get unitPrice
      *
-     * @return float 
+     * @return float
      */
     public function getUnitPrice()
     {
@@ -157,6 +160,7 @@ class OfferElement
      * Set totalPrice
      *
      * @param float $totalPrice
+     *
      * @return OfferElement
      */
     public function setTotalPrice($totalPrice)
@@ -169,7 +173,7 @@ class OfferElement
     /**
      * Get totalPrice
      *
-     * @return float 
+     * @return float
      */
     public function getTotalPrice()
     {
@@ -180,6 +184,7 @@ class OfferElement
      * Set offer
      *
      * @param \Dywee\OrderBundle\Entity\Offer $offer
+     *
      * @return OfferElement
      */
     public function setOffer(\Dywee\OrderBundle\Entity\Offer $offer)
@@ -192,7 +197,7 @@ class OfferElement
     /**
      * Get offer
      *
-     * @return \Dywee\OrderBundle\Entity\Offer 
+     * @return \Dywee\OrderBundle\Entity\Offer
      */
     public function getOffer()
     {
@@ -202,10 +207,11 @@ class OfferElement
     /**
      * Set product
      *
-     * @param \Dywee\ProductBundle\Entity\Product $product
+     * @param ProductInterface $product
+     *
      * @return OfferElement
      */
-    public function setProduct(\Dywee\ProductBundle\Entity\Product $product)
+    public function setProduct(ProductInterface $product)
     {
         $this->product = $product;
         $this->setUnitPrice($product->getPrice());
@@ -215,9 +221,12 @@ class OfferElement
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function calculateTotalPrice()
     {
-        $price = $this->getUnitPrice()*$this->getQuantity()*$this->getLocationCoeff();
+        $price = $this->getUnitPrice() * $this->getQuantity() * $this->getLocationCoeff();
         $price -= $this->getDiscountValue();
         $this->setTotalPrice($price);
 
@@ -227,7 +236,7 @@ class OfferElement
     /**
      * Get product
      *
-     * @return \Dywee\ProductBundle\Entity\Product 
+     * @return ProductInterface
      */
     public function getProduct()
     {
@@ -238,6 +247,7 @@ class OfferElement
      * Set locationCoeff
      *
      * @param integer $locationCoeff
+     *
      * @return OfferElement
      */
     public function setLocationCoeff($locationCoeff)
@@ -252,7 +262,7 @@ class OfferElement
     /**
      * Get locationCoeff
      *
-     * @return integer 
+     * @return integer
      */
     public function getLocationCoeff()
     {
@@ -263,15 +273,15 @@ class OfferElement
      * Set discountRate
      *
      * @param float $discountRate
+     *
      * @return OfferElement
      */
     public function setDiscountRate($discountRate, $fromValue = false)
     {
         $this->discountRate = $discountRate;
 
-        if($this->getTotalPrice() > 0 && $fromValue == false && $discountRate > 0)
-        {
-            $this->setDiscountValue(($this->getTotalPrice()/$this->discountRate), true);
+        if ($this->getTotalPrice() > 0 && $fromValue == false && $discountRate > 0) {
+            $this->setDiscountValue(($this->getTotalPrice() / $this->discountRate), true);
         }
 
         return $this;
@@ -280,7 +290,7 @@ class OfferElement
     /**
      * Get discountRate
      *
-     * @return float 
+     * @return float
      */
     public function getDiscountRate()
     {
@@ -291,16 +301,16 @@ class OfferElement
      * Set discountValue
      *
      * @param float $discountValue
+     *
      * @return OfferElement
      */
     public function setDiscountValue($discountValue, $fromRate = false)
     {
         $this->discountValue = $discountValue;
 
-        if($this->getTotalPrice() > 0)
-        {
-            if($fromRate == false)
-                $this->setDiscountRate(($this->discountValue/$this->getTotalPrice()), true);
+        if ($this->getTotalPrice() > 0) {
+            if ($fromRate == false)
+                $this->setDiscountRate(($this->discountValue / $this->getTotalPrice()), true);
 
             $this->calculateTotalPrice();
         }
@@ -311,7 +321,7 @@ class OfferElement
     /**
      * Get discountValue
      *
-     * @return float 
+     * @return float
      */
     public function getDiscountValue()
     {
@@ -322,23 +332,24 @@ class OfferElement
      * Set duration
      *
      * @param integer $duration
+     *
      * @return OfferElement
      */
     public function setDuration($duration)
     {
         $this->duration = $duration;
 
-        $data = array(
-            0 => 1,
-            1 => 1,
-            2 => 1.9,
-            3 => 2.7,
-            4 => 3.2,
-            5 => 3.6,
-            6 => 3.8,
-            7 => 4,
-            8 => 4.5,
-            9 => 5,
+        $data = [
+            0  => 1,
+            1  => 1,
+            2  => 1.9,
+            3  => 2.7,
+            4  => 3.2,
+            5  => 3.6,
+            6  => 3.8,
+            7  => 4,
+            8  => 4.5,
+            9  => 5,
             10 => 5.5,
             11 => 6,
             12 => 6.5,
@@ -360,7 +371,7 @@ class OfferElement
             28 => 12.4,
             29 => 12.7,
             30 => 13,
-        );
+        ];
 
         return $this->setLocationCoeff($data[$duration]);
     }
@@ -368,7 +379,7 @@ class OfferElement
     /**
      * Get duration
      *
-     * @return integer 
+     * @return integer
      */
     public function getDuration()
     {
@@ -378,10 +389,11 @@ class OfferElement
     /**
      * Set beginAt
      *
-     * @param \dateTime $beginAt
+     * @param \DateTime $beginAt
+     *
      * @return OfferElement
      */
-    public function setBeginAt(\dateTime $beginAt = null)
+    public function setBeginAt(\DateTime $beginAt = null)
     {
         $this->beginAt = $beginAt;
         $this->timeInterval();
@@ -392,7 +404,7 @@ class OfferElement
     /**
      * Get beginAt
      *
-     * @return \dateTime 
+     * @return \DateTime
      */
     public function getBeginAt()
     {
@@ -402,10 +414,11 @@ class OfferElement
     /**
      * Set endAt
      *
-     * @param \dateTime $endAt
+     * @param \DateTime $endAt
+     *
      * @return OfferElement
      */
-    public function setEndAt(\dateTime $endAt)
+    public function setEndAt(\DateTime $endAt)
     {
         $this->endAt = $endAt;
         $this->timeInterval();
@@ -416,7 +429,7 @@ class OfferElement
     /**
      * Get endAt
      *
-     * @return \dateTime 
+     * @return \DateTime
      */
     public function getEndAt()
     {
@@ -425,12 +438,9 @@ class OfferElement
 
     public function timeInterval()
     {
-        if($this->getBeginAt() != null && $this->getEndAt() != null)
-        {
-            $date1 = $this->getBeginAt();
-            $date2 = $this->getEndAt();
-            $int = (int) $date1->diff($date2, true)->format('%a');
-            $this->setDuration($int+1);
+        if ($this->getBeginAt() && $this->getEndAt()) {
+            $int = (int)$this->getBeginAt()->diff($this->getEndAt(), true)->format('%a');
+            $this->setDuration($int + 1);
         }
     }
 }

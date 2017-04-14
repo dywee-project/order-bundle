@@ -22,7 +22,7 @@ class OrderDiscountElement
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-    
+
     /**
      * @var int
      * @ORM\Column(type="smallint")
@@ -54,11 +54,13 @@ class OrderDiscountElement
 
     /**
      * @param mixed $discount
+     *
      * @return OrderDiscountElement
      */
     public function setDiscount($discount)
     {
         $this->discount = $discount;
+
         return $this;
     }
 
@@ -72,11 +74,13 @@ class OrderDiscountElement
 
     /**
      * @param mixed $order
+     *
      * @return OrderDiscountElement
      */
     public function setOrder($order)
     {
         $this->order = $order;
+
         return $this;
     }
 
@@ -90,11 +94,13 @@ class OrderDiscountElement
 
     /**
      * @param mixed $iterator
+     *
      * @return OrderDiscountElement
      */
     public function setIterator($iterator)
     {
         $this->iterator = $iterator;
+
         return $this;
     }
 }

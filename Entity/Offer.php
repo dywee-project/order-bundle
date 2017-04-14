@@ -3,7 +3,7 @@
 namespace Dywee\OrderBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Sylius\Component\User\Model\UserInterface;
+use Dywee\CoreBundle\Model\UserInterface;
 
 /**
  * Offer
@@ -154,8 +154,8 @@ class Offer
      */
     private $deliveryInfo;
 
-    /*
-     * @ORM\ManyToOne(targetEntity="Dywee\UserBundle\Entity\User")
+    /**
+     * @ORM\ManyToOne(targetEntity="Dywee\CoreBundle\Model\UserInterface")
      */
     private $createdBy;
 

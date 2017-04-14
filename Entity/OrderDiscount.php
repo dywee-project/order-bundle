@@ -42,7 +42,7 @@ class OrderDiscount
      * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
      */
     private $price;
-    
+
     /**
      * @var float
      * @ORM\Column(type="decimal", precision=5, scale=2, nullable=true)
@@ -60,7 +60,7 @@ class OrderDiscount
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $endAt;
-    
+
     /**
      * @ORM\OneToMany(targetEntity="OrderDiscountElement", mappedBy="discount")
      */
@@ -87,11 +87,13 @@ class OrderDiscount
 
     /**
      * @param string $combinable
+     *
      * @return OrderElement
      */
     public function setCombinable($combinable)
     {
         $this->combinable = $combinable;
+
         return $this;
     }
 
@@ -105,11 +107,13 @@ class OrderDiscount
 
     /**
      * @param float $price
+     *
      * @return OrderElement
      */
     public function setPrice($price)
     {
         $this->price = $price;
+
         return $this;
     }
 
@@ -123,11 +127,13 @@ class OrderDiscount
 
     /**
      * @param float $discount
+     *
      * @return OrderElement
      */
     public function setDiscount($discount)
     {
         $this->discount = $discount;
+
         return $this;
     }
 
@@ -141,11 +147,13 @@ class OrderDiscount
 
     /**
      * @param \Datetime $beginAt
+     *
      * @return OrderElement
      */
     public function setBeginAt($beginAt)
     {
         $this->beginAt = $beginAt;
+
         return $this;
     }
 
@@ -159,11 +167,13 @@ class OrderDiscount
 
     /**
      * @param \Datetime $endAt
+     *
      * @return OrderElement
      */
     public function setEndAt($endAt)
     {
         $this->endAt = $endAt;
+
         return $this;
     }
 
@@ -172,6 +182,7 @@ class OrderDiscount
     {
         $this->elements[] = $element;
         $element->setDiscount($this);
+
         return $this;
     }
 
@@ -184,7 +195,6 @@ class OrderDiscount
     {
         return $this->elements->removeElement($element);
     }
-
 
 
 }

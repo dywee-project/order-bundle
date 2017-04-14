@@ -12,7 +12,7 @@ use Dywee\ProductBundle\Entity\RentableProductItem;
 use Dywee\ShipmentBundle\Entity\Shipment;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Sylius\Component\Addressing\Model\AddressInterface;
-use Sylius\Component\User\Model\UserInterface;
+use Dywee\CoreBundle\Model\CustomerInterface;
 
 /**
  * BaseOrder
@@ -157,7 +157,7 @@ class BaseOrder implements BaseOrderInterface
      *
      * @ORM\Column(name="reference", type="string", length=255)
      */
-    private $reference = '';
+    private $reference;
 
     /**
      * @var string
@@ -201,15 +201,15 @@ class BaseOrder implements BaseOrderInterface
      */
     private $state = self::STATE_IN_SESSION;
 
-    /*
-     * @var UserInterface
-     * @ORM\ManyToOne(targetEntity="Dywee\UserBundle\Entity\User", cascade={"persist"})
+    /**
+     * @var CustomerInterface
+     * @ORM\ManyToOne(targetEntity="Dywee\CoreBundle\Model\CustomerInterface", cascade={"persist"})
      */
     private $billingUser;
 
-    /*
-     * @var UserInterface
-     * @ORM\ManyToOne(targetEntity="Dywee\UserBundle\Entity\User", cascade={"persist"})
+    /**
+     * @var CustomerInterface
+     * @ORM\ManyToOne(targetEntity="Dywee\CoreBundle\Model\CustomerInterface", cascade={"persist"})
      */
     private $shippingUser;
 
@@ -275,6 +275,18 @@ class BaseOrder implements BaseOrderInterface
 
 
     private $previousState = null;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->orderElements = new ArrayCollection();
+        $this->shipments = new ArrayCollection();
+        $this->reference = time() . '-' . strtoupper(substr(md5(rand() . rand()), 0, 4));
+        $this->discountElements = new ArrayCollection();
+        $this->beginAt = new \DateTime();
+    }
 
     /**
      * Get id
@@ -712,10 +724,11 @@ class BaseOrder implements BaseOrderInterface
     /**
      * Set billingUser
      *
-     * @param UserInterface $billingUser
+     * @param CustomerInterface $billingUser
+     *
      * @return BaseOrderInterface
      */
-    public function setBillingUser(UserInterface $billingUser = null)
+    public function setBillingUser(CustomerInterface $billingUser = null)
     {
         $this->billingUser = $billingUser;
 
@@ -725,7 +738,7 @@ class BaseOrder implements BaseOrderInterface
     /**
      * Get billingUser
      *
-     * @return UserInterface
+     * @return CustomerInterface
      */
     public function getBillingUser()
     {
@@ -735,10 +748,10 @@ class BaseOrder implements BaseOrderInterface
     /**
      * Set shippingUser
      *
-     * @param UserInterface $shippingUser
+     * @param CustomerInterface $shippingUser
      * @return BaseOrderInterface
      */
-    public function setShippingUser(UserInterface $shippingUser = null)
+    public function setShippingUser(CustomerInterface $shippingUser = null)
     {
         $this->shippingUser = $shippingUser;
 
@@ -748,7 +761,7 @@ class BaseOrder implements BaseOrderInterface
     /**
      * Get shippingUser
      *
-     * @return UserInterface
+     * @return CustomerInterface
      */
     public function getShippingUser()
     {
@@ -806,18 +819,6 @@ class BaseOrder implements BaseOrderInterface
     public function getDiscountValue()
     {
         return $this->discountValue;
-    }
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->orderElements = new ArrayCollection();
-        $this->shipments = new ArrayCollection();
-        $this->reference = time() . '-' . strtoupper(substr(md5(rand() . rand()), 0, 4));
-        $this->discountElements = new ArrayCollection();
-        $this->beginAt = new \DateTime();
     }
 
     /**

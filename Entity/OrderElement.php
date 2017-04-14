@@ -3,6 +3,7 @@
 namespace Dywee\OrderBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dywee\CoreBundle\Model\ProductInterface;
 use Dywee\ProductBundle\Entity\BaseProduct;
 use Dywee\ProductBundle\Entity\Product;
 
@@ -29,7 +30,7 @@ class OrderElement
     private $order;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Dywee\ProductBundle\Entity\BaseProduct")
+     * @ORM\ManyToOne(targetEntity="Dywee\CoreBundle\Model\ProductInterface")
      * @ORM\JoinColumn(nullable=false)
      */
     private $product;
@@ -41,17 +42,15 @@ class OrderElement
      */
     private $quantity = 1;
 
-    private $oldQuantity;
-
     /**
-     * @var decimal
+     * @var float
      *
      * @ORM\Column(name="unitPrice", type="decimal", precision=10, scale=2)
      */
     private $unitPrice = 0;
 
     /**
-     * @var decimal
+     * @var float
      *
      * @ORM\Column(name="TotalPrice", type="decimal", precision=10, scale=2)
      */
@@ -205,10 +204,10 @@ class OrderElement
     /**
      * Set product
      *
-     * @param \Dywee\ProductBundle\Entity\BaseProduct $product
+     * @param ProductInterface $product
      * @return OrderElement
      */
-    public function setProduct(BaseProduct $product)
+    public function setProduct(ProductInterface $product)
     {
         $this->product = $product;
 
@@ -229,7 +228,7 @@ class OrderElement
     /**
      * Get product
      *
-     * @return \Dywee\ProductBundle\Entity\BaseProduct $product
+     * @return ProductInterface $product
      */
     public function getProduct()
     {
