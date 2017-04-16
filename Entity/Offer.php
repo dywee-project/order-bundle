@@ -634,10 +634,11 @@ class Offer
     /**
      * Set deliver
      *
-     * @param \Dywee\ShipmentBundle\Entity\Deliver $deliver
+     * @param \Dywee\OrderBundle\Entity\Deliver $deliver
+     *
      * @return Offer
      */
-    public function setDeliver(\Dywee\ShipmentBundle\Entity\Deliver $deliver = null)
+    public function setDeliver(\Dywee\OrderBundle\Entity\Deliver $deliver = null)
     {
         $this->deliver = $deliver;
 
@@ -647,7 +648,7 @@ class Offer
     /**
      * Get deliver
      *
-     * @return \Dywee\ShipmentBundle\Entity\Deliver 
+     * @return \Dywee\OrderBundle\Entity\Deliver
      */
     public function getDeliver()
     {

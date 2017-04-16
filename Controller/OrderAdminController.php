@@ -3,6 +3,7 @@
 namespace Dywee\OrderBundle\Controller;
 
 use Dywee\OrderBundle\Entity\BaseOrder;
+use Dywee\OrderBundle\Entity\BaseOrderInterface;
 use Dywee\OrderBundle\Entity\OrderElement;
 use Dywee\OrderBundle\Filter\OrderFilterType;
 use Dywee\OrderBundle\Form\BaseOrderType;
@@ -66,7 +67,7 @@ class OrderAdminController extends Controller
             //'searchForm' => $form->createView(),
             //'filterActive' => $filterActive,
             'activeState' => $request->query->get('state'),
-            'states' => array(BaseOrder::STATE_IN_SESSION, BaseOrder::STATE_WAITING, BaseOrder::STATE_IN_PROGRESS, BaseOrder::STATE_FINALIZED),
+            'states' => array(BaseOrderInterface::STATE_IN_SESSION, BaseOrderInterface::STATE_WAITING, BaseOrderInterface::STATE_IN_PROGRESS, BaseOrderInterface::STATE_FINALIZED),
         );
 
         return $this->render('DyweeOrderBundle:Order:table.html.twig', $data);

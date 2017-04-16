@@ -4,16 +4,18 @@ namespace Dywee\OrderBundle\Service;
 
 use Doctrine\ORM\EntityManager;
 use Dywee\OrderBundle\Entity\BaseOrder;
-use Dywee\ShipmentBundle\Entity\Shipment;
-use Dywee\ShipmentBundle\Entity\ShipmentElement;
+use Dywee\OrderBundle\Entity\Shipment;
+use Dywee\OrderBundle\Entity\ShipmentElement;
+use Dywee\OrderBundle\Entity\ShipmentRule;
 
-class ShipmentRuleManager{
+class ShipmentRuleManager
+{
     protected $repository;
     protected $order;
 
     public function __construct(EntityManager $em)
     {
-        $this->repository = $em->getRepository('DyweeShipmentBundle:ShipmentRule');
+        $this->repository = $em->getRepository(ShipmentRule::class);
     }
 
     public function handleOrder(BaseOrder $order)
@@ -24,7 +26,7 @@ class ShipmentRuleManager{
         $this->handleQuantity();
         $this->handleWeight();
 
-        if(!$mustBeUniq)
+        if (!$mustBeUniq)
             $this->reconciliateShipmentElements();
 
         return true;
@@ -42,8 +44,7 @@ class ShipmentRuleManager{
 
     protected function checkRule($valueToCheck, $operator, $value)
     {
-        switch($operator)
-        {
+        switch ($operator) {
             case '<':
                 return $valueToCheck < $value;
             case '<=':
@@ -68,51 +69,45 @@ class ShipmentRuleManager{
 
     protected function handleQuantity()
     {
-        $rules = $this->repository->findForQuantityMax(array('mappedKey' => 'quantity', 'operator' => '<'));
+        $rules = $this->repository->findForQuantityMax(['mappedKey' => 'quantity', 'operator' => '<']);
 
-        if(count($rules) === 0)
+        if (count($rules) === 0)
             return;
 
         $max = 0;
 
-        if(count($rules) === 1)
+        if (count($rules) === 1) {
             $max = $rules[0]->getValue();
-        else{
-            foreach($rules as $rule)
-                if($rule->getValue() < $max)
+        } else {
+            foreach ($rules as $rule) {
+                if ($rule->getValue() < $max) {
                     $max = $rule->getValue();
+                }
+            }
         }
 
         $shipmentToAdd = new Shipment();
-        foreach($this->order->getShipments() as $shipment)
-        {
-            if(!$shipment->getSendingIndex() || $shipment->getSendingIndex() == 1)
-            {
+        foreach ($this->order->getShipments() as $shipment) {
+            if (!$shipment->getSendingIndex() || $shipment->getSendingIndex() == 1) {
                 $shipmentToAdd = clone $shipment;
                 break;
             }
         }
 
-        foreach($this->order->getShipments() as $shipment)
-        {
-            if($shipment->countElements() > $max)
-            {
-                foreach($shipment->getShipmentElements() as $shipmentElement)
-                {
-                    if($shipmentElement->getQuantity() > $max)
-                    {
+        foreach ($this->order->getShipments() as $shipment) {
+            if ($shipment->countElements() > $max) {
+                foreach ($shipment->getShipmentElements() as $shipmentElement) {
+                    if ($shipmentElement->getQuantity() > $max) {
                         $rest = $shipmentElement->getQuantity() - $max;
                         $shipmentElement->setQuantity($max)->setWeight($shipmentElement->getProduct()->getWeight() * $max);
                         $shipment->canBeReconciliated(false);
 
-                        while($rest >= $max)
-                        {
+                        while ($rest >= $max) {
                             $shipmentElementToAdd = new ShipmentElement();
                             $shipmentElementToAdd
                                 ->setProduct($shipmentElement->getProduct())
                                 ->setQuantity($max - $shipmentToAdd->countElements())
-                                ->setWeight($shipmentElementToAdd->getProduct()->getWeight() * $max)
-                            ;
+                                ->setWeight($shipmentElementToAdd->getProduct()->getWeight() * $max);
                             $shipmentToAdd->addShipmentElement($shipmentElementToAdd);
                             $shipmentToAdd->canBeReconciliated(false);
                             $rest -= $shipmentToAdd->countElements();
@@ -120,20 +115,17 @@ class ShipmentRuleManager{
                             $shipmentToAdd = clone $shipment;
                         }
 
-                        if($rest > 0)
-                        {
+                        if ($rest > 0) {
                             $shipmentElementToAdd = clone $shipmentElement;
                             $shipmentElementToAdd
                                 ->setProduct($shipmentElement->getProduct())
                                 ->setQuantity($rest)
-                                ->setWeight($shipmentElementToAdd->getProduct()->getWeight() * $rest)
-                            ;
+                                ->setWeight($shipmentElementToAdd->getProduct()->getWeight() * $rest);
                             $shipmentToAdd->addShipmentElement($shipmentElementToAdd);
                         }
                     }
 
-                    if($shipmentToAdd->countElements() === $max)
-                    {
+                    if ($shipmentToAdd->countElements() === $max) {
                         $this->order->addShipment($shipmentToAdd);
                         $shipmentToAdd = clone $shipmentToAdd;
                     }
@@ -141,39 +133,33 @@ class ShipmentRuleManager{
             }
 
             //If the first manipulation does'nt resolve the rule
-            if($shipment->countElements() > $max)
-            {
+            if ($shipment->countElements() > $max) {
                 $quantity = 0;
-                foreach($shipment as $shipmentElement)
-                {
+                foreach ($shipment as $shipmentElement) {
                     $quantity += $shipmentElement->getQuantity();
-                    if($quantity > $max)
-                    {
+                    if ($quantity > $max) {
                         $quantity = $shipmentElement->getQuantity();
                         $shipmentToAdd = new Shipment();
                     }
                 }
             }
         }
-        if($shipmentToAdd->countElements() > 0)
+        if ($shipmentToAdd->countElements() > 0)
             $this->order->addShipment($shipmentToAdd);
     }
 
     protected function handleUniqProduct()
     {
-        $rule = $this->repository->findOneBy(array('mappedKey' => 'product', 'operator' => '==', 'value' => '[self]'));
+        $rule = $this->repository->findOneBy(['mappedKey' => 'product', 'operator' => '==', 'value' => '[self]']);
 
-        if(!$rule)
+        if (!$rule)
             return false;
 
         //We rely one and only one product to one shipment
-        foreach($this->order->getShipments() as $shipment)
-        {
+        foreach ($this->order->getShipments() as $shipment) {
             $product = null;
-            foreach($shipment->getShipmentElements() as $shipmentElement)
-            {
-                if($shipmentElement->getProduct() != $product && $product != null)
-                {
+            foreach ($shipment->getShipmentElements() as $shipmentElement) {
+                if ($shipmentElement->getProduct() != $product && $product != null) {
                     $shipment->removeShipmentElement($shipmentElement);
 
                     $shipmentToAdd = new Shipment();

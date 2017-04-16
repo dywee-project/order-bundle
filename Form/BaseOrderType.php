@@ -5,6 +5,8 @@ namespace Dywee\OrderBundle\Form;
 use Dywee\AddressBundle\Entity\AddressRepository;
 use Dywee\AddressBundle\Form\AddressType;
 use Dywee\OrderBundle\Entity\BaseOrder;
+use Dywee\OrderBundle\Entity\BaseOrderInterface;
+use Dywee\OrderBundle\Entity\ShippingMethod;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -25,13 +27,13 @@ class BaseOrderType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $choices = array(
-            BaseOrder::STATE_IN_SESSION => BaseOrder::STATE_IN_SESSION,
-            BaseOrder::STATE_WAITING => BaseOrder::STATE_WAITING,
-            BaseOrder::STATE_IN_PROGRESS => BaseOrder::STATE_IN_PROGRESS,
-            BaseOrder::STATE_READY_FOR_SHIPPING => BaseOrder::STATE_READY_FOR_SHIPPING,
-            BaseOrder::STATE_IN_SHIPPING => BaseOrder::STATE_IN_SHIPPING,
-            BaseOrder::STATE_FINALIZED => BaseOrder::STATE_FINALIZED,
-            BaseOrder::STATE_RETURNED => BaseOrder::STATE_RETURNED,
+            BaseOrderInterface::STATE_IN_SESSION => BaseOrderInterface::STATE_IN_SESSION,
+            BaseOrderInterface::STATE_WAITING => BaseOrderInterface::STATE_WAITING,
+            BaseOrderInterface::STATE_IN_PROGRESS => BaseOrderInterface::STATE_IN_PROGRESS,
+            BaseOrderInterface::STATE_READY_FOR_SHIPPING => BaseOrderInterface::STATE_READY_FOR_SHIPPING,
+            BaseOrderInterface::STATE_IN_SHIPPING => BaseOrderInterface::STATE_IN_SHIPPING,
+            BaseOrderInterface::STATE_FINALIZED => BaseOrderInterface::STATE_FINALIZED,
+            BaseOrderInterface::STATE_RETURNED => BaseOrderInterface::STATE_RETURNED,
         );
 
         $builder
@@ -64,7 +66,7 @@ class BaseOrderType extends AbstractType
             ->add('beginAt',            DateType::class, array('required' => false, 'widget' => 'single_text'))
             ->add('endAt',              DateType::class, array('required' => false, 'widget' => 'single_text'))
             ->add('shippingMethod',     EntityType::class, array(
-                'class' => 'DyweeShipmentBundle:ShippingMethod',
+                'class' => ShippingMethod::class,
                 'choice_label' => 'name'
             ))
             //->add('deliver',            EntityType::class,       array('class' => 'DyweeShipmentBundle:Deliver', 'property' => 'name'))

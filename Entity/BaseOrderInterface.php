@@ -2,14 +2,38 @@
 
 namespace Dywee\OrderBundle\Entity;
 
+use Dywee\CoreBundle\Model\AddressInterface;
 use Dywee\CoreBundle\Model\CustomerInterface;
 use Dywee\CoreBundle\Model\PersistableInterface;
 use Dywee\ProductBundle\Entity\BaseProduct;
-use Sylius\Component\Addressing\Model\AddressInterface;
-use Sylius\Component\User\Model\UserInterface;
 
 interface BaseOrderInterface extends PersistableInterface
 {
+    const STATE_IN_SESSION = 'order.state.session';
+    const STATE_CANCELLED = 'order.state.cancelled';
+    const STATE_WAITING = 'order.state.waiting';
+    const STATE_IN_PROGRESS = 'order.state.in_progress';
+    const STATE_FINALIZED = 'order.state.finalized';
+    const STATE_RETURNED = 'order.state.returned';
+
+    const STATE_READY_FOR_SHIPPING = 'order.state.ready_shipping';
+    const STATE_IN_SHIPPING = 'order.state.in_shipping';
+    const STATE_SHIPPED = 'order.state.shipped';
+
+    const STATE_CUSTOMER_ERROR = 'order.state.customer_error';
+    const STATE_SELLER_ERROR = 'order.state.seller_customer';
+    const STATE_ERROR = 'order.state.error';
+
+    const PAYMENT_STATE_WAITING = 'order_payment.state.waiting';
+    const PAYMENT_WAITING_VALIDATION = 'order_payment.state.waiting_validation';
+    const PAYMENT_VALIDATED = 'order_payment.state.validated';
+    const PAYMENT_REFUND = 'order_payment.state.refund';
+    const PAYMENT_PARTIALLY_PAID = 'order_payment.state.partially_paid';
+
+    const TYPE_ONLY_BUY = 'order.type.buy';
+    const TYPE_ONLY_RENT = 'order.type.rent';
+    const TYPE_BUY_AND_RENT = 'order.type.both';
+
     /**
      * Set isGift
      *

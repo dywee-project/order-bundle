@@ -6,8 +6,8 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Dywee\OrderBundle\Entity\BaseOrder;
 use Dywee\ProductBundle\Entity\ProductDownloadable;
 use Dywee\ProductBundle\Entity\ProductSubscription;
-use Dywee\ShipmentBundle\Entity\Shipment;
-use Dywee\ShipmentBundle\Entity\ShipmentElement;
+use Dywee\OrderBundle\Entity\Shipment;
+use Dywee\OrderBundle\Entity\ShipmentElement;
 
 class ShipmentCalculator
 {
@@ -19,34 +19,48 @@ class ShipmentCalculator
         $this->shipmentRuleManager = $ruleManager;
     }*/
 
+    /**
+     * @param LifecycleEventArgs $args
+     */
     public function preUpdate(LifecycleEventArgs $args)
     {
         $entity = $args->getEntity();
-        if(!$entity instanceof BaseOrder)
+        if (!$entity instanceof BaseOrder) {
             return;
+        }
 
         $this->em = $args->getEntityManager();
-        return $this->calculateShipments($entity);
+
+        $this->calculateShipments($entity);
     }
 
+    /**
+     * @param LifecycleEventArgs $args
+     */
     public function prePersist(LifecycleEventArgs $args)
     {
         $entity = $args->getEntity();
-        if(!$entity instanceof BaseOrder)
+        if (!$entity instanceof BaseOrder) {
             return;
+        }
 
         $this->em = $args->getEntityManager();
-        return $this->calculateShipments($entity);
+
+        $this->calculateShipments($entity);
     }
 
+    /**
+     * @param BaseOrder $order
+     */
     public function calculateShipments(BaseOrder $order)
     {
-        if(!$order->mustRecalculShipments())
+        if (!$order->mustRecalculShipments()){
             return;
+        }
 
         $this->shipmentRuleManager = new ShipmentRuleManager($this->em);
 
-        $order->setShipments(array());
+        $order->setShipments([]);
 
         $shipment = new Shipment();
 
@@ -55,21 +69,18 @@ class ShipmentCalculator
 
         $shipment->setDepartureAt($departureDate);
 
-        foreach($order->getOrderElements() as $orderElement)
-        {
+        foreach ($order->getOrderElements() as $orderElement) {
             $product = $orderElement->getProduct();
             //On gère les abonnements
-            if($product instanceof ProductSubscription)
-            {
-                for($i = 0; $i < $product->getMaxShipment(); $i++)
-                {
+            if ($product instanceof ProductSubscription) {
+                for ($i = 0; $i < $product->getMaxShipment(); $i++) {
                     $shipmentForSubscription = new Shipment();
                     $shipmentElementForSubscription = new ShipmentElement();
-                    $shipmentForSubscription->setSendingIndex($i+1)->addShipmentElement($shipmentElementForSubscription);
+                    $shipmentForSubscription->setSendingIndex($i + 1)->addShipmentElement($shipmentElementForSubscription);
 
                     $departure = clone $departureDate;
-                    if($i > 0)
-                        $departure->modify('+'.$product->getRecurrence(). ' ' . $product->getRecurrenceUnit());
+                    if ($i > 0)
+                        $departure->modify('+' . $product->getRecurrence() . ' ' . $product->getRecurrenceUnit());
 
                     $shipmentForSubscription->setDepartureAt($departure);
 
@@ -79,8 +90,7 @@ class ShipmentCalculator
 
                     $order->addShipment($shipmentForSubscription);
                 }
-            }
-            else if(!$product instanceof ProductDownloadable){
+            } elseif (!$product instanceof ProductDownloadable) {
 
                 $shipmentElement = new ShipmentElement();
 

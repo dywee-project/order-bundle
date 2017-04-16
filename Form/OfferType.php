@@ -3,6 +3,7 @@
 namespace Dywee\OrderBundle\Form;
 
 use Dywee\AddressBundle\Form\AddressType;
+use Dywee\OrderBundle\Entity\Deliver;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -31,7 +32,7 @@ class OfferType extends AbstractType
                 'allow_delete'      => true,
                 'by_reference'      => false
             ))
-            ->add('deliver',            'entity',       array('class' => 'DyweeShipmentBundle:Deliver', 'property' => 'name'))
+            ->add('deliver',            'entity',       array('class' => Deliver::class, 'property' => 'name'))
             ->add('deliveryCost')
             ->add('save',               'submit')
         ;
