@@ -18,4 +18,32 @@ class Payment extends BasePayment
      * @var integer $id
      */
     protected $id;
+
+    /**
+     * @var BaseOrderInterface
+     * @ORM\ManyToOne(targetEntity="Dywee\OrderBundle\Entity\BaseOrder", inversedBy="payments")
+     */
+    private $order;
+
+    /**
+     * @return BaseOrderInterface
+     */
+    public function getOrder() : BaseOrderInterface
+    {
+        return $this->order;
+    }
+
+    /**
+     * @param BaseOrderInterface $order
+     *
+     * @return Payment
+     */
+    public function setOrder(BaseOrderInterface $order) : Payment
+    {
+        $this->order = $order;
+
+        return $this;
+    }
+
+
 }

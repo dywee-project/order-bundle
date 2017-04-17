@@ -9,11 +9,15 @@
 namespace Dywee\OrderBundle\Controller;
 
 
+use Dywee\OrderBundle\Entity\BaseOrderInterface;
 use FOS\RestBundle\Controller\Annotations\Route;
+use Payum\Core\Model\PaymentInterface;
 use Payum\Core\Request\GetHumanStatus;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class PaymentController extends Controller
 {
@@ -27,15 +31,19 @@ class PaymentController extends Controller
 
         $storage = $this->get('payum')->getStorage('Dywee\OrderBundle\Entity\Payment');
 
+        $order = $this->get('dywee_order_cms.order_session_handler')->getOrderFromSession();
+
         $payment = $storage->create();
         $payment->setNumber(uniqid('payment', true));
         $payment->setCurrencyCode('EUR');
-        $payment->setTotalAmount(123); // 1.23 EUR
+        $payment->setTotalAmount($order->getTotalPrice() * 100); // 1.23 EUR
         $payment->setDescription('A description');
-        $payment->setClientId('anId');
-        $payment->setClientEmail('foo@example.com');
+        $payment->setClientId($this->getUser()->getId());
+        $payment->setClientEmail($this->getUser()->getEmail());
 
         $storage->update($payment);
+        $order->addPayment($payment);
+        $order->setPaymentStatus(BaseOrderInterface::PAYMENT_WAITING_VALIDATION);
 
         $captureToken = $this->get('payum')->getTokenFactory()->createCaptureToken(
             $gatewayName,
@@ -50,7 +58,7 @@ class PaymentController extends Controller
      * @Route(path="order/payment/done", name="order_payment_done")
      * @param Request $request
      *
-     * @return JsonResponse
+     * @return Response
      */
     public function doneAction(Request $request)
     {
@@ -67,18 +75,40 @@ class PaymentController extends Controller
 
         // or Payum can fetch the model for you while executing a request (Preferred).
         $gateway->execute($status = new GetHumanStatus($token));
+        /** @var PaymentInterface $payment */
         $payment = $status->getFirstModel();
+        /** @var BaseOrderInterface $order */
+        $order = $payment->getOrder();
 
-        // you have order and payment status
-        // so you can do whatever you want for example you can just print status and payment details.
+        $em = $this->getDoctrine()->getManager();
 
-        return new JsonResponse([
-            'status'  => $status->getValue(),
-            'payment' => [
-                'total_amount'  => $payment->getTotalAmount(),
-                'currency_code' => $payment->getCurrencyCode(),
-                'details'       => $payment->getDetails(),
-            ],
-        ]);
+        if ((float)$payment->getTotalAmount() !== (float)$order->getTotalPrice()) {
+            throw new \LogicException('amount of the payment is not equal to the amount of the order (' . $payment->getTotalAmount() . '!=' . $order->getTotalPrice());
+        }
+
+        switch (true) {
+            case $status->isAuthorized():
+                $order->setPaymentStatus(BaseOrderInterface::PAYMENT_AUTHORIZED);
+                break;
+            case $status->isCaptured():
+                $order->setPaymentStatus(BaseOrderInterface::PAYMENT_VALIDATED);
+                $request->getSession()->set('validatedOrderId', $order->getId());
+                break;
+            case $status->isCanceled():
+            case $status->isExpired():
+            case $status->isFailed():
+            case $status->isUnknown():
+                $order->setPaymentStatus(BaseOrderInterface::PAYMENT_CANCELLED);
+                break;
+            case $status->isPending():
+                $order->setPaymentStatus(BaseOrderInterface::PAYMENT_WAITING_VALIDATION);
+                break;
+        }
+
+        $request->getSession()->set('validatedOrderId', $order->getId());
+        $em->persist($order);
+        $em->flush();
+
+        return $this->redirectToRoute('checkout_confirmation');
     }
 }

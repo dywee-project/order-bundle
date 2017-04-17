@@ -13,6 +13,7 @@ use Dywee\ProductBundle\Entity\RentableProductItem;
 use Dywee\OrderBundle\Entity\Shipment;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Dywee\CoreBundle\Model\CustomerInterface;
+use Payum\Core\Model\PaymentInterface;
 
 /**
  * BaseOrder
@@ -252,6 +253,18 @@ class BaseOrder implements BaseOrderInterface
     private $previousState = null;
 
     /**
+     * @var PaymentInterface
+     * @ORM\OneToMany(targetEntity="Dywee\OrderBundle\Entity\Payment", mappedBy="order")
+     */
+    private $payments;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", length=30)
+     */
+    private $paymentStatus = BaseOrderInterface::PAYMENT_STATUS_NONE;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -261,6 +274,7 @@ class BaseOrder implements BaseOrderInterface
         $this->reference = time() . '-' . strtoupper(substr(md5(rand() . rand()), 0, 4));
         $this->discountElements = new ArrayCollection();
         $this->beginAt = new \DateTime();
+        $this->payments = new ArrayCollection();
     }
 
     /**
@@ -1368,4 +1382,58 @@ class BaseOrder implements BaseOrderInterface
         $this->mustRecalculShipments = false;
         return $this;
     }
+
+    /**
+     * @return PaymentInterface
+     */
+    public function getPayments() : PaymentInterface
+    {
+        return $this->payments;
+    }
+
+    /**
+     * @param Payment $payment
+     *
+     * @return $this
+     */
+    public function addPayment(Payment $payment)
+    {
+        $this->payments->add($payment);
+        $payment->setOrder($this);
+        return $this;
+    }
+
+    /**
+     * @param PaymentInterface $payment
+     *
+     * @return $this
+     */
+    public function removePayment(PaymentInterface $payment)
+    {
+        $this->payments->removeElement($payment);
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPaymentStatus() : string
+    {
+        return $this->paymentStatus;
+    }
+
+    /**
+     * @param string $paymentStatus
+     *
+     * @return BaseOrder
+     */
+    public function setPaymentStatus(string $paymentStatus) : BaseOrder
+    {
+        $this->paymentStatus = $paymentStatus;
+
+        return $this;
+    }
+
+
 }

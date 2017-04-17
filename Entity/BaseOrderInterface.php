@@ -6,6 +6,7 @@ use Dywee\CoreBundle\Model\AddressInterface;
 use Dywee\CoreBundle\Model\CustomerInterface;
 use Dywee\CoreBundle\Model\PersistableInterface;
 use Dywee\ProductBundle\Entity\BaseProduct;
+use Payum\Core\Model\PaymentInterface;
 
 interface BaseOrderInterface extends PersistableInterface
 {
@@ -24,11 +25,16 @@ interface BaseOrderInterface extends PersistableInterface
     const STATE_SELLER_ERROR = 'order.state.seller_customer';
     const STATE_ERROR = 'order.state.error';
 
+    const PAYMENT_STATUS_NONE = 'order_payment.state.waiting';
+    const PAYMENT_STATUS_WAITING = 'order_payment.state.waiting';
+    /** @deprecated */
     const PAYMENT_STATE_WAITING = 'order_payment.state.waiting';
     const PAYMENT_WAITING_VALIDATION = 'order_payment.state.waiting_validation';
     const PAYMENT_VALIDATED = 'order_payment.state.validated';
     const PAYMENT_REFUND = 'order_payment.state.refund';
     const PAYMENT_PARTIALLY_PAID = 'order_payment.state.partially_paid';
+    const PAYMENT_AUTHORIZED = 'order_payment.state.authorized';
+    const PAYMENT_CANCELLED = 'order_payment.state.cancelled';
 
     const TYPE_ONLY_BUY = 'order.type.buy';
     const TYPE_ONLY_RENT = 'order.type.rent';
@@ -555,4 +561,34 @@ interface BaseOrderInterface extends PersistableInterface
      */
     public function setType($type);
 
+    /**
+     * @return PaymentInterface
+     */
+    public function getPayments() : PaymentInterface;
+
+    /**
+     * @param Payment $payment
+     *
+     * @return $this
+     */
+    public function addPayment(Payment $payment);
+
+    /**
+     * @param PaymentInterface $payment
+     *
+     * @return $this
+     */
+    public function removePayment(PaymentInterface $payment);
+
+    /**
+     * @return string
+     */
+    public function getPaymentStatus() : string;
+
+    /**
+     * @param string $paymentStatus
+     *
+     * @return BaseOrder
+     */
+    public function setPaymentStatus(string $paymentStatus) : BaseOrder;
 }
