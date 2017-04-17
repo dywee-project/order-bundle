@@ -89,10 +89,11 @@ class PaymentController extends Controller
         switch (true) {
             case $status->isAuthorized():
                 $order->setPaymentStatus(BaseOrderInterface::PAYMENT_AUTHORIZED);
+                $request->getSession()->set('order', null);
                 break;
             case $status->isCaptured():
                 $order->setPaymentStatus(BaseOrderInterface::PAYMENT_VALIDATED);
-                $request->getSession()->set('validatedOrderId', $order->getId());
+                $request->getSession()->set('order', null);
                 break;
             case $status->isCanceled():
             case $status->isExpired():
