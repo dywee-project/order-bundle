@@ -15,10 +15,6 @@
   "require": {
     "php": ">=7.0.0",
     "dywee/core-bundle": "dev-master",
-    "dywee/product-bundle": "dev-master",
-    "dywee/user-bundle": "dev-master",
-    "dywee/address-bundle": "dev-master",
-    "dywee/shipment-bundle": "dev-master",
     "genemu/form-bundle": "^3.0@dev",
     "payum/payum-bundle": "^2.2"
   },
