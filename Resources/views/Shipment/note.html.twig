@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+
+    <title>La belgique une fois - Facture {{ shipment.order.reference }}</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="{{ asset('bundles/dyweecore/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('bundles/dyweecore/css/bootstrap-theme.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('bundles/dyweecore/css/admin.min.css') }}">
+
+</head>
+
+<body>
+<div class="container">
+
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+    <div class="spacer"></div>
+    <div class="row">
+        <div class="col-xs-8">
+            <p>BLC Services Belgium sprl</p>
+
+            <p>Vieux chemin de Nivelles, 124<br>
+                1440 Braine-le-Château<br>
+                TVA BE 541 953 252<br>
+                Entrepôt fiscal : 555.399
+            </p>
+        </div>
+
+        <div class="col-xs-4">
+
+            {% if shipment.order.shippingAddress is not null %}
+            <p>{{ shipment.order.shippingAddress.firstName }} {{ shipment.order.shippingAddress.lastName }}</p>
+
+            <p>
+                {{ shipment.order.shippingAddress.address1 }}<br>
+                {{ shipment.order.shippingAddress.address2 }}<br>
+                {{ shipment.order.shippingAddress.zip }} {{ shipment.order.shippingAddress.cityString }}<br>
+                {{ shipment.order.shippingAddress.country.iso }} {{ shipment.order.shippingAddress.country.name }}
+            </p>
+            {% else %}
+                <p>{{ shipment.order.billingAddress.firstName }} {{ shipment.order.billingAddress.lastName }}</p>
+
+                <p>
+                    {{ shipment.order.billingAddress.address1 }}<br>
+                    {{ shipment.order.billingAddress.address2 }}<br>
+                    {{ shipment.order.billingAddress.zip }} {{ shipment.order.billingAddress.cityString }}<br>
+                    {{ shipment.order.billingAddress.country.iso }} {{ shipment.order.billingAddress.country.name }}
+                </p>
+            {% endif %}
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-8">
+            <p>ref. commande :	{{ shipment.order.reference }}<br>
+                ref. facture :	{{ shipment.order.invoiceReference }}
+            </p>
+        </div>
+        <div class="col-xs-4">
+            <p>DATE :	{{ shipment.order.validationDate|date('d/m/Y') }}</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <table class="table table-bordered table-condensed" border="1">
+                <thead>
+                <tr class="info"><th>Produit</th><th>Quantité</th></tr>
+                </thead>
+                <tbody>
+                {% for element in shipment.order.orderElements %}
+                    <tr>
+                        <td>{{ element.product.name }}
+                            {% if element.product.productType == 3 %}
+                            - envoi n°{{ shipment.sendingIndex }}
+                            {% endif %}
+                        </td>
+                        <td>{{ element.quantity }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            {% if 1 == 1 %}
+                <div><small>La TVA est déclarée et acquitée à l'Administration française par notre mandataire fiscal en France, la sarl A.VAT.S sarl, 3087 Rue de la Gare, F-59299 Boescheppe.<br>
+                        Notre numéro fiscal en France : FR 91 799 728 522
+                    </small></div>
+            {% endif %}
+            <hr>
+            <p class="text-center"><small>BELFIUS  -  IBAN BE11 0688 9837 7348  -  BIC  GKCCBEBB <br>
+                    TVA 0541 953 252 – RPM NIVELLES<br>
+                    Entrepôt fiscal : 555.399</small></p>
+
+            <p class="text-center"><small>TEL : 06 35 93 25 25<br>
+                    http://www.labelgiqueunefois.com</small></p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

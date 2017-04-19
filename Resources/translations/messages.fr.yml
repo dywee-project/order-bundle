@@ -34,3 +34,40 @@ order:
         invoice: Gestion des factures
 
     noOrder: Pas de commandes
+
+shipment:
+    sidebar:
+        label: Gestion des envois
+        table: Liste des méthodes d'envoi
+
+    all_country: Tous les pays
+    no_weight_limit: pas de limite de poids
+
+    active: Actif
+    inactive: Inactif
+
+    state:
+        not_prepared: Non préparé
+        preparing: En préparation
+        waiting: En attente
+        shipping: En livraison
+        shipped: Livré
+        waiting_customer: En attente de réception
+        returned: Retourné
+
+deliver:
+    sidebar:
+        table: Liste des livreurs
+
+shipmentMethod:
+    form:
+        name: Nom
+        deliver: Livreur
+        code: Code spécifique livreur
+        minWeight: Poids minimum
+        maxWeight: Poids maximum
+        active: Active
+
+shipmentRule:
+    sidebar:
+        table: Liste des règles

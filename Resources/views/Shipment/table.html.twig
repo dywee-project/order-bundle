@@ -1,0 +1,21 @@
+{# Dywee\ShipmentBundle\Resources\View\Shipment\table.html.twig #}
+
+{%  extends "DyweeShipmentBundle::admin.html.twig" %}
+
+{% block body %}
+    <div class="pull-right">
+        <a href="{{ path('order_adminList') }}" class="btn btn-default">Retour à la liste des commandes</a>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h2 class="box-title">Liste des Envois</h2>
+                </div>
+                {% include 'DyweeShipmentBundle:Shipment:miniTable.html.twig' %}
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

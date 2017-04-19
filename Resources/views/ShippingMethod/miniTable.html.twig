@@ -1,0 +1,64 @@
+<table class="table table-striped table-hover">
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>Nom</th>
+        <th>Pays</th>
+        <th>Livreur</th>
+        <th>Type</th>
+        <th>Poids</th>
+        <th>Prix</th>
+        <th>Statut</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {%  for shipmentMethod in shipmentMethods %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ shipmentMethod.name }}</td>
+            <td>
+                {% if shipmentMethod.country is not null %}
+                    {{ shipmentMethod.country.name }}
+                {% else %}
+                    {{ 'shipment.all_country'|trans }}
+                {% endif %}
+            </td>
+            <td>{{ shipmentMethod.deliver.name }}</td>
+            <td>{{ shipmentMethod.type }}</td>
+            <td>
+                {% if shipmentMethod.minWeight is not null %}
+                    {% if shipmentMethod.maxWeight is not null %}
+                        {{ shipmentMethod.minWeight }} gr -> {{ shipmentMethod.maxWeight }} gr
+                    {% else %}
+                        {{ shipmentMethod.minWeight }} gr -> {{ 'shipment.no_weight_limit'|trans }}
+                    {% endif %}
+                {% else %}
+                    {% if shipmentMethod.maxWeight is not null %}
+                        {{ 'shipment.no_weight_limit'|trans }} gr -> {{ shipmentMethod.maxWeight }} gr
+                    {% else %}
+                        {{ 'shipment.no_weight_limit'|trans }}
+                    {% endif %}
+                {% endif %}
+
+            </td>
+            <td>{{ shipmentMethod.price|number_format(2) }}€</td>
+            <td>{% if shipmentMethod.active == false %}
+                    <span class="label label-default">{{ 'shipment.inactive'|trans }}</span>
+                {% elseif shipmentMethod.active == true %}
+                    <span class="label label-success">{{ 'shipment.active'|trans }}</span>
+                {%  endif %}
+            </td>
+            <td>
+                <div class="btn-group btn-group-xs">
+                    <a href="#{{ path('shipping_method_view', {id: shipmentMethod.id}) }}" class="btn btn-default"><i class="fa fa-eye"></i> </a>
+                    <a href="{{ path('shipping_method_update', {id: shipmentMethod.id}) }}" class="btn btn-default"><i class="fa fa-pencil"></i> </a>
+                </div>
+
+                {#<a href="#{{ path('shipment_method_delete', {id: shipmentMethod.id}) }}" class="link-unstyled"><i class="fa fa-trash-o"></i> </a>#}
+
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

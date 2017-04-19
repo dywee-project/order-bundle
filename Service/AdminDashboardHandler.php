@@ -16,27 +16,27 @@ class AdminDashboardHandler
 
     public function getDashboardElement()
     {
-        $elements = array(
-            'key' => 'order',
-            'cards' => array(
-                array(
+        $elements = [
+            'key'   => 'order',
+            'cards' => [
+                [
                     'controller' => 'DyweeOrderBundle:Dashboard:card'
-                )
-            ),
-            'boxes' => array(
-                array(
+                ]
+            ],
+            'boxes' => [
+                [
                     'column' => 'col-md-8',
-                    'type' => 'default',
-                    'title' => 'order.dashboard.table',
-                    'body' => array(
-                        array(
-                            'boxBody' => false,
+                    'type'   => 'default',
+                    'title'  => 'order.dashboard.table',
+                    'body'   => [
+                        [
+                            'boxBody'    => false,
                             'controller' => 'DyweeOrderBundle:Dashboard:table'
-                        )
-                    )
-                )
-            )
-        );
+                        ]
+                    ]
+                ]
+            ]
+        ];
 
         return $elements;
     }

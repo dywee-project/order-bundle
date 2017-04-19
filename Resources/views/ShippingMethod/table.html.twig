@@ -1,0 +1,28 @@
+{%  extends "DyweeShipmentBundle::admin.html.twig" %}
+
+{% block metaTitle %}
+    Liste des règles de livraison {{ parent() }}
+{% endblock %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <div class="box-tools">
+                        <a href="{{ path('shipping_method_add') }}" class="btn btn-success btn-box-tool"><i class="fa fa-plus"></i> Ajouter</a>
+                    </div>
+                    <h1 class="box-title">Liste des règles de livraison</h1>
+                </div>
+                {% include 'DyweeShipmentBundle:ShippingMethod:miniTable.html.twig' %}
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+{% endblock %}

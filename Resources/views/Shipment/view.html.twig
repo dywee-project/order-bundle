@@ -1,0 +1,104 @@
+{% extends "DyweeOrderBundle::admin.html.twig" %}
+
+{% block body %}
+    <div class="action-left">
+        <a href="{{ path('order_view', {id: shipment.order.id}) }}" class="btn btn-default"><i class="fa fa-angle-left"></i> Retour à la commande</a>
+    </div>
+    <div class="title-heading">
+        <h1 class="text-center">Coup d'oeil sur un envoi</h1>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading"><h2 class="panel-title">Contenu de l'envoi</h2></div>
+                <table class="table table-striped table-hover table-condensed">
+                    <thead>
+                    <tr>
+                        <th>Produit</th>
+                        <th>Quantity</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for shipmentElement in shipment.shipmentElements %}
+                        <tr>
+                            <td>
+                                {{ shipmentElement.product.name }}
+                                - envoi n°{{ shipment.sendingIndex }}
+                            </td>
+                            <td>{{ shipmentElement.quantity }}</td>
+
+                            <td>
+
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <div class="box-body">
+                    <a href="{# path('shipment_send', {id: shipment.id}) #}" class="btn btn-default btn-block">Marqué comme "Envoyé"</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-heading"><h2 class="panel-title">Informations</h2></div>
+                <table class="table table-striped table-hover table-condensed">
+                    <tbody>
+                    <tr>
+                        <th>Ordre</th>
+                        <td>{{ shipment.sendingIndex }}</td>
+                    </tr>
+                    <tr>
+                        <th>Date de départ</th>
+                        <td>{{ shipment.departureAt|date('d/m/Y') }}</td>
+                    </tr>
+                    <tr>
+                        <th>Date d'update</th>
+                        <td>{{ shipment.updatedAt|date('d/m/Y') }}</td>
+                    </tr>
+                    <tr>
+                        <th>Date de finalisation</th>
+                        <td>{{ shipment.endAt|date('d/m/Y') }}</td>
+                    </tr>
+                    <tr>
+                        <th>livreur</th>
+                        <td>
+                            {% if shipment.shippingMethod %}
+                                {{ shipment.shippingMethod.deliver.name }}
+                            {% else %}
+                                Non défini
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>tracingInfos</th>
+                        <td>{{ shipment.tracingInfos }}</td>
+                    </tr>
+                    <tr>
+                        <th>state</th>
+                        <td>{% include 'DyweeOrderBundle:Shipment:state.html.twig' %}
+                        </td>
+                    <tbody>
+                </table>
+
+                {#<div class="box-body">
+                    <p><a href="{{ path('shipment_edit', {id: shipment.id}) }}" class="btn btn-default btn-block"><i
+                                    class="fa fa-pencil"></i> Modifier</a></p>
+                </div>#}
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h2 class="panel-title">Actions</h2>
+                </div>
+                <div class="panel-body">
+                    <a href="#" class="btn btn-default btn-block">Imprimer l'étiquette</a>
+                    <a href="#" class="btn btn-default btn-block">Imprimer la note d'envoi</a>
+                    <a href="#" class="btn btn-default btn-block">Marqué comme "Envoyé"</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

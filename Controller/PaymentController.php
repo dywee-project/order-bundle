@@ -14,10 +14,8 @@ use FOS\RestBundle\Controller\Annotations\Route;
 use Payum\Core\Model\PaymentInterface;
 use Payum\Core\Request\GetHumanStatus;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class PaymentController extends Controller
 {
@@ -86,26 +84,9 @@ class PaymentController extends Controller
             throw new \LogicException('amount of the payment is not equal to the amount of the order (' . $payment->getTotalAmount() . '!=' . $order->getTotalPrice());
         }
 
-        switch (true) {
-            case $status->isAuthorized():
-                $order->setPaymentStatus(BaseOrderInterface::PAYMENT_AUTHORIZED);
-                $request->getSession()->set('order', null);
-                break;
-            case $status->isCaptured():
-                $order->setPaymentStatus(BaseOrderInterface::PAYMENT_VALIDATED);
-                $request->getSession()->set('order', null);
-                break;
-            case $status->isCanceled():
-            case $status->isExpired():
-            case $status->isFailed():
-            case $status->isUnknown():
-                $order->setPaymentStatus(BaseOrderInterface::PAYMENT_CANCELLED);
-                break;
-            case $status->isPending():
-                $order->setPaymentStatus(BaseOrderInterface::PAYMENT_WAITING_VALIDATION);
-                break;
-        }
+        $this->get('dywee_order.status_manager')->changePaymentStatus($order, $status);
 
+        $request->getSession()->set('order', null);
         $request->getSession()->set('validatedOrderId', $order->getId());
         $em->persist($order);
         $em->flush();

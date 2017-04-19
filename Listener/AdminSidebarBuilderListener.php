@@ -8,7 +8,8 @@ use Dywee\OrderBundle\Service\AdminSidebarHandler;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 
-class AdminSidebarBuilderListener implements EventSubscriberInterface{
+class AdminSidebarBuilderListener implements EventSubscriberInterface
+{
     private $orderAdminSidebarHandler;
 
     public function __construct(AdminSidebarHandler $orderAdminSidebarHandler)
@@ -19,14 +20,15 @@ class AdminSidebarBuilderListener implements EventSubscriberInterface{
     public static function getSubscribedEvents()
     {
         // return the subscribed events, their methods and priorities
-        return array(
-            DyweeCoreEvent::BUILD_ADMIN_SIDEBAR => array('addElementToSidebar', -10)
-        );
+        return [
+            DyweeCoreEvent::BUILD_ADMIN_SIDEBAR => ['addElementToSidebar', -10]
+        ];
     }
 
     public function addElementToSidebar(AdminSidebarBuilderEvent $adminSidebarBuilderEvent)
     {
         $adminSidebarBuilderEvent->addAdminElement($this->orderAdminSidebarHandler->getSideBarMenuElement());
+        $adminSidebarBuilderEvent->addAdminElement($this->orderAdminSidebarHandler->getShipmentSidebarElements());
     }
 
 }

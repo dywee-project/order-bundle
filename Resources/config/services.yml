@@ -72,3 +72,12 @@ services:
     dywee_order.shipment_rule_manager:
         class: Dywee\OrderBundle\Service\ShipmentRuleManager
         arguments: ['@doctrine.orm.entity_manager']
+
+    ###########################
+    #                         #
+    #         MANAGER         #
+    #                         #
+    ###########################
+
+    dywee_order.status_manager:
+        class: Dywee\OrderBundle\Service\OrderStatusManager

@@ -1,0 +1,19 @@
+<div class="box box-info">
+    <div class="box-header with-border">
+        <h2 class="box-title">Aide</h2>
+    </div>
+    <div class="box-body">
+        <p>Le nom de la méthode de livraison est le nom que vos clients verront sur le site.</p>
+        <p>Le champs "{{ 'shipmentMethod.form.code'|trans }}" est le nom de la méthode que votre livreur doit utiliser, ce code est utilisé en interne par l'entreprise de livraison pour connaitre le type de livraison.<br>
+        Par exemple, pour mondial relay:
+        <ul>
+            <li>Livraison en point relai: 24R</li>
+            <li>Livraison à domicile: HOM</li>
+        </ul>
+        Ces codes sont fourni par l'entreprise de livraison
+        </p>
+        <p>Vous pouvez configurer un prix par pays et par poids. Configurez autant de méthodes de livraison que de variantes voulues.</p>
+        <p>Pour ne pas mettre de contraintes sur un des champs restrictifs (pays, poids minimum et maximum), laissez les vides.</p>
+        <p>Vous pouvez activer ou désactiver facilement des méthodes via la case à cocher "{{ 'shipmentMethod.form.active'|trans }}"</p>
+    </div>
+</div>

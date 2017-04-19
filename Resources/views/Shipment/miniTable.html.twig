@@ -1,0 +1,45 @@
+<table class="table table-striped table-hover">
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>Ordre</th>
+        <th>Date de départ</th>
+        <th>Date d'update</th>
+        <th>Date de finalisation</th>
+        <th>Type de livraison</th>
+        <th>tracingInfos</th>
+        <th>state</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {%  for shipment in shipments %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ shipment.sendingIndex }}</td>
+            <td>{{ shipment.departureAt|date('d/m/Y') }}</td>
+            <td>{{ shipment.updatedAt|date('d/m/Y') }}</td>
+            <td>{{ shipment.endAt|date('d/m/Y') }}</td>
+            <td>
+                {% if shipment.shippingMethod is not null %}
+                    {{ shipment.shippingMethod.deliver.name }} - {{ shipment.shippingMethod.name }}
+                {% else %}
+                    Non défini
+                {% endif %}
+            </td>
+            <td>{{ shipment.tracingInfos }}</td>
+            <td>{% include 'DyweeShipmentBundle:Shipment:state.html.twig' %}</td>
+            <td>
+                <div class="btn-group btn-group-xs">
+                    <a href="{{ path('shipment_view', {id: shipment.id}) }}" class="btn btn-default"><i class="fa fa-eye"></i> </a>
+                    <a href="{{ path('shipment_edit', {id: shipment.id}) }}" class="btn btn-default"><i class="fa fa-eye"></i> </a>
+                    {#<a href="{{ path('dywee_shipment_note_download', {idShipment: shipment.id}) }}" class="btn btn-default"><i class="fa fa-print"></i> </a>#}
+                    {#<a href="{{ path('dywee_shipment_label', {id: shipment.id}) }}" class="btn btn-default"><i class="fa fa-barcode"></i> </a>#}
+                    {#<a href="{{ path('shipment_update', {id: shipment.id}) }}" class="btn btn-default"><i class="fa fa-pencil"></i> </a>#}
+                    {#<a href="{{ path('dywee_shipment_delete', {id: shipment.id}) }}" class="btn btn-default"><i class="fa fa-trash-o"></i> </a>#}
+                </div>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

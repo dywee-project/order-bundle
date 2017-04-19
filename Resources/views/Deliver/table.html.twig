@@ -1,0 +1,53 @@
+{%  extends "DyweeOrderBundle::admin.html.twig" %}
+
+{% block metaTitle %}
+    Liste des livreurs {{ parent() }}
+{% endblock %}
+
+{% block body %}
+
+    <div class="col-md-6">
+        <div class="box box-default">
+            <div class="box-header">
+                <h2 class="box-title">Liste des livreurs</h2>
+            </div>
+            <table class="table table-striped table-hover">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nom</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {%  for deliver in delivers %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td><a href="#{{ path('deliver_view', {id: deliver.id}) }}">{{ deliver.name }}</a></td>
+                        <td>{% if deliver.active %}
+                                <span class="label label-default">Inactif</span>
+                            {% else %}
+                                <span class="label label-success">Actif</span>
+                            {%  endif %}
+
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-xs">
+                                {#<a href="#{{ path('deliver_view', {id: deliver.id}) }}" class="btn btn-default"><i class="fa fa-eye"></i> </a>#}
+                                <a href="{{ path('deliver_update', {id: deliver.id}) }}" class="btn btn-default"><i class="fa fa-pencil"></i> </a>
+                            </div>
+
+                            {#<a href="#{{ path('deliver_delete', {id: deliver.id}) }}" class="btn btn-xs btn-danger"><i class="fa fa-trash-o"></i> </a>#}
+
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+{% endblock %}
