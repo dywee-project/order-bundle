@@ -21,7 +21,7 @@ class ShippingMethodController extends Controller
         $dr = $this->getDoctrine()->getManager()->getRepository(ShippingMethod::class);
         $shipmentMethodList = $dr->findAll();
 
-        return $this->render('DyweeShipmentBundle:ShippingMethod:table.html.twig', array('shipmentMethods' => $shipmentMethodList));
+        return $this->render('DyweeOrderBundle:ShippingMethod:table.html.twig', array('shipmentMethods' => $shipmentMethodList));
     }
 
     /**
@@ -45,7 +45,7 @@ class ShippingMethodController extends Controller
             return $this->redirectToRoute('shipping_method_table');
         }
 
-        return $this->render('DyweeShipmentBundle:ShippingMethod:add.html.twig', array('form' => $form->createView()));
+        return $this->render('DyweeOrderBundle:ShippingMethod:add.html.twig', array('form' => $form->createView()));
     }
 
     /**
@@ -56,7 +56,7 @@ class ShippingMethodController extends Controller
      */
     public function viewAction(ShippingMethod $shipmentMethod)
     {
-        return $this->render('DyweeShipmentBundle:ShippingMethod:view.html.twig', array('shipmentMethods' => $shipmentMethod));
+        return $this->render('DyweeOrderBundle:ShippingMethod:view.html.twig', array('shipmentMethods' => $shipmentMethod));
     }
 
     /**
@@ -78,7 +78,7 @@ class ShippingMethodController extends Controller
             return $this->redirectToRoute('shipping_method_table');
         }
 
-        return $this->render('DyweeShipmentBundle:ShippingMethod:edit.html.twig', array('form' => $form->createView()));
+        return $this->render('DyweeOrderBundle:ShippingMethod:edit.html.twig', array('form' => $form->createView()));
     }
 
 

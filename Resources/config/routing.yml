@@ -1,6 +1,7 @@
+#deprecated
 order_table:
     path:     /admin/order/table
-    defaults: { _controller: DyweeOrderBundle:OrderAdmin:table, state: 2, page: 1 }
+    defaults: { _controller: DyweeOrderBundle:Order:table, state: 2, page: 1 }
 
 order_add:
     path:     /admin/order/add

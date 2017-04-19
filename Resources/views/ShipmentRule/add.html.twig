@@ -1,4 +1,4 @@
-{% extends "DyweeShipmentBundle::admin.html.twig" %}
+{% extends "DyweeOrderBundle::admin.html.twig" %}
 
 {% block metaTitle %}
     Ajout d'une règle de livraison {{ parent() }}
@@ -13,7 +13,7 @@
                     <h2 class="box-title">Ajout d'une règle de livraison</h2>
                 </div>
                 <div class="box-body">
-                    {%  include "DyweeShipmentBundle:ShipmentRule:form.html.twig" %}
+                    {%  include "DyweeOrderBundle:ShipmentRule:form.html.twig" %}
                 </div>
             </div>
         </div>

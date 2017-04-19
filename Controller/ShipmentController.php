@@ -16,7 +16,7 @@ class ShipmentController extends ParentController
      */
     public function shipmentTableAction(BaseOrder $order)
     {
-        return $this->render('DyweeShipmentBundle:Shipment:table.html.twig', array('shipments' => $order->getShipments()));
+        return $this->render('DyweeOrderBundle:Shipment:table.html.twig', array('shipments' => $order->getShipments()));
     }
 
     /**
@@ -42,9 +42,9 @@ class ShipmentController extends ParentController
         $fileName = /*'files/sendNotes/*/'envoi_'.$shipment->getId().'.pdf';
         if (!file_exists($fileName))
         {
-            $note = $this->renderView('DyweeShipmentBundle:Shipment:note.html.twig', array('shipment' => $shipment));
+            $note = $this->renderView('DyweeOrderBundle:Shipment:note.html.twig', array('shipment' => $shipment));
 
-            return $this->render('DyweeShipmentBundle:Shipment:note.html.twig', array('shipment' => $shipment));
+            return $this->render('DyweeOrderBundle:Shipment:note.html.twig', array('shipment' => $shipment));
 
             $pdfGenerator = $this->get('spraed.pdf.generator');
 
@@ -89,7 +89,7 @@ class ShipmentController extends ParentController
     public function viewNoteAction(Shipment $shipment)
     {
         $this->container->get('profiler')->disable();
-        return $this->render('DyweeShipmentBundle:Shipment:note.html.twig', array('shipment' => $shipment));
+        return $this->render('DyweeOrderBundle:Shipment:note.html.twig', array('shipment' => $shipment));
     }
 
     public function sendAction(Shipment $shipment)

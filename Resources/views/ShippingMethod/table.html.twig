@@ -1,4 +1,4 @@
-{%  extends "DyweeShipmentBundle::admin.html.twig" %}
+{%  extends "DyweeOrderBundle::admin.html.twig" %}
 
 {% block metaTitle %}
     Liste des règles de livraison {{ parent() }}
@@ -15,7 +15,7 @@
                     </div>
                     <h1 class="box-title">Liste des règles de livraison</h1>
                 </div>
-                {% include 'DyweeShipmentBundle:ShippingMethod:miniTable.html.twig' %}
+                {% include 'DyweeOrderBundle:ShippingMethod:miniTable.html.twig' %}
             </div>
         </div>
     </div>

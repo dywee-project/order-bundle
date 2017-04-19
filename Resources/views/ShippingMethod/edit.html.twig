@@ -1,4 +1,4 @@
-{% extends "DyweeShipmentBundle::admin.html.twig" %}
+{% extends "DyweeOrderBundle::admin.html.twig" %}
 
 {% block metaTitle %}
     Modification d'une méthode de livraison {{ parent() }}
@@ -13,13 +13,13 @@
                     <h2 class="box-title">Modification d'une méthode de livraison</h2>
                 </div>
                 <div class="box-body">
-                    {%  include "DyweeShipmentBundle:ShippingMethod:form.html.twig" %}
+                    {%  include "DyweeOrderBundle:ShippingMethod:form.html.twig" %}
                 </div>
             </div>
         </div>
 
         <div class="col-md-6">
-            {% include 'DyweeShipmentBundle:ShippingMethod:helper.html.twig' %}
+            {% include 'DyweeOrderBundle:ShippingMethod:helper.html.twig' %}
         </div>
     </div>
 
