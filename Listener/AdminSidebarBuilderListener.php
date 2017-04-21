@@ -10,25 +10,40 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class AdminSidebarBuilderListener implements EventSubscriberInterface
 {
+    /** @var AdminSidebarHandler $orderAdminSidebarHandler */
     private $orderAdminSidebarHandler;
 
-    public function __construct(AdminSidebarHandler $orderAdminSidebarHandler)
+    /** @var bool */
+    private $inSidebar;
+
+    public function __construct(AdminSidebarHandler $orderAdminSidebarHandler, bool $inSidebar)
     {
         $this->orderAdminSidebarHandler = $orderAdminSidebarHandler;
+        $this->inSidebar = $inSidebar;
     }
 
     public static function getSubscribedEvents()
     {
         // return the subscribed events, their methods and priorities
         return [
-            DyweeCoreEvent::BUILD_ADMIN_SIDEBAR => ['addElementToSidebar', -10]
+            DyweeCoreEvent::BUILD_ADMIN_SIDEBAR => ['addElementToSidebar', -10],
         ];
     }
 
     public function addElementToSidebar(AdminSidebarBuilderEvent $adminSidebarBuilderEvent)
     {
-        $adminSidebarBuilderEvent->addAdminElement($this->orderAdminSidebarHandler->getSideBarMenuElement());
-        $adminSidebarBuilderEvent->addAdminElement($this->orderAdminSidebarHandler->getShipmentSidebarElements());
+        if($this->inSidebar) {
+            $adminSidebarBuilderEvent->addAdminElement($this->orderAdminSidebarHandler->getSideBarMenuElement());
+            $adminSidebarBuilderEvent->addAdminElement($this->orderAdminSidebarHandler->getShipmentSidebarElements());
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    public function isInSidebar() : bool
+    {
+        return $this->inSidebar;
     }
 
 }

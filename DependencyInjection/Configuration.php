@@ -1,6 +1,6 @@
 <?php
 
-namespace Acme\SocialBundle\DependencyInjection;
+namespace Dywee\OrderBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -17,7 +17,7 @@ class Configuration implements ConfigurationInterface
             ->enumNode('price_vat_display')
                 ->values(['incl', 'excl'])
                 ->defaultValue('incl')
-            ->end() //incl | excl
+            ->end()
             ->enumNode('sell_type')
                 ->values(['buy', 'rent', 'both'])
                 ->defaultValue('buy')

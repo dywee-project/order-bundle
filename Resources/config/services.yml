@@ -26,7 +26,7 @@ services:
 
     dywee_order.admin_sidebar_listener:
         class: Dywee\OrderBundle\Listener\AdminSidebarBuilderListener
-        arguments: [ '@dywee_order.sidebar_handler' ]
+        arguments: [ '@dywee_order.sidebar_handler', true ]
         tags:
             - { name: kernel.event_subscriber }
 
