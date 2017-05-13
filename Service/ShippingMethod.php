@@ -5,6 +5,7 @@ namespace Dywee\OrderBundle\Service;
 use Doctrine\ORM\EntityManager;
 use Dywee\AddressBundle\Entity\CountryInterface;
 use Dywee\OrderBundle\Entity\BaseOrder;
+use Dywee\OrderBundle\Entity\BaseOrderInterface;
 use Dywee\OrderBundle\Entity\Shipment;
 
 class ShippingMethod
@@ -85,5 +86,12 @@ class ShippingMethod
         }
 
         return $this->shipmentMethods;
+    }
+
+    public function setNoShippingMethod(BaseOrderInterface $order)
+    {
+        $shippingMethodRepository = $this->em->getRepository(\Dywee\OrderBundle\Entity\ShippingMethod::class);
+        $shippingMethod = $shippingMethodRepository->findOneByType('free');
+        $order->setShippingMethod($shippingMethod);
     }
 }

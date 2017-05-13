@@ -80,7 +80,7 @@ class PaymentController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        if ((float)$payment->getTotalAmount() !== (float)$order->getTotalPrice()) {
+        if ((float)$payment->getTotalAmount() !== ((float)$order->getTotalPrice()) * 100) {
             throw new \LogicException('amount of the payment is not equal to the amount of the order (' . $payment->getTotalAmount() . '!=' . $order->getTotalPrice());
         }
 

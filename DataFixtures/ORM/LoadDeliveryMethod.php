@@ -20,6 +20,11 @@ class LoadDeliveryMethod extends AbstractFixture
 {
     public function load(ObjectManager $manager)
     {
+        $noShipping = new ShippingMethod();
+        $noShipping->setName('No shipping');
+        $noShipping->setActive(true);
+        $noShipping->setType('free');
+
         $shop = new ShippingMethod();
         $shop->setName('Withdrawal in store');
         $shop->setActive(true);
@@ -30,6 +35,7 @@ class LoadDeliveryMethod extends AbstractFixture
         $mondialRelay->setActive(false);
         $mondialRelay->setDeliver($this->getReference('deliver-mondial-relay'));
 
+        $manager->persist($noShipping);
         $manager->persist($shop);
         $manager->persist($mondialRelay);
 

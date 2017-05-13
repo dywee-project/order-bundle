@@ -81,3 +81,6 @@ services:
 
     dywee_order.status_manager:
         class: Dywee\OrderBundle\Service\OrderStatusManager
+
+    dywee_order.virtualization_manager:
+        class: Dywee\OrderBundle\Service\OrderVirtualizationManager

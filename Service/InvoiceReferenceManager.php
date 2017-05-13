@@ -1,4 +1,5 @@
 <?php
+
 namespace Dywee\OrderBundle\Service;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
@@ -8,7 +9,8 @@ use Dywee\OrderBundle\Entity\OrderReferenceBuilder;
 use Dywee\OrderBundle\Entity\ReferenceIterator;
 use Dywee\ProductBundle\Entity\ProductStat;
 
-class InvoiceReferenceManager {
+class InvoiceReferenceManager
+{
     public function preUpdate(LifecycleEventArgs $args)
     {
         return $this->invoice($args);
@@ -38,8 +40,12 @@ class InvoiceReferenceManager {
             return;
         }
 
-        if($entity->isElligibleForInvoice()) {
+        if ($entity->isElligibleForInvoice()) {
             $country = $entity->getShippingAddress()->getCountry();
+
+            if (!$country) {
+                return;
+            }
 
             $orderReferenceBuilderRepository = $em->getRepository('DyweeOrderBundle:OrderReferenceBuilder');
             $orderReferenceBuilder = $orderReferenceBuilderRepository->findOneById(1);
@@ -53,6 +59,8 @@ class InvoiceReferenceManager {
             // Add reference prefix
             $reference = $orderReferenceBuilder->getPrefix();
 
+            var_dump($reference); exit;
+
             // Add country reference if needed and if prefix does'nt already added it
             if ($orderReferenceBuilder->getByCountry()) {
                 if ($orderReferenceBuilder->getPrefix() !== '[country]') {
@@ -60,12 +68,10 @@ class InvoiceReferenceManager {
                         $reference .= ' ';
                     }
                     $reference .= $country->getIso();
+                } else {
+                    $reference = str_replace(['[country]'], [$country->getIso()], $reference);
                 }
-                else{
-                    $reference = str_replace(array('[country]'), array($country->getIso()), $reference);
-                }
-            }
-            else{
+            } else {
                 $country = null;
             }
 
@@ -73,17 +79,19 @@ class InvoiceReferenceManager {
             $iteratorRepository = $em->getRepository('DyweeOrderBundle:ReferenceIterator');
             $iterator = $iteratorRepository->findOneByCountry($country);
 
-            if(!$iterator)
-            {
+            if (!$iterator) {
                 $iterator = new ReferenceIterator();
-                $iterator->setCountry($country);
+                if ($country) {
+                    $iterator->setCountry($country);
+                }
             }
 
             $iteration = $iterator->getIteration();
 
             // Conform to digit number
-            while(strlen($iteration) < $orderReferenceBuilder->getDigitNumber())
-                $iteration = '0'.$iteration;
+            while (strlen($iteration) < $orderReferenceBuilder->getDigitNumber()){
+                $iteration = '0' . $iteration;
+            }
 
             $reference .= $iteration;
 
@@ -101,30 +109,40 @@ class InvoiceReferenceManager {
         $entity = $args->getEntity();
         $em = $args->getEntityManager();
 
-        if (!$entity instanceof BaseOrder){
+        if (!$entity instanceof BaseOrder) {
             return;
         }
 
-        if(!$entity->justGotInvoice)
+        if (!$entity->justGotInvoice) {
             return;
+        }
 
         $country = $entity->getShippingAddress()->getCountry();
+
+        if (!$country) {
+            return;
+        }
 
         $orderReferenceBuilderRepository = $em->getRepository('DyweeOrderBundle:OrderReferenceBuilder');
         $orderReferenceBuilder = $orderReferenceBuilderRepository->findOneById(1);
 
-        if (!$orderReferenceBuilder->getByCountry()) {
+        if (!$orderReferenceBuilder || !$orderReferenceBuilder->getByCountry()) {
             $country = null;
         }
 
         // Add iteration
         $iteratorRepository = $em->getRepository('DyweeOrderBundle:ReferenceIterator');
-        $iterator = $iteratorRepository->findOneByCountry($country);
+        $iterator = null;
 
-        if(!$iterator)
-        {
+        if ($country) {
+            $iterator = $iteratorRepository->findOneByCountry($country);
+        }
+
+        if (!$iterator) {
             $iterator = new ReferenceIterator();
-            $iterator->setCountry($country);
+            if ($country) {
+                $iterator->setCountry($country);
+            }
         }
 
         $iterator->iterate();

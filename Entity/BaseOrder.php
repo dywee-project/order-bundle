@@ -291,6 +291,7 @@ class BaseOrder implements BaseOrderInterface
      * Set isGift
      *
      * @param boolean $isGift
+     *
      * @return BaseOrderInterface
      */
     public function setIsGift($isGift)
@@ -314,6 +315,7 @@ class BaseOrder implements BaseOrderInterface
      * Set priceVatExcl
      *
      * @param float $priceVatExcl
+     *
      * @return BaseOrderInterface
      */
     public function setPriceVatExcl($priceVatExcl)
@@ -335,9 +337,11 @@ class BaseOrder implements BaseOrderInterface
 
     /**
      * Set deliveryCost
+     *
      * @deprecated
      *
      * @param float $deliveryCost
+     *
      * @return BaseOrderInterface
      */
     public function setDeliveryCost($deliveryCost)
@@ -356,6 +360,7 @@ class BaseOrder implements BaseOrderInterface
 
     /**
      * Get deliveryCost
+     *
      * @deprecated use shippingCost instead
      *
      * @return float
@@ -374,6 +379,7 @@ class BaseOrder implements BaseOrderInterface
      * Set vatRate
      *
      * @param string $vatRate
+     *
      * @return BaseOrderInterface
      */
     public function setVatRate($vatRate)
@@ -397,6 +403,7 @@ class BaseOrder implements BaseOrderInterface
      * Set vatPrice
      *
      * @param float $vatPrice
+     *
      * @return BaseOrderInterface
      */
     public function setVatPrice($vatPrice)
@@ -420,6 +427,7 @@ class BaseOrder implements BaseOrderInterface
      * Set discountCode
      *
      * @param string $discountCode
+     *
      * @return BaseOrderInterface
      */
     public function setDiscountCode($discountCode)
@@ -443,6 +451,7 @@ class BaseOrder implements BaseOrderInterface
      * Set discountRate
      *
      * @param float $discountRate
+     *
      * @return BaseOrderInterface
      */
     public function setDiscountRate($discountRate)
@@ -466,6 +475,7 @@ class BaseOrder implements BaseOrderInterface
      * Set priceVatIncl
      *
      * @param float $priceVatIncl
+     *
      * @return BaseOrderInterface
      */
     public function setPriceVatIncl($priceVatIncl)
@@ -489,6 +499,7 @@ class BaseOrder implements BaseOrderInterface
      * Set totalPrice
      *
      * @param float $totalPrice
+     *
      * @return BaseOrderInterface
      */
     public function setTotalPrice($totalPrice)
@@ -514,6 +525,7 @@ class BaseOrder implements BaseOrderInterface
      * Set description
      *
      * @param string $description
+     *
      * @return BaseOrderInterface
      */
     public function setDescription($description)
@@ -538,12 +550,13 @@ class BaseOrder implements BaseOrderInterface
      * Set validatedAt
      *
      * @param \DateTime $validationDate
+     *
      * @return BaseOrderInterface
      */
     public function setValidatedAt(\DateTime $validationDate)
     {
         $this->validatedAt = $validationDate;
-        
+
         return $this;
     }
 
@@ -562,6 +575,7 @@ class BaseOrder implements BaseOrderInterface
      * Set reference
      *
      * @param string $reference
+     *
      * @return BaseOrderInterface
      */
     public function setReference($reference)
@@ -585,6 +599,7 @@ class BaseOrder implements BaseOrderInterface
      * Set invoiceReference
      *
      * @param string $invoiceReference
+     *
      * @return BaseOrderInterface
      */
     public function setInvoiceReference($invoiceReference)
@@ -608,6 +623,7 @@ class BaseOrder implements BaseOrderInterface
      * Set shippingMessage
      *
      * @param string $shippingMessage
+     *
      * @return BaseOrderInterface
      */
     public function setShippingMessage($shippingMessage)
@@ -631,6 +647,7 @@ class BaseOrder implements BaseOrderInterface
      * Set locale
      *
      * @param string $locale
+     *
      * @return BaseOrderInterface
      */
     public function setLocale($locale)
@@ -654,6 +671,7 @@ class BaseOrder implements BaseOrderInterface
      * Set active
      *
      * @param boolean $active
+     *
      * @return BaseOrderInterface
      */
     public function setActive($active)
@@ -677,6 +695,7 @@ class BaseOrder implements BaseOrderInterface
      * Set state
      *
      * @param integer $state
+     *
      * @return BaseOrderInterface
      */
     public function setState($state)
@@ -738,6 +757,7 @@ class BaseOrder implements BaseOrderInterface
      * Set shippingUser
      *
      * @param CustomerInterface $shippingUser
+     *
      * @return BaseOrderInterface
      */
     public function setShippingUser(CustomerInterface $shippingUser = null)
@@ -781,6 +801,7 @@ class BaseOrder implements BaseOrderInterface
     public function setShippingAddress(AddressInterface $shippingAddress = null)
     {
         $this->shippingAddress = $shippingAddress;
+
         return $this;
     }
 
@@ -847,6 +868,7 @@ class BaseOrder implements BaseOrderInterface
 
     /**
      * @param null $type
+     *
      * @return int
      */
     public function countProducts($type = null)
@@ -905,9 +927,10 @@ class BaseOrder implements BaseOrderInterface
     public function calculShippingCost()
     {
         //TODO le shipping cost doit être calculé via le prix d'envoi de chaque shippingMethod de chaque orderElement
-        if($this->getShippingMethod())
+        if ($this->getShippingMethod())
             $this->setShippingCost($this->getShippingMethod()->getPrice() * count($this->getShipments()));
         else $this->setShippingCost(null);
+
         return $this;
     }
 
@@ -950,8 +973,9 @@ class BaseOrder implements BaseOrderInterface
 
     /**
      * @param BaseProduct $product
-     * @param $quantity
-     * @param int $locationCoeff
+     * @param             $quantity
+     * @param int         $locationCoeff
+     *
      * @return $this
      */
     public function addProduct(BaseProduct $product, $quantity, $locationCoeff = 1)
@@ -994,6 +1018,7 @@ class BaseOrder implements BaseOrderInterface
             if ($orderElement->getProduct()->getId() == $product->getId())
                 return $orderElement->getQuantity();
         }
+
         return 0;
     }
 
@@ -1007,6 +1032,7 @@ class BaseOrder implements BaseOrderInterface
         foreach ($this->getOrderElements() as $orderElement)
             if (!$type || $orderElement->getProduct() instanceof $type)
                 $weight += $orderElement->getProduct()->getWeight() * $orderElement->getQuantity();
+
         return $weight;
     }
 
@@ -1020,6 +1046,7 @@ class BaseOrder implements BaseOrderInterface
             $weight += $orderElement->getProduct()->getWeight() * $orderElement->getQuantity();
         }
         $this->weight = $weight;
+
         return $this;
     }
 
@@ -1044,6 +1071,7 @@ class BaseOrder implements BaseOrderInterface
     {
         foreach ($this->orderElements as $orderElement)
             if ($orderElement->getDiscountValue() > 0) return true;
+
         return false;
     }
 
@@ -1101,7 +1129,7 @@ class BaseOrder implements BaseOrderInterface
         foreach ($this->getOrderElements() as $orderElement) {
             $xType = $orderElement->getProduct()->getValidatedAt();
             if (!$wType) $wType = $xType;
-            else if ($xType != $wType) $sameType = false;
+            elseif ($xType != $wType) $sameType = false;
         }
         if ($sameType) {
             if (is_numeric($type))
@@ -1136,6 +1164,7 @@ class BaseOrder implements BaseOrderInterface
     public function setMailStep($mailStep)
     {
         $this->mailStep = $mailStep;
+
         return $this;
     }
 
@@ -1169,43 +1198,6 @@ class BaseOrder implements BaseOrderInterface
         return $this;
     }
 
-
-    private $isVirtual = null;
-    private $isOnlyVirtual = null;
-
-    public function isVirtual($forceRecalcul = false)
-    {
-        if ($this->isVirtual && !$forceRecalcul)
-            return $this->isVirtual;
-
-        $this->calculVirtualisation();
-
-        return $this->isVirtual;
-    }
-
-    public function isOnlyVirtual($forceRecalcul = false)
-    {
-        if ($this->isOnlyVirtual && !$forceRecalcul)
-            return $this->isVirtual;
-
-        $this->calculVirtualisation();
-
-        return $this->isOnlyVirtual;
-    }
-
-    private function calculVirtualisation()
-    {
-        $this->isVirtual = false;
-        $this->isOnlyVirtual = $this->getOrderElements() > 1;
-
-
-        foreach ($this->getOrderElements() as $element)
-            if ($element->getProduct() instanceof ProductDownloadable)
-                $this->isVirtual = true;
-            else
-                $this->isOnlyVirtual = false;
-    }
-
     public function setPreviousState($state)
     {
         $this->previousState = $state;
@@ -1228,7 +1220,9 @@ class BaseOrder implements BaseOrderInterface
 
     /**
      * alias
+     *
      * @param $price
+     *
      * @return $this
      */
     public function setPrice($price)
@@ -1241,6 +1235,7 @@ class BaseOrder implements BaseOrderInterface
         $this->discountElements[] = $element;
         $element->setIterator(count($this->discountElements) + 1);
         $element->setOrder($this);
+
         return $this;
     }
 
@@ -1265,21 +1260,24 @@ class BaseOrder implements BaseOrderInterface
 
     /**
      * @param string $type
+     *
      * @return BaseOrder
      */
     public function setType($type)
     {
         $this->type = $type;
+
         return $this;
     }
 
     public function getOrderRentElements()
     {
-        $elements = array();
+        $elements = [];
         foreach ($this->getOrderElements() as $element) {
             if ($element->getProduct() instanceof RentableProduct)
                 $elements[] = $element;
         }
+
         return $elements;
     }
 
@@ -1303,15 +1301,18 @@ class BaseOrder implements BaseOrderInterface
 
     /**
      * @param Shipment $shipment
+     *
      * @return BaseOrder
      */
     public function addShipment(Shipment $shipment)
     {
         $this->shipments[] = $shipment;
         $shipment->setOrder($this);
-        if($this->getShippingMethod())
+        if ($this->getShippingMethod()) {
             $shipment->setShippingMethod($this->getShippingMethod());
+        }
         $this->mustRecalculShipments = true;
+
         return $this;
     }
 
@@ -1325,6 +1326,7 @@ class BaseOrder implements BaseOrderInterface
     {
         $this->shipments = $shipments;
         $this->mustRecalculShipments = true;
+
         return $this;
     }
 
@@ -1338,15 +1340,18 @@ class BaseOrder implements BaseOrderInterface
 
     /**
      * @param mixed $shippingMethod
+     *
      * @return BaseOrder
      */
-    public function setShippingMethod($shippingMethod)
+    public function setShippingMethod(ShippingMethod $shippingMethod)
     {
         $this->shippingMethod = $shippingMethod;
-        foreach($this->getShipments() as $shipment)
+        foreach ($this->getShipments() as $shipment) {
             $shipment->setShippingMethod($this->getShippingMethod());
+        }
         $this->calculShippingCost();
         $this->forcePriceCalculation();
+
         return $this;
     }
 
@@ -1355,14 +1360,15 @@ class BaseOrder implements BaseOrderInterface
     //TODO savoir quand on a besoin de valider, est-ce que c'est dès qu'on a un paiement, ou que la commande passe en active?
     public function isElligibleForInvoice()
     {
-        if ($this->getInvoiceReference() || !$this->getBillingAddress() || !$this->getShippingAddress() || !$this->getBillingAddress()->getCountry() || !$this->getShippingAddress()->getCountry())
+        if ($this->getInvoiceReference() || !$this->getBillingAddress() || !$this->getShippingAddress() || !$this->getBillingAddress()->getCountry() || !$this->getShippingAddress()->getCountry()) {
             return false;
+        }
 
-        //$from = array(self::STATE_IN_SESSION, self::STATE_ERROR);
-        $to = array(self::STATE_IN_PROGRESS, self::STATE_READY_FOR_SHIPPING, self::STATE_IN_SHIPPING, self::STATE_FINALIZED);
+        $to = [self::STATE_IN_PROGRESS, self::STATE_READY_FOR_SHIPPING, self::STATE_IN_SHIPPING, self::STATE_FINALIZED];
 
-        if (!in_array($this->getState(), $to, true))
+        if (!in_array($this->getState(), $to, true)) {
             return false;
+        }
 
         //TODO gérer paiement
 
@@ -1372,14 +1378,16 @@ class BaseOrder implements BaseOrderInterface
     public function mustRecalculShipments()
     {
         $return = $this->mustRecalculShipments;
-        if(!$return && count($this->getShipments()) == 0 && count($this->getOrderElements()) > 0)
+        if (!$return && count($this->getShipments()) == 0 && count($this->getOrderElements()) > 0)
             return true;
+
         return $this->mustRecalculShipments;
     }
 
     public function RecalculShipmentsFinished()
     {
         $this->mustRecalculShipments = false;
+
         return $this;
     }
 
@@ -1400,6 +1408,7 @@ class BaseOrder implements BaseOrderInterface
     {
         $this->payments->add($payment);
         $payment->setOrder($this);
+
         return $this;
     }
 

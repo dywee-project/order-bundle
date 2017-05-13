@@ -86,6 +86,18 @@ interface BaseOrderInterface extends PersistableInterface
     public function getShippingCost();
 
     /**
+     * @return ShippingMethod|null
+     */
+    public function getShippingMethod();
+
+    /**
+     * @param ShippingMethod $shippingMethod
+     *
+     * @return BaseOrderInterface
+     */
+    public function setShippingMethod(ShippingMethod $shippingMethod);
+
+    /**
      * Set vatRate
      *
      * @param string $vatRate
@@ -528,10 +540,6 @@ interface BaseOrderInterface extends PersistableInterface
     public function decreaseStock();
 
     public function refundStock();
-
-    public function isVirtual($forceRecalcul = false);
-
-    public function isOnlyVirtual($forceRecalcul = false);
 
     public function setPreviousState($state);
 
