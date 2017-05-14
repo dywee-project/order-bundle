@@ -1,5 +1,5 @@
 {
-  "name": "dywee/order-bundle",
+  "name": "olix21/order-bundle",
   "type": "symfony-bundle",
   "description": "Symfony3 bundle for easy management of order in e-commerce",
   "keywords": ["order", "eshop", "ecommerce"],
@@ -13,14 +13,14 @@
     }
   ],
   "require": {
-    "php": ">=7.0.0",
-    "dywee/core-bundle": "dev-master",
+    "php": ">=7.1.0",
+    "olix21/core-bundle": "dev-master",
     "genemu/form-bundle": "^3.0@dev",
     "payum/payum-bundle": "^2.2"
   },
   "autoload": {
     "psr-4": {
-      "Dywee\\OrderBundle\\": ""
+      "Olix21\\OrderBundle\\": ""
     }
   }
 }
