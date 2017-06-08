@@ -12,7 +12,7 @@ use Doctrine\ORM\EntityRepository;
  */
 class ShipmentRuleRepository extends EntityRepository
 {
-    public function findForQuantityMax()
+    public function findForQuantityMax(array $data)
     {
         $qb = $this->createQueryBuilder('sr')
             ->select('sr')

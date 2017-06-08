@@ -5,12 +5,11 @@ namespace Dywee\OrderBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Dywee\CoreBundle\Model\AddressInterface;
+use Dywee\CoreBundle\Model\ProductInterface;
 use Dywee\CoreBundle\Traits\TimeDelimitableEntity;
 use Dywee\ProductBundle\Entity\BaseProduct;
-use Dywee\ProductBundle\Entity\ProductDownloadable;
 use Dywee\ProductBundle\Entity\RentableProduct;
 use Dywee\ProductBundle\Entity\RentableProductItem;
-use Dywee\OrderBundle\Entity\Shipment;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Dywee\CoreBundle\Model\CustomerInterface;
 use Payum\Core\Model\PaymentInterface;
@@ -250,7 +249,7 @@ class BaseOrder implements BaseOrderInterface
     private $mustRecalculShipments = false;
 
 
-    private $previousState = null;
+    private $previousState;
 
     /**
      * @var PaymentInterface
@@ -271,7 +270,7 @@ class BaseOrder implements BaseOrderInterface
     {
         $this->orderElements = new ArrayCollection();
         $this->shipments = new ArrayCollection();
-        $this->reference = time() . '-' . strtoupper(substr(md5(rand() . rand()), 0, 4));
+        $this->reference = time() . '-' . strtoupper(substr(md5(mt_rand() . mt_rand()), 0, 4));
         $this->discountElements = new ArrayCollection();
         $this->beginAt = new \DateTime();
         $this->payments = new ArrayCollection();
@@ -505,8 +504,9 @@ class BaseOrder implements BaseOrderInterface
     public function setTotalPrice($totalPrice)
     {
         $this->totalPrice = $totalPrice;
-        if ($this->totalPrice === 0)
+        if ($this->totalPrice === 0) {
             $this->setShippingCost(0);
+        }
 
         return $this;
     }
@@ -700,20 +700,12 @@ class BaseOrder implements BaseOrderInterface
      */
     public function setState($state)
     {
-        //On retient si le state a changé
-        if ($this->state != $state)
+        // We keep the previous state for handling the change of state
+        if ($this->state !== $state) {
             $this->setPreviousState($this->getState());
+        }
 
         $this->state = $state;
-
-        /*Si la commande est marquée comme finalisée on marque comme étant finalisés tous les envois
-        if($state === self::STATE_FINALIZED)
-        {
-            foreach($this->getShipments() as $shipment)
-                $shipment->setState(9);
-        }
-        else $this->mustRecaculShipments = true;
-        */
 
         return $this;
     }
@@ -850,7 +842,7 @@ class BaseOrder implements BaseOrderInterface
     {
         $this->orderElements->removeElement($orderElements);
         $orderElements->setOrder(null);
-        $this->mustRecaculShipments = true;
+        $this->mustRecalculShipments = true;
 
         return $this;
     }
@@ -873,14 +865,15 @@ class BaseOrder implements BaseOrderInterface
      */
     public function countProducts($type = null)
     {
-        $nbre = 0;
+        $quantity = 0;
 
         foreach ($this->getOrderElements() as $orderElement) {
-            if (!$type || $orderElement->getProduct() instanceof $type)
-                $nbre += $orderElement->getQuantity();
+            if (!$type || $orderElement->getProduct() instanceof $type) {
+                $quantity += $orderElement->getQuantity();
+            }
         }
 
-        return $nbre;
+        return $quantity;
     }
 
     /**
@@ -889,47 +882,50 @@ class BaseOrder implements BaseOrderInterface
     public function forcePriceCalculation()
     {
         $isTTC = true;
-        // CALCUL DU PRIX
-        $price = 0;
-        if ($this->getShippingAddress() && $this->getShippingAddress()->getCity() && $this->getShippingAddress()->getCity()->getCountry())
-            $this->setVatRate($this->getShippingAddress()->getCity()->getCountry()->getVatRate());
-        $this->setPriceVatIncl(0);
-        foreach ($this->getOrderElements() as $orderElement)
-            $price += $orderElement->getTotalPrice();
 
+        // Price calculation
+        $price = 0;
+        if ($this->getShippingAddress() && $this->getShippingAddress()->getCity() && $this->getShippingAddress()->getCity()->getCountry()) {
+            $this->setVatRate($this->getShippingAddress()->getCity()->getCountry()->getVatRate());
+        }
+        $this->setPriceVatIncl(0);
+        foreach ($this->getOrderElements() as $orderElement) {
+            $price += $orderElement->getTotalPrice();
+        }
 
         if ($isTTC) {
             $this->setPriceVatIncl($price);
             $this->setPriceVatExcl($price / (1 + $this->getVatRate() / 100));
             $this->setVatPrice($this->getPriceVatIncl() - $this->getPriceVatExcl());
-        } else {
-            /*$this->setPriceVatExcl($price);
-            $this->setVatPrice($this->getPriceVatExcl()*$this->getVatRate()/100);
-            $this->setPriceVatIncl($this->getPriceVatExcl()+$this->getVatPrice());*/
         }
 
-
-        /*if($this->getDiscountRate() > 0 || $this->getDiscountValue() > 0)
-        {
-            if($this->getDiscountValue() == 0)
-                $this->setDiscountValue($this->getDiscountRate()*$this->getPriceVatExcl()/100);
-            elseif($this->getDiscountRate() == 0)
-                $this->setDiscountRate(100*$this->getDiscountValue()/$this->getPriceVatExcl());
-        }*/
-
-        $this->calculShippingCost();
+        $this->calculateShippingCost();
 
         $this->setTotalPrice($this->getPriceVatIncl() + $this->getShippingCost() - $this->getDiscountValue());
 
         return $this;
     }
 
+    /**
+     * @return BaseOrder
+     * @deprecated
+     */
     public function calculShippingCost()
     {
+        return $this->calculateShippingCost();
+    }
+
+    /**
+     * @return $this
+     */
+    public function calculateShippingCost()
+    {
         //TODO le shipping cost doit être calculé via le prix d'envoi de chaque shippingMethod de chaque orderElement
-        if ($this->getShippingMethod())
+        if ($this->getShippingMethod()) {
             $this->setShippingCost($this->getShippingMethod()->getPrice() * count($this->getShipments()));
-        else $this->setShippingCost(null);
+        } else {
+            $this->setShippingCost(null);
+        }
 
         return $this;
     }
@@ -951,21 +947,26 @@ class BaseOrder implements BaseOrderInterface
         $rent = false;
 
         foreach ($this->getOrderElements() as $element) {
-            if ($element instanceof RentableProduct || $element instanceof RentableProductItem)
+            if ($element instanceof RentableProduct || $element instanceof RentableProductItem) {
                 $rent = true;
-            else
+            } else {
                 $buy = true;
+            }
 
-            if ($rent && $buy)
+            if ($rent && $buy) {
                 break;
+            }
         }
 
         if ($buy) {
-            if ($rent)
+            if ($rent) {
                 $this->setType(BaseOrder::TYPE_BUY_AND_RENT);
-            else $this->setType(BaseOrder::TYPE_ONLY_BUY);
-        } elseif ($rent)
+            } else {
+                $this->setType(BaseOrder::TYPE_ONLY_BUY);
+            }
+        } elseif ($rent) {
             $this->setType(BaseOrder::TYPE_BUY_AND_RENT);
+        }
 
         return $this;
 
@@ -983,10 +984,12 @@ class BaseOrder implements BaseOrderInterface
         $exist = false;
         //Check si le produit a déjà été commandé une fois
         foreach ($this->getOrderElements() as $key => $orderElement) {
-            if ($orderElement->getProduct()->getId() == $product->getId()) {
+            if ($orderElement->getProduct()->getId() === $product->getId()) {
                 //Si oui on augmente la quantité
                 $orderElement->setQuantity($orderElement->getQuantity() + $quantity);
-                if ($orderElement->getQuantity() <= 0) $this->removeOrderElement($orderElement);
+                if ($orderElement->getQuantity() <= 0) {
+                    $this->removeOrderElement($orderElement);
+                }
                 $exist = $key;
             }
         }
@@ -1015,8 +1018,9 @@ class BaseOrder implements BaseOrderInterface
     public function getQuantityForProduct(BaseProduct $product)
     {
         foreach ($this->getOrderElements() as $key => $orderElement) {
-            if ($orderElement->getProduct()->getId() == $product->getId())
+            if ($orderElement->getProduct()->getId() === $product->getId()) {
                 return $orderElement->getQuantity();
+            }
         }
 
         return 0;
@@ -1029,9 +1033,11 @@ class BaseOrder implements BaseOrderInterface
     public function getWeight($type = null)
     {
         $weight = 0;
-        foreach ($this->getOrderElements() as $orderElement)
-            if (!$type || $orderElement->getProduct() instanceof $type)
+        foreach ($this->getOrderElements() as $orderElement) {
+            if (!$type || $orderElement->getProduct() instanceof $type) {
                 $weight += $orderElement->getProduct()->getWeight() * $orderElement->getQuantity();
+            }
+        }
 
         return $weight;
     }
@@ -1051,14 +1057,14 @@ class BaseOrder implements BaseOrderInterface
     }
 
 
-    public function removeProduct($product)
+    public function removeProduct(ProductInterface $product)
     {
         $id = is_numeric($product) ? $product : $product->getId();
 
         foreach ($this->getOrderElements() as $orderElement) {
             if ($orderElement->getProduct()->getId() === $id) {
                 $this->removeOrderElement($orderElement);
-                $this->mustRecaculShipments = true;
+                $this->mustRecalculShipments = true;
                 $this->forcePriceCalculation();
             }
         }
@@ -1069,8 +1075,11 @@ class BaseOrder implements BaseOrderInterface
 
     public function containsElementReduction()
     {
-        foreach ($this->orderElements as $orderElement)
-            if ($orderElement->getDiscountValue() > 0) return true;
+        foreach ($this->orderElements as $orderElement) {
+            if ($orderElement->getDiscountValue() > 0) {
+                return true;
+            }
+        }
 
         return false;
     }
@@ -1112,31 +1121,31 @@ class BaseOrder implements BaseOrderInterface
     }
 
     /**
-     * @inheritdoc
+     * @param null $type
+     *
+     * @return bool
      */
-    public function setDuration($duration)
-    {
-        $this->duration = $duration;
-
-        return $this;
-    }
-
-
     public function containsOnlyOneType($type = null)
     {
         $wType = false;
         $sameType = true;
         foreach ($this->getOrderElements() as $orderElement) {
             $xType = $orderElement->getProduct()->getValidatedAt();
-            if (!$wType) $wType = $xType;
-            elseif ($xType != $wType) $sameType = false;
+            if (!$wType) {
+                $wType = $xType;
+            } elseif ($xType !== $wType) {
+                $sameType = false;
+            }
         }
         if ($sameType) {
-            if (is_numeric($type))
-                return $type == $wType;
+            if (is_numeric($type)) {
+                return $type === $wType;
+            }
 
-            else return true;
-        } else return false;
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -1181,8 +1190,9 @@ class BaseOrder implements BaseOrderInterface
      */
     public function decreaseStock()
     {
-        foreach ($this->getOrderElements() as $orderElement)
+        foreach ($this->getOrderElements() as $orderElement) {
             $orderElement->getProduct()->decreaseStock($orderElement->getQuantity());
+        }
 
         return $this;
     }
@@ -1192,8 +1202,9 @@ class BaseOrder implements BaseOrderInterface
      */
     public function refundStock()
     {
-        foreach ($this->getOrderElements() as $orderElement)
+        foreach ($this->getOrderElements() as $orderElement) {
             $orderElement->getProduct()->refundStock($orderElement->getQuantity());
+        }
 
         return $this;
     }
@@ -1223,7 +1234,7 @@ class BaseOrder implements BaseOrderInterface
      *
      * @param $price
      *
-     * @return $this
+     * @return BaseOrderInterface
      */
     public function setPrice($price)
     {
@@ -1239,11 +1250,19 @@ class BaseOrder implements BaseOrderInterface
         return $this;
     }
 
+    /**
+     * @return ArrayCollection|OrderDiscountElement[]
+     */
     public function getDiscountElements()
     {
         return $this->discountElements;
     }
 
+    /**
+     * @param OrderDiscountElement $element
+     *
+     * @return bool
+     */
     public function removeDiscountElement(OrderDiscountElement $element)
     {
         return $this->discountElements->removeElement($element);
@@ -1270,12 +1289,16 @@ class BaseOrder implements BaseOrderInterface
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function getOrderRentElements()
     {
         $elements = [];
         foreach ($this->getOrderElements() as $element) {
-            if ($element->getProduct() instanceof RentableProduct)
+            if ($element->getProduct() instanceof RentableProduct) {
                 $elements[] = $element;
+            }
         }
 
         return $elements;
@@ -1292,7 +1315,7 @@ class BaseOrder implements BaseOrderInterface
     }
 
     /**
-     * @return mixed
+     * @return ArrayCollection|Shipment[]
      */
     public function getShipments()
     {
@@ -1349,7 +1372,7 @@ class BaseOrder implements BaseOrderInterface
         foreach ($this->getShipments() as $shipment) {
             $shipment->setShippingMethod($this->getShippingMethod());
         }
-        $this->calculShippingCost();
+        $this->calculateShippingCost();
         $this->forcePriceCalculation();
 
         return $this;
@@ -1378,13 +1401,14 @@ class BaseOrder implements BaseOrderInterface
     public function mustRecalculShipments()
     {
         $return = $this->mustRecalculShipments;
-        if (!$return && count($this->getShipments()) == 0 && count($this->getOrderElements()) > 0)
+        if (!$return && count($this->getShipments()) === 0 && count($this->getOrderElements()) > 0) {
             return true;
+        }
 
         return $this->mustRecalculShipments;
     }
 
-    public function RecalculShipmentsFinished()
+    public function recalculShipmentsFinished()
     {
         $this->mustRecalculShipments = false;
 

@@ -215,7 +215,7 @@ class Shipment
     /**
      * Get shipmentElements
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return \Doctrine\Common\Collections\Collection|ShipmentElement[]
      */
     public function getShipmentElements()
     {

@@ -9,7 +9,9 @@
 namespace Dywee\OrderBundle\Controller;
 
 
+use Dywee\OrderBundle\DyweeOrderEvent;
 use Dywee\OrderBundle\Entity\BaseOrderInterface;
+use Dywee\OrderBundle\Event\PaymentValidatedEvent;
 use FOS\RestBundle\Controller\Annotations\Route;
 use Payum\Core\Model\PaymentInterface;
 use Payum\Core\Request\GetHumanStatus;
@@ -86,8 +88,8 @@ class PaymentController extends Controller
 
         $this->get('dywee_order.status_manager')->changePaymentStatus($order, $status);
 
-        $request->getSession()->set('order', null);
-        $request->getSession()->set('validatedOrderId', $order->getId());
+        $this->get('event_dispatcher')->dispatch(DyweeOrderEvent::PAYMENT_VALIDATED, new PaymentValidatedEvent($order));
+
         $em->persist($order);
         $em->flush();
 

@@ -7,22 +7,53 @@ use Dywee\AddressBundle\Entity\CountryInterface;
 use Dywee\OrderBundle\Entity\BaseOrder;
 use Dywee\OrderBundle\Entity\BaseOrderInterface;
 use Dywee\OrderBundle\Entity\Shipment;
+use Dywee\OrderBundle\Entity\ShippingMethod as ShippingMethodEntity;
+use Dywee\OrderBundle\Exception\ShipmentsNotCalculatedException;
+use Dywee\OrderCMSBundle\Service\SessionOrderHandler;
 
-class ShippingMethod
+class ShippingMethodHandler
 {
-    protected $em;
-    protected $error;
-    protected $shipmentMethods = [];
-    protected $shipmentMethodRepository;
+    /** @var EntityManager */
+    private $em;
 
-    public function __construct(EntityManager $entityManager)
+    /** @var array */
+    private $shipmentMethods = [];
+
+    /** @var \Doctrine\ORM\EntityRepository|\Dywee\OrderBundle\Repository\ShippingMethodRepository */
+    private $shipmentMethodRepository;
+
+    /** @var SessionOrderHandler */
+    private $orderSessionHandler;
+
+    /**
+     * ShippingMethodHandler constructor.
+     *
+     * @param EntityManager       $entityManager
+     * @param SessionOrderHandler $sessionOrderHandler
+     */
+    public function __construct(EntityManager $entityManager, SessionOrderHandler $sessionOrderHandler)
     {
         $this->em = $entityManager;
-        $this->shipmentMethodRepository = $this->em->getRepository(\Dywee\OrderBundle\Entity\ShippingMethod::class);
+        $this->shipmentMethodRepository = $this->em->getRepository(ShippingMethodEntity::class);
+        $this->orderSessionHandler = $sessionOrderHandler;
     }
 
-    public function calculateForOrder(BaseOrder $order)
+    /**
+     * @param BaseOrder|null $order
+     *
+     * @return array
+     * @throws \Exception
+     */
+    public function calculateForOrder(BaseOrder $order = null)
     {
+        if (!$order) {
+            $order = $this->orderSessionHandler->getOrderFromSession();
+        }
+
+        if (!$order->getShipments()) {
+            throw new ShipmentsNotCalculatedException();
+        }
+
         $shipmentMethods = [];
         if (!$order->getShippingAddress()) {
             throw new \InvalidArgumentException('shipmentMethod.error.no_shipping_address');
@@ -74,6 +105,12 @@ class ShippingMethod
         return $toDisplay;
     }
 
+    /**
+     * @param Shipment         $shipment
+     * @param CountryInterface $country
+     *
+     * @return array
+     */
     protected function getAvailableShipmentMethods(Shipment $shipment, CountryInterface $country)
     {
         $weight = $shipment->getWeight();
@@ -88,9 +125,12 @@ class ShippingMethod
         return $this->shipmentMethods;
     }
 
+    /**
+     * @param BaseOrderInterface $order
+     */
     public function setNoShippingMethod(BaseOrderInterface $order)
     {
-        $shippingMethodRepository = $this->em->getRepository(\Dywee\OrderBundle\Entity\ShippingMethod::class);
+        $shippingMethodRepository = $this->em->getRepository(ShippingMethodEntity::class);
         $shippingMethod = $shippingMethodRepository->findOneByType('free');
         $order->setShippingMethod($shippingMethod);
     }

@@ -11,27 +11,42 @@ use Dywee\ProductBundle\Entity\ProductStat;
 
 class InvoiceReferenceManager
 {
+    /**
+     * @param LifecycleEventArgs $args
+     */
     public function preUpdate(LifecycleEventArgs $args)
     {
-        return $this->invoice($args);
+        $this->invoice($args);
     }
 
+    /**
+     * @param LifecycleEventArgs $args
+     */
     public function prePersist(LifecycleEventArgs $args)
     {
-        return $this->invoice($args);
+        $this->invoice($args);
     }
 
+    /**
+     * @param LifecycleEventArgs $args
+     */
     public function postPersist(LifecycleEventArgs $args)
     {
-        return $this->incrementInvoice($args);
+        $this->incrementInvoice($args);
     }
 
+    /**
+     * @param LifecycleEventArgs $args
+     */
     public function postUpdate(LifecycleEventArgs $args)
     {
-        return $this->incrementInvoice($args);
+        $this->incrementInvoice($args);
     }
 
-    protected function invoice($args)
+    /**
+     * @param LifecycleEventArgs $args
+     */
+    protected function invoice(LifecycleEventArgs $args)
     {
         $entity = $args->getEntity();
         $em = $args->getEntityManager();
@@ -58,8 +73,6 @@ class InvoiceReferenceManager
 
             // Add reference prefix
             $reference = $orderReferenceBuilder->getPrefix();
-
-            var_dump($reference); exit;
 
             // Add country reference if needed and if prefix does'nt already added it
             if ($orderReferenceBuilder->getByCountry()) {
@@ -89,7 +102,7 @@ class InvoiceReferenceManager
             $iteration = $iterator->getIteration();
 
             // Conform to digit number
-            while (strlen($iteration) < $orderReferenceBuilder->getDigitNumber()){
+            while (strlen($iteration) < $orderReferenceBuilder->getDigitNumber()) {
                 $iteration = '0' . $iteration;
             }
 
@@ -104,7 +117,10 @@ class InvoiceReferenceManager
 
     }
 
-    protected function incrementInvoice($args)
+    /**
+     * @param LifecycleEventArgs $args
+     */
+    protected function incrementInvoice(LifecycleEventArgs $args)
     {
         $entity = $args->getEntity();
         $em = $args->getEntityManager();

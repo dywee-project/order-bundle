@@ -11,5 +11,5 @@ namespace Dywee\OrderBundle;
 
 class DyweeOrderEvent
 {
-
+    const PAYMENT_VALIDATED = 'order.payment_validated';
 }

@@ -34,6 +34,7 @@ services:
         class: Dywee\OrderBundle\Service\AdminSidebarHandler
         arguments: [ '@router' ]
 
+
     ###########################
     #                         #
     #        DASHBOARD        #
@@ -51,10 +52,9 @@ services:
         arguments: [ '@router' ]
 
 
-
     ###########################
     #                         #
-    #         SHIPMENT        #
+    #        SHIPMENTS        #
     #                         #
     ###########################
 
@@ -66,16 +66,17 @@ services:
             - { name: doctrine.event_listener, event: preUpdate }
 
     dywee_order.shipment_method:
-        class: Dywee\OrderBundle\Service\ShippingMethod
+        class: Dywee\OrderBundle\Service\ShippingMethodHandler
         arguments: [ '@doctrine.orm.entity_manager' ]
 
     dywee_order.shipment_rule_manager:
         class: Dywee\OrderBundle\Service\ShipmentRuleManager
         arguments: ['@doctrine.orm.entity_manager']
 
+
     ###########################
     #                         #
-    #         MANAGER         #
+    #         MANAGERS        #
     #                         #
     ###########################
 
@@ -84,3 +85,22 @@ services:
 
     dywee_order.virtualization_manager:
         class: Dywee\OrderBundle\Service\OrderVirtualizationManager
+
+    dywee_order.payment_validated_listener:
+        class: Dywee\OrderBundle\Listener\PaymentValidatedListener
+        arguments: ['@session']
+        tags:
+            - { name: kernel.event_listener, event: order.payment_validated, method: onPaymentValidated }
+
+
+    ###########################
+    #                         #
+    #          FORMS          #
+    #                         #
+    ###########################
+
+    dywee_order.shipping_options_type:
+        class: Dywee\OrderBundle\Form\ShippingOptionsType
+        arguments: ['@dywee_order.shipment_method']
+        tags:
+        - { name: form.type }

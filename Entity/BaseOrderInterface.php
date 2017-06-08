@@ -5,6 +5,7 @@ namespace Dywee\OrderBundle\Entity;
 use Dywee\CoreBundle\Model\AddressInterface;
 use Dywee\CoreBundle\Model\CustomerInterface;
 use Dywee\CoreBundle\Model\PersistableInterface;
+use Dywee\CoreBundle\Model\ProductInterface;
 use Dywee\ProductBundle\Entity\BaseProduct;
 use Payum\Core\Model\PaymentInterface;
 
@@ -44,6 +45,7 @@ interface BaseOrderInterface extends PersistableInterface
      * Set isGift
      *
      * @param boolean $isGift
+     *
      * @return BaseOrderInterface
      */
     public function setIsGift($isGift);
@@ -59,6 +61,7 @@ interface BaseOrderInterface extends PersistableInterface
      * Set priceVatExcl
      *
      * @param float $priceVatExcl
+     *
      * @return BaseOrderInterface
      */
     public function setPriceVatExcl($priceVatExcl);
@@ -74,6 +77,7 @@ interface BaseOrderInterface extends PersistableInterface
      * Set deliveryCost
      *
      * @param float $deliveryCost
+     *
      * @return BaseOrderInterface
      */
     public function setShippingCost($deliveryCost);
@@ -101,6 +105,7 @@ interface BaseOrderInterface extends PersistableInterface
      * Set vatRate
      *
      * @param string $vatRate
+     *
      * @return BaseOrderInterface
      */
     public function setVatRate($vatRate);
@@ -116,6 +121,7 @@ interface BaseOrderInterface extends PersistableInterface
      * Set vatPrice
      *
      * @param float $vatPrice
+     *
      * @return BaseOrderInterface
      */
     public function setVatPrice($vatPrice);
@@ -131,6 +137,7 @@ interface BaseOrderInterface extends PersistableInterface
      * Set discountCode
      *
      * @param string $discountCode
+     *
      * @return BaseOrderInterface
      */
     public function setDiscountCode($discountCode);
@@ -146,6 +153,7 @@ interface BaseOrderInterface extends PersistableInterface
      * Set discountRate
      *
      * @param float $discountRate
+     *
      * @return BaseOrderInterface
      */
     public function setDiscountRate($discountRate);
@@ -161,6 +169,7 @@ interface BaseOrderInterface extends PersistableInterface
      * Set priceVatIncl
      *
      * @param float $priceVatIncl
+     *
      * @return BaseOrderInterface
      */
     public function setPriceVatIncl($priceVatIncl);
@@ -176,6 +185,7 @@ interface BaseOrderInterface extends PersistableInterface
      * Set totalPrice
      *
      * @param float $totalPrice
+     *
      * @return BaseOrderInterface
      */
     public function setTotalPrice($totalPrice);
@@ -191,6 +201,7 @@ interface BaseOrderInterface extends PersistableInterface
      * Set description
      *
      * @param string $description
+     *
      * @return BaseOrderInterface
      */
     public function setDescription($description);
@@ -206,6 +217,7 @@ interface BaseOrderInterface extends PersistableInterface
      * Set createdAt
      *
      * @param \DateTime $creationDate
+     *
      * @return BaseOrderInterface
      */
     public function setCreatedAt(\DateTime $creationDate);
@@ -221,6 +233,7 @@ interface BaseOrderInterface extends PersistableInterface
      * Set updatedAt
      *
      * @param \DateTime $updateDate
+     *
      * @return BaseOrderInterface
      */
     public function setUpdatedAt(\DateTime $updateDate);
@@ -229,6 +242,7 @@ interface BaseOrderInterface extends PersistableInterface
      * Set validatedAt
      *
      * @param \DateTime $validationDate
+     *
      * @return BaseOrderInterface
      */
     public function setValidatedAt(\DateTime $validationDate);
@@ -245,6 +259,7 @@ interface BaseOrderInterface extends PersistableInterface
      * Set reference
      *
      * @param string $reference
+     *
      * @return BaseOrderInterface
      */
     public function setReference($reference);
@@ -260,6 +275,7 @@ interface BaseOrderInterface extends PersistableInterface
      * Set invoiceReference
      *
      * @param string $invoiceReference
+     *
      * @return BaseOrderInterface
      */
     public function setInvoiceReference($invoiceReference);
@@ -275,6 +291,7 @@ interface BaseOrderInterface extends PersistableInterface
      * Set shippingMessage
      *
      * @param string $shippingMessage
+     *
      * @return BaseOrderInterface
      */
     public function setShippingMessage($shippingMessage);
@@ -290,6 +307,7 @@ interface BaseOrderInterface extends PersistableInterface
      * Set locale
      *
      * @param string $locale
+     *
      * @return BaseOrderInterface
      */
     public function setLocale($locale);
@@ -305,6 +323,7 @@ interface BaseOrderInterface extends PersistableInterface
      * Set active
      *
      * @param boolean $active
+     *
      * @return BaseOrderInterface
      */
     public function setActive($active);
@@ -320,6 +339,7 @@ interface BaseOrderInterface extends PersistableInterface
      * Set state
      *
      * @param integer $state
+     *
      * @return BaseOrderInterface
      */
     public function setState($state);
@@ -367,6 +387,7 @@ interface BaseOrderInterface extends PersistableInterface
      * Set billingAddress
      *
      * @param AddressInterface $billingAddress
+     *
      * @return BaseOrderInterface
      */
     public function setBillingAddress(AddressInterface $billingAddress = null);
@@ -382,6 +403,7 @@ interface BaseOrderInterface extends PersistableInterface
      * Set shippingAddress
      *
      * @param AddressInterface $shippingAddress
+     *
      * @return BaseOrderInterface
      */
     public function setShippingAddress(AddressInterface $shippingAddress = null);
@@ -397,6 +419,7 @@ interface BaseOrderInterface extends PersistableInterface
      * Set discountValue
      *
      * @param float $discountValue
+     *
      * @return BaseOrderInterface
      */
     public function setDiscountValue($discountValue);
@@ -412,6 +435,7 @@ interface BaseOrderInterface extends PersistableInterface
      * Add orderElements
      *
      * @param \Dywee\OrderBundle\Entity\OrderElement $orderElements
+     *
      * @return BaseOrderInterface
      */
     public function addOrderElement(OrderElement $orderElements);
@@ -437,14 +461,16 @@ interface BaseOrderInterface extends PersistableInterface
 
     /**
      * @param BaseProduct $product
-     * @param int $quantity
-     * @param int $locationCoeff
+     * @param int         $quantity
+     * @param int         $locationCoeff
+     *
      * @return BaseProduct
      */
     public function addProduct(BaseProduct $product, $quantity, $locationCoeff = 1);
 
     /**
      * @param BaseProduct $product
+     *
      * @return int
      */
     public function getQuantityForProduct(BaseProduct $product);
@@ -462,8 +488,12 @@ interface BaseOrderInterface extends PersistableInterface
      */
     public function weightCalculation();
 
-
-    public function removeProduct($product);
+    /**
+     * @param ProductInterface $product
+     *
+     * @return BaseOrderInterface
+     */
+    public function removeProduct(ProductInterface $product);
 
 
     public function containsElementReduction();
@@ -472,6 +502,7 @@ interface BaseOrderInterface extends PersistableInterface
      * Set deposit
      *
      * @param float $deposit
+     *
      * @return BaseOrderInterface
      */
     public function setDeposit($deposit);
@@ -487,6 +518,7 @@ interface BaseOrderInterface extends PersistableInterface
      * Set endedAt
      *
      * @param \DateTime $endingDate
+     *
      * @return BaseOrderInterface
      */
     public function setEndedAt(\DateTime $endingDate);
@@ -495,12 +527,6 @@ interface BaseOrderInterface extends PersistableInterface
      * @return \DateTime
      */
     public function getEndedAt();
-
-    /**
-     * @param integer $duration
-     * @return BaseOrderInterface
-     */
-    public function setDuration($duration);
 
     public function containsOnlyOneType($type = null);
 
@@ -552,7 +578,9 @@ interface BaseOrderInterface extends PersistableInterface
 
     /**
      * alias
+     *
      * @param $price
+     *
      * @return $this
      */
     public function setPrice($price);
@@ -565,6 +593,7 @@ interface BaseOrderInterface extends PersistableInterface
 
     /**
      * @param string $type
+     *
      * @return BaseOrder
      */
     public function setType($type);
