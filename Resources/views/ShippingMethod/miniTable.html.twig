@@ -24,7 +24,13 @@
                     {{ 'shipment.all_country'|trans }}
                 {% endif %}
             </td>
-            <td>{{ shipmentMethod.deliver.name }}</td>
+            <td>
+                {% if shipmentMethod.deliver is not null %}
+                    {{ shipmentMethod.deliver.name }}
+                {% else %}
+                    No supplier
+                {% endif %}
+            </td>
             <td>{{ shipmentMethod.type }}</td>
             <td>
                 {% if shipmentMethod.minWeight is not null %}

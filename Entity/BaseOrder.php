@@ -252,7 +252,7 @@ class BaseOrder implements BaseOrderInterface
     private $previousState;
 
     /**
-     * @var PaymentInterface
+     * @var ArrayCollection|Payment[]
      * @ORM\OneToMany(targetEntity="Dywee\OrderBundle\Entity\Payment", mappedBy="order")
      */
     private $payments;
@@ -1416,9 +1416,9 @@ class BaseOrder implements BaseOrderInterface
     }
 
     /**
-     * @return PaymentInterface
+     * @return ArrayCollection|Payment[]
      */
-    public function getPayments() : PaymentInterface
+    public function getPayments()
     {
         return $this->payments;
     }

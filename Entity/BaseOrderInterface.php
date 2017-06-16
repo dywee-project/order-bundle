@@ -2,6 +2,7 @@
 
 namespace Dywee\OrderBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Dywee\CoreBundle\Model\AddressInterface;
 use Dywee\CoreBundle\Model\CustomerInterface;
 use Dywee\CoreBundle\Model\PersistableInterface;
@@ -599,9 +600,9 @@ interface BaseOrderInterface extends PersistableInterface
     public function setType($type);
 
     /**
-     * @return PaymentInterface
+     * @return ArrayCollection|Payment[]
      */
-    public function getPayments() : PaymentInterface;
+    public function getPayments();
 
     /**
      * @param Payment $payment

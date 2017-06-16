@@ -9,10 +9,13 @@
 
     <div class="title-heading">
         <div class="pull-right">
-            <a href="{{ path('order_table') }}" class="btn btn-default"><i class="fa fa-angle-left"></i> Retour à la liste des commandes</a>
-            <a href="{{ path('order_update', {id: order.id}) }}" class="btn btn-default"><i class="fa fa-pencil"></i> Editer</a>
+            <a href="{{ path('order_table') }}" class="btn btn-default"><i class="fa fa-angle-left"></i> Retour à la
+                liste des commandes</a>
+            <a href="{{ path('order_update', {id: order.id}) }}" class="btn btn-default"><i class="fa fa-pencil"></i>
+                Editer</a>
             <div class="btn-group">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                        aria-expanded="false">
                     Actions <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-right" role="menu">
@@ -39,7 +42,8 @@
     <div class="row">
         <div class="col-md-8">
             <div class="panel panel-default">
-                <div class="panel-heading"><h3 class="panel-title">Récapitulatif de la commande <span class="pull-right">ref: {{ order.reference }}</span></h3></div>
+                <div class="panel-heading"><h3 class="panel-title">Récapitulatif de la commande <span
+                                class="pull-right">ref: {{ order.reference }}</span></h3></div>
                 <table class="table table-bordered">
                     <thead>
                     <tr>
@@ -49,7 +53,8 @@
                         <th>Prix unitaire</th>
                         {#<th>Dég.</th>#}
                         <th>Quantité</th>
-                        {% if order.containsElementReduction() == true %}<th>Réduction</th>{% endif %}
+                        {% if order.containsElementReduction() == true %}
+                            <th>Réduction</th>{% endif %}
                         <th>Total</th>
                     </tr>
                     </thead>
@@ -77,15 +82,19 @@
                     {% if order.DiscountValue > 0 %}
                         <tr>
                             <td colspan="{{ firstTableColspan }}">Réduction</td>
-                            <td colspan="{{ lastTableColspan }}">- {{ order.discountValue|number_format(2) }}€ ({{ order.discountRate }}% de réduction)</td>
+                            <td colspan="{{ lastTableColspan }}">- {{ order.discountValue|number_format(2) }}€
+                                ({{ order.discountRate }}% de réduction)
+                            </td>
                         </tr>
                     {% endif %}
                     <tr>
                         <td colspan="{{ firstTableColspan }}">TVA</td>
-                        <td colspan="{{ lastTableColspan }}">{{ order.vatPrice|number_format(2) }}€ ({{ order.vatRate }}%)</td>
+                        <td colspan="{{ lastTableColspan }}">{{ order.vatPrice|number_format(2) }}€ ({{ order.vatRate }}
+                            %)
+                        </td>
                     </tr>
                     <tr class="active">
-                        <td colspan="{{ firstTableColspan }}">Prix TTC </td>
+                        <td colspan="{{ firstTableColspan }}">Prix TTC</td>
                         <td colspan="{{ lastTableColspan }}">{{ order.PriceVatIncl|number_format(2) }}€</td>
                     </tr>
                     {% if order.shippingCost > 0 %}
@@ -126,11 +135,13 @@
                                 <td>{{ shipment.sendingIndex }}</td>
                                 <td>{{ shipment.departureAt|date('d/m/Y') }}</td>
                                 <td>{{ shipment.countElements }}</td>
-                                <td>{% include 'DyweeShipmentBundle:Shipment:state.html.twig' %}</td>
+                                <td>{% include 'DyweeOrderBundle:Shipment:state.html.twig' %}</td>
                                 <td>
                                     <div class="btn-group btn-group-xs">
-                                        <a href="{{ path('shipment_view', {id: shipment.id, referer: true}) }}" class="btn btn-default"><i class="faf fa-eye"></i> </a>
-                                        <a href="{{ path('shipment_edit', {id: shipment.id, referer: true}) }}" class="btn btn-default"><i class="faf fa-pencil"></i> </a>
+                                        <a href="{{ path('shipment_view', {id: shipment.id, referer: true}) }}"
+                                           class="btn btn-default"><i class="faf fa-eye"></i> </a>
+                                        <a href="{{ path('shipment_edit', {id: shipment.id, referer: true}) }}"
+                                           class="btn btn-default"><i class="faf fa-pencil"></i> </a>
                                     </div>
                                 </td>
                             </tr>
@@ -143,7 +154,8 @@
                     </div>
                 {% endif %}
                 <div class="panel-body">
-                    <a href="#" class="btn btn-default btn-block disabled"><i class="fa fa-refresh"></i> Recalculer les envois</a>
+                    <a href="#" class="btn btn-default btn-block disabled"><i class="fa fa-refresh"></i> Recalculer les
+                        envois</a>
                 </div>
             </div>
         </div>
@@ -187,47 +199,32 @@
         </div>
         <div class="col-md-6">
             <div class="panel panel-default">
-                <div class="panel-heading"><h3 class="panel-title">Paiement</h3> </div>
+                <div class="panel-heading"><h3 class="panel-title">Paiement</h3></div>
                 <table class="table table-bordered">
                     <tr>
-                        <th>Statut du payment</th>
-                        <th>Moyen de paiement</th>
-                        <th>Accompte</th>
-                        <th>Détail paiement</th>
+                        <th>Total</th>
+                        <th>Number</th>
+                        <th>Email</th>
+                        <th>Actions</th>
                     </tr>
-                    <tr>
-                        <td colspan="4">Bientot disponible</td>
-                    </tr>
-                    {#<tr>
-                        {#<td>
-                            {% if order.paymentState == 0 %}
-                                <span class="label label-info">En attente de paiement</span>
-                            {% elseif order.paymentState == 1 %}
-                                <span class="label label-primary">Acompte donné</span>
-                            {% elseif order.paymentState == 2 %}
-                                <span class="label label-success">Payé</span>
-                            {% elseif order.paymentState == 3 %}
-                                <span class="label label-default">Remboursé</span>
-                            {% else %}
-                                <span class="label label-danger">Erreur</span>
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if order.paymentMethod == 1 %}
-                                <span class="label label-primary">Liquidité</span>
-                            {% elseif order.paymentMethod == 2 %}
-                                <span class="label label-primary">Virement</span>
-                            {% elseif order.paymentMethod == 3 %}
-                                <span class="label label-info">Paypal</span>
-                            {% elseif order.paymentMethod == 4 %}
-                                <span class="label label-info">Ogone</span>
-                            {% else %}
-                                <span class="label label-warning">Non renseigné</span>
-                            {% endif %}#}
-                        {#</td>
-                        <td>{{ order.deposit|number_format(2) }}€</td>
-                        <td><a href="#{# path('dywee_order_payment_overview', {id: order.id})">Détail paiement</a></td>
-                    </tr>#}
+
+                    {% if order.payments|length > 0 %}
+                        {% for payment in order.payments %}
+                            <tr>
+                                <td>{{ payment.totalAmount }} {{ payment.currencyCode }}</td>
+                                <td>{{ payment.number }}</td>
+                                <td>{{ payment.clientEmail }}</td>
+                                <td></td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="4">
+                                <span class="label label-danger">Erreur: not payment found</span>
+                            </td>
+                        </tr>
+                    {% endif %}
+
                 </table>
             </div>
         </div>
@@ -239,22 +236,23 @@
                 <div class="panel-heading"><h3 class="panel-title">Adresse de Facturation</h3></div>
                 <div class="panel-body">
                     {% if order.billingAddress is not null %}
-                        {% set address = order.shippingAddress %}
-                        {%  include 'DyweeAddressBundle:Address:view_wrapped.html.twig' %}
-                        <p><a href="{{ path('address_admin_update', {id: address.id}) }}" class="btn btn-default btn-block"><i class="fa fa-pencil"></i> Modifier</a> </p>
+                        {% include 'DyweeAddressBundle:Address:view_wrapped.html.twig' with {address: order.billingAddress} %}
+                        <p><a href="{{ path('address_admin_update', {id: order.billingAddress.id}) }}"
+                              class="btn btn-default btn-block"><i class="fa fa-pencil"></i> Modifier</a></p>
                     {% else %}
                         {{ 'address.notDefined'|trans }}
                     {% endif %}
                 </div>
-            </div></div>
+            </div>
+        </div>
         <div class="col-md-4">
             <div class="panel panel-default">
                 <div class="panel-heading"><h3 class="panel-title">Adresse de livraison</h3></div>
                 <div class="panel-body">
                     {% if order.shippingAddress is not null %}
-                        {% set address = order.billingAddress %}
-                        {% include 'DyweeAddressBundle:Address:view_wrapped.html.twig' %}
-                        <p><a href="{{ path('address_admin_update', {id: address.id}) }}" class="btn btn-default btn-block"><i class="fa fa-pencil"></i> Modifier</a> </p>
+                        {% include 'DyweeAddressBundle:Address:view_wrapped.html.twig' with {address: order.shippingAddress} %}
+                        <p><a href="{{ path('address_admin_update', {id: order.shippingAddress.id}) }}"
+                              class="btn btn-default btn-block"><i class="fa fa-pencil"></i> Modifier</a></p>
                     {% else %}
                         {{ 'address.notDefined'|trans }}
                     {% endif %}
