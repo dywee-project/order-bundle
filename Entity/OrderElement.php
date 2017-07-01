@@ -135,10 +135,10 @@ class OrderElement
     /**
      * Set unitPrice
      *
-     * @param decimal $unitPrice
+     * @param float $unitPrice
      * @return OrderElement
      */
-    public function setUnitPrice($unitPrice)
+    public function setUnitPrice(float $unitPrice)
     {
         $this->unitPrice = $unitPrice;
 
@@ -148,7 +148,7 @@ class OrderElement
     /**
      * Get unitPrice
      *
-     * @return decimal
+     * @return float
      */
     public function getUnitPrice()
     {
