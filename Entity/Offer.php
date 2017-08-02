@@ -755,4 +755,27 @@ class Offer
     {
         return $this->sellType;
     }
+
+    /**
+     * Set website
+     *
+     * @param \Dywee\WebsiteBundle\Entity\Website $website
+     * @return Offer
+     */
+    public function setWebsite(\Dywee\WebsiteBundle\Entity\Website $website = null)
+    {
+        $this->website = $website;
+
+        return $this;
+    }
+
+    /**
+     * Get website
+     *
+     * @return \Dywee\WebsiteBundle\Entity\Website 
+     */
+    public function getWebsite()
+    {
+        return $this->website;
+    }
 }

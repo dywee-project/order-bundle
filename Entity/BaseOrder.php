@@ -850,7 +850,7 @@ class BaseOrder implements BaseOrderInterface
     /**
      * Get orderElements
      *
-     * @return \Doctrine\Common\Collections\Collection|OrderElement[]
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getOrderElements()
     {
@@ -973,21 +973,49 @@ class BaseOrder implements BaseOrderInterface
     }
 
     /**
-     * @param ProductInterface $product
+     * @param BaseProduct $product
      * @param             $quantity
      * @param int         $locationCoeff
      *
      * @return $this
      */
-    public function addProduct(ProductInterface $product, $quantity, $locationCoeff = 1)
+    public function addProduct(BaseProduct $product, $quantity, $locationCoeff = 1)
     {
+        $exist = false;
+        //Check si le produit a déjà été commandé une fois
+        foreach ($this->getOrderElements() as $key => $orderElement) {
+            if ($orderElement->getProduct()->getId() === $product->getId()) {
+                //Si oui on augmente la quantité
+                $orderElement->setQuantity($orderElement->getQuantity() + $quantity);
+                if ($orderElement->getQuantity() <= 0) {
+                    $this->removeOrderElement($orderElement);
+                }
+                $exist = $key;
+            }
+        }
 
+        //Sinon on l'ajoute
+        if (!is_numeric($exist)) {
+            $orderElement = new OrderElement();
+
+            $orderElement->setProduct($product);
+            $orderElement->setQuantity($quantity);
+            $orderElement->setLocationCoeff($locationCoeff);
+            $orderElement->setUnitPrice($product->getPrice());
+
+            $this->addOrderElement($orderElement);
+        }
+
+        $this->forcePriceCalculation();
+        $this->mustRecalculShipments = true;
+
+        return $this;
     }
 
     /**
      * @inheritdoc
      */
-    public function getQuantityForProduct(ProductInterface $product)
+    public function getQuantityForProduct(BaseProduct $product)
     {
         foreach ($this->getOrderElements() as $key => $orderElement) {
             if ($orderElement->getProduct()->getId() === $product->getId()) {
@@ -1436,26 +1464,6 @@ class BaseOrder implements BaseOrderInterface
     public function setPaymentStatus(string $paymentStatus) : BaseOrder
     {
         $this->paymentStatus = $paymentStatus;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isMustRecalculShipments() : bool
-    {
-        return $this->mustRecalculShipments;
-    }
-
-    /**
-     * @param bool $mustRecalculShipments
-     *
-     * @return BaseOrder
-     */
-    public function setMustRecalculShipments(bool $mustRecalculShipments) : BaseOrder
-    {
-        $this->mustRecalculShipments = $mustRecalculShipments;
 
         return $this;
     }
