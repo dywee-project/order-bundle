@@ -461,20 +461,20 @@ interface BaseOrderInterface extends PersistableInterface
     public function forcePriceCalculation();
 
     /**
-     * @param BaseProduct $product
+     * @param ProductInterface $product
      * @param int         $quantity
      * @param int         $locationCoeff
      *
-     * @return BaseProduct
+     * @return BaseOrderInterface
      */
-    public function addProduct(BaseProduct $product, $quantity, $locationCoeff = 1);
+    public function addProduct(ProductInterface $product, $quantity, $locationCoeff = 1);
 
     /**
-     * @param BaseProduct $product
+     * @param ProductInterface $product
      *
      * @return int
      */
-    public function getQuantityForProduct(BaseProduct $product);
+    public function getQuantityForProduct(ProductInterface $product);
 
 
     /**
@@ -629,4 +629,16 @@ interface BaseOrderInterface extends PersistableInterface
      * @return BaseOrder
      */
     public function setPaymentStatus(string $paymentStatus) : BaseOrder;
+
+    /**
+     * @return bool
+     */
+    public function isMustRecalculShipments() : bool;
+
+    /**
+     * @param bool $mustRecalculShipments
+     *
+     * @return BaseOrder
+     */
+    public function setMustRecalculShipments(bool $mustRecalculShipments) : BaseOrder;
 }
