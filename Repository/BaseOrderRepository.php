@@ -13,7 +13,12 @@ use Dywee\OrderBundle\Entity\BaseOrder;
  */
 class BaseOrderRepository extends EntityRepository
 {
-    public function findAllForPagination($state = null)
+    /**
+     * @param string|null $state
+     *
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function findAllForPagination(string $state = null)
     {
         $qb = $this->createQueryBuilder('o');
 
@@ -28,6 +33,12 @@ class BaseOrderRepository extends EntityRepository
         return $qb;
     }
 
+    /**
+     * @param $type
+     * @param $data
+     *
+     * @return array
+     */
     public function findAllByTypeAndData($type, $data)
     {
         $qb = $this->createQueryBuilder('o')
@@ -40,6 +51,11 @@ class BaseOrderRepository extends EntityRepository
             ;
     }
 
+    /**
+     * @param string $state
+     *
+     * @return mixed
+     */
     public function countByState($state = BaseOrder::STATE_IN_PROGRESS)
     {
         $qb = $this->createQueryBuilder('o')
@@ -50,6 +66,12 @@ class BaseOrderRepository extends EntityRepository
         return $qb->getQuery()->getSingleScalarResult();
     }
 
+    /**
+     * @param $month
+     * @param $state
+     *
+     * @return array
+     */
     public function findByMonth($month, $state)
     {
         $emConfig = $this->getEntityManager()->getConfiguration();
