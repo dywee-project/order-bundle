@@ -80,6 +80,9 @@ services:
     #                         #
     ###########################
 
+    dywee_order.order_element_manager:
+        class: Dywee\OrderBundle\Service\OrderElementManager
+
     dywee_order.status_manager:
         class: Dywee\OrderBundle\Service\OrderStatusManager
 

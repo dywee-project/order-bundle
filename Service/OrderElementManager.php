@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Olivier
- * Date: 21/06/17
- * Time: 08:38
- */
 
 namespace Dywee\OrderBundle\Service;
 
@@ -15,10 +9,12 @@ use Dywee\OrderBundle\Entity\OrderElement;
 
 class OrderElementManager
 {
-    public function __construct()
-    {
-    }
-
+    /**
+     * @param BaseOrder        $order
+     * @param ProductInterface $product
+     * @param                  $quantity
+     * @param int              $locationCoeff
+     */
     public function addProduct(BaseOrder $order, ProductInterface $product, $quantity, $locationCoeff = 1)
     {
         $exist = false;
@@ -56,7 +52,7 @@ class OrderElementManager
      * @param ProductInterface $product
      * @param int              $quantity
      */
-    public function removeProduct(BaseOrder $order, ProductInterface $product, int $quantity)
+    public function removeProduct(BaseOrder $order, ProductInterface $product, int $quantity = 0)
     {
         if (!$quantity) {
             $this->addProduct($order, $product, -1 * $this->countProductQuantity($order, $product));
