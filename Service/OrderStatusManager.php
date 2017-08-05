@@ -40,6 +40,7 @@ class OrderStatusManager
     private function handleValidPayment(BaseOrderInterface $order)
     {
         if ($order->getState() === BaseOrderInterface::STATE_IN_SESSION) {
+            $order->setPaymentStatus(BaseOrderInterface::PAYMENT_VALIDATED);
             $order->setState(BaseOrderInterface::STATE_IN_PROGRESS);
         }
     }

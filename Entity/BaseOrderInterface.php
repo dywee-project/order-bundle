@@ -342,15 +342,33 @@ interface BaseOrderInterface extends PersistableInterface
      * @param integer $state
      *
      * @return BaseOrderInterface
+     * @deprecated use setStatus
      */
     public function setState($state);
+
+    /**
+     * Set status
+     *
+     * @param integer $status
+     *
+     * @return BaseOrderInterface
+     */
+    public function setStatus($status);
 
     /**
      * Get state
      *
      * @return integer
+     * @deprecated use getStatus
      */
     public function getState();
+
+    /**
+     * Get status
+     *
+     * @return integer
+     */
+    public function getStatus();
 
     /**
      * Set customer

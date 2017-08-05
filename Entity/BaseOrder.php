@@ -691,17 +691,39 @@ class BaseOrder implements BaseOrderInterface
      * @param integer $state
      *
      * @return BaseOrderInterface
+     *
+     * @deprecated
      */
     public function setState($state)
     {
+        return $this->setStatus($state);
+    }
+
+    /**
+     * @param int $status
+     *
+     * @return $this
+     */
+    public function setStatus($status)
+    {
         // We keep the previous state for handling the change of state
-        if ($this->state !== $state) {
+        if ($this->state !== $status) {
             $this->setPreviousState($this->getState());
         }
 
-        $this->state = $state;
+        $this->state = $status;
 
         return $this;
+    }
+
+    /**
+     * Get status
+     *
+     * @return integer
+     */
+    public function getState()
+    {
+        return $this->getStatus();
     }
 
     /**
@@ -709,7 +731,7 @@ class BaseOrder implements BaseOrderInterface
      *
      * @return integer
      */
-    public function getState()
+    public function getStatus()
     {
         return $this->state;
     }

@@ -31,7 +31,7 @@ class PaymentController extends Controller
 
         $storage = $this->get('payum')->getStorage('Dywee\OrderBundle\Entity\Payment');
 
-        $order = $this->get('dywee_order_cms.order_session_handler')->getOrderFromSession();
+        $order = $this->get('dywee_order_cms.basket_manager')->getBasket();
 
         $payment = $storage->create();
         $payment->setNumber(uniqid('payment', true));

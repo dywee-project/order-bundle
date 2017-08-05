@@ -15,11 +15,6 @@ order:
         seller_customer: Erreur (vendeur)
         error: Erreur
 
-        waiting: Paiement en attente
-        waiting_validation: Paiement en attente de validation
-        validated: Paiement validé
-        refund: Remboursé
-
     dashboard:
         table: Dernières commandes
 
@@ -34,6 +29,16 @@ order:
         invoice: Gestion des factures
 
     noOrder: Pas de commandes
+
+order_payment:
+    state:
+        waiting: Paiement en attente
+        waiting_validation: Paiement en attente de validation
+        validated: Paiement validé
+        refund: Remboursé
+        partially_paid: Partiellement payée
+        authorized: Authorisé
+        cancelled: Annulé
 
 shipment:
     sidebar:
