@@ -7,17 +7,25 @@ use Symfony\Component\Routing\Router;
 
 class AdminSidebarHandler
 {
-
+    /** @var Router */
     private $router;
 
+    /**
+     * AdminSidebarHandler constructor.
+     *
+     * @param Router $router
+     */
     public function __construct(Router $router)
     {
         $this->router = $router;
     }
 
+    /**
+     * @return array
+     */
     public function getSideBarMenuElement()
     {
-        $menu = [
+        return [
             'key'      => 'order',
             'icon'     => 'fa fa-shopping-cart',
             'label'    => 'order.sidebar.label',
@@ -34,12 +42,14 @@ class AdminSidebarHandler
                 ],
             ]
         ];
-
-        return $menu;
     }
 
+    /**
+     * @return array
+     */
     public function getShipmentSidebarElements()
     {
+
         return [
             'key'      => 'shipment',
             'icon'     => 'fa fa-truck',
