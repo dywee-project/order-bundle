@@ -180,13 +180,7 @@ class BaseOrder implements BaseOrderInterface
      * @var CustomerInterface
      * @ORM\ManyToOne(targetEntity="Dywee\CoreBundle\Model\CustomerInterface", cascade={"persist"})
      */
-    private $billingUser;
-
-    /**
-     * @var CustomerInterface
-     * @ORM\ManyToOne(targetEntity="Dywee\CoreBundle\Model\CustomerInterface", cascade={"persist"})
-     */
-    private $shippingUser;
+    private $customer;
 
     /**
      * @var AddressInterface
@@ -722,51 +716,27 @@ class BaseOrder implements BaseOrderInterface
 
 
     /**
-     * Set billingUser
+     * Set customer
      *
-     * @param CustomerInterface $billingUser
+     * @param CustomerInterface $customer
      *
      * @return BaseOrderInterface
      */
-    public function setBillingUser(CustomerInterface $billingUser = null)
+    public function setCustomer(CustomerInterface $customer = null)
     {
-        $this->billingUser = $billingUser;
+        $this->customer = $customer;
 
         return $this;
     }
 
     /**
-     * Get billingUser
+     * Get customer
      *
      * @return CustomerInterface
      */
-    public function getBillingUser()
+    public function getCustomer()
     {
-        return $this->billingUser;
-    }
-
-    /**
-     * Set shippingUser
-     *
-     * @param CustomerInterface $shippingUser
-     *
-     * @return BaseOrderInterface
-     */
-    public function setShippingUser(CustomerInterface $shippingUser = null)
-    {
-        $this->shippingUser = $shippingUser;
-
-        return $this;
-    }
-
-    /**
-     * Get shippingUser
-     *
-     * @return CustomerInterface
-     */
-    public function getShippingUser()
-    {
-        return $this->shippingUser;
+        return $this->customer;
     }
 
     /**

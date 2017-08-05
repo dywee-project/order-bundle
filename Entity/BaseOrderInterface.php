@@ -353,36 +353,20 @@ interface BaseOrderInterface extends PersistableInterface
     public function getState();
 
     /**
-     * Set billingUser
+     * Set customer
      *
-     * @param CustomerInterface $billingUser
+     * @param CustomerInterface $customer
      *
      * @return BaseOrderInterface
      */
-    public function setBillingUser(CustomerInterface $billingUser = null);
+    public function setCustomer(CustomerInterface $customer = null);
 
     /**
-     * Get billingUser
+     * Get customer
      *
      * @return CustomerInterface
      * */
-    public function getBillingUser();
-
-    /**
-     * Set shippingUser
-     *
-     * @param CustomerInterface $shippingUser
-     *
-     * @return BaseOrderInterface
-     */
-    public function setShippingUser(CustomerInterface $shippingUser = null);
-
-    /**
-     * Get shippingUser
-     *
-     * @return CustomerInterface
-     */
-    public function getShippingUser();
+    public function getCustomer();
 
     /**
      * Set billingAddress
