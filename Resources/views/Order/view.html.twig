@@ -4,9 +4,6 @@
 
 {% block body %}
 
-    {% set firstTableColspan = 3 %}{% set lastTableColspan = 1 %}
-    {% if order.containsElementReduction() == true %}{% set firstTableColspan = 4 %}{% set lastTableColspan = 2 %}{% endif %}
-
     <div class="title-heading">
         <div class="pull-right">
             <a href="{{ path('order_table') }}" class="btn btn-default"><i class="fa fa-angle-left"></i> Retour à la
@@ -41,192 +38,23 @@
     {% endif %}
     <div class="row">
         <div class="col-md-8">
-            <div class="panel panel-default">
-                <div class="panel-heading"><h3 class="panel-title">Récapitulatif de la commande <span
-                                class="pull-right">ref: {{ order.reference }}</span></h3></div>
-                <table class="table table-bordered">
-                    <thead>
-                    <tr>
-                        {#<th>Dates</th>
-                        <th>Jours</th>#}
-                        <th>Produit</th>
-                        <th>Prix unitaire</th>
-                        {#<th>Dég.</th>#}
-                        <th>Quantité</th>
-                        {% if order.containsElementReduction() == true %}
-                            <th>Réduction</th>{% endif %}
-                        <th>Total</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for orderElement in order.orderElements %}
-                        <tr>
-                            {#<td>Du {{ orderElement.beginAt|date('d/m/Y') }}<br>Au {{ orderElement.endAt|date('d/m/Y') }}</td>
-                            <td>{{ orderElement.duration }}</td>#}
-                            <td>{{ orderElement.product.name }}</td>
-                            <td>{{ orderElement.unitPrice|number_format(2) }}€</td>
-                            <td>{{ orderElement.quantity }}</td>
-                            {#<td>{{ orderElement.locationCoeff }}</td>#}
-                            {% if order.containsElementReduction() == true %}
-                                <td>
-                                    {% if orderElement.discountValue > 0 %}{{ orderElement.discountRate }}%{% endif %}
-                                </td>
-                            {% endif %}
-                            <td>{{ orderElement.totalPrice|number_format(2) }}€</td>
-                        </tr>
-                    {% endfor %}
-                    <tr class="active">
-                        <td colspan="{{ firstTableColspan }}">Prix HTT</td>
-                        <td colspan="{{ lastTableColspan }}">{{ order.PriceVatExcl|number_format(2) }}€</td>
-                    </tr>
-                    {% if order.DiscountValue > 0 %}
-                        <tr>
-                            <td colspan="{{ firstTableColspan }}">Réduction</td>
-                            <td colspan="{{ lastTableColspan }}">- {{ order.discountValue|number_format(2) }}€
-                                ({{ order.discountRate }}% de réduction)
-                            </td>
-                        </tr>
-                    {% endif %}
-                    <tr>
-                        <td colspan="{{ firstTableColspan }}">TVA</td>
-                        <td colspan="{{ lastTableColspan }}">{{ order.vatPrice|number_format(2) }}€ ({{ order.vatRate }}
-                            %)
-                        </td>
-                    </tr>
-                    <tr class="active">
-                        <td colspan="{{ firstTableColspan }}">Prix TTC</td>
-                        <td colspan="{{ lastTableColspan }}">{{ order.PriceVatIncl|number_format(2) }}€</td>
-                    </tr>
-                    {% if order.shippingCost > 0 %}
-                        <tr>
-                            <td colspan="{{ firstTableColspan }}">Frais de transport (TTC)</td>
-                            <td colspan="{{ lastTableColspan }}">{{ order.deliveryCost|number_format(2) }}€</td>
-                        </tr>
-                    {% endif %}
-                    <tr class="success">
-                        <td colspan="{{ firstTableColspan }}">Total TTC</td>
-                        <td colspan="{{ lastTableColspan }}">{{ order.totalPrice|number_format(2) }}€</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+            {% include 'DyweeOrderBundle:Fragment:overview_panel.html.twig' %}
         </div>
         <div class="col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h2 class="panel-title">Liste des envois</h2>
-                </div>
-                {% if order.getShipments|length > 0 %}
-                    <table class="table table-stripped table-hover">
-                        <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Index</th>
-                            <th>date d'envoi</th>
-                            <th>Produits</th>
-                            <th>Statut</th>
-                            <th>Actions</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for shipment in order.getShipments %}
-                            <tr>
-                                <td>{{ loop.index }}</td>
-                                <td>{{ shipment.sendingIndex }}</td>
-                                <td>{{ shipment.departureAt|date('d/m/Y') }}</td>
-                                <td>{{ shipment.countElements }}</td>
-                                <td>{% include 'DyweeOrderBundle:Shipment:state.html.twig' %}</td>
-                                <td>
-                                    <div class="btn-group btn-group-xs">
-                                        <a href="{{ path('shipment_view', {id: shipment.id, referer: true}) }}"
-                                           class="btn btn-default"><i class="faf fa-eye"></i> </a>
-                                        <a href="{{ path('shipment_edit', {id: shipment.id, referer: true}) }}"
-                                           class="btn btn-default"><i class="faf fa-pencil"></i> </a>
-                                    </div>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                {% else %}
-                    <div class="panel-body">
-                        <p>Pas d'envoi trouvé</p>
-                    </div>
-                {% endif %}
-                <div class="panel-body">
-                    <a href="#" class="btn btn-default btn-block disabled"><i class="fa fa-refresh"></i> Recalculer les
-                        envois</a>
-                </div>
-            </div>
+            {% include 'DyweeOrderBundle:Fragment:shipments_panel.html.twig' with {admin: true} %}
         </div>
     </div>
 
     {% if not order.shippingMessage == '' %}
-        <div class="panel panel-default">
-            <div class="panel-heading"><h3 class="panel-title">{{ 'Message pour la livraison'|trans }}</h3></div>
-            <div class="panel-body">
-                {{ order.shippingMessage }}
-            </div>
-        </div>
+        {% include 'DyweeOrderBundle:Fragment:shipping_message_panel.html.twig' %}
     {% endif %}
+
     <div class="row">
         <div class="col-md-6">
-            <div class="panel panel-default" id="payment">
-                <div class="panel-heading"><h3 class="panel-title">Informations</h3></div>
-                <table class="table table-bordered">
-                    <thead>
-                    <tr>
-                        <th>Date de la commande</th>
-                        <th>Date du dernier traitement</th>
-                        {% if order.endAt is not null %}
-                            <th>Date de retour</th>
-                        {% endif %}
-                        <th>Statut</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>{{ order.createdAt|date('d/m/Y à H\\hi') }}</td>
-                        <td>{{ order.validatedAt|date('d/m/Y à H\\hi') }}</td>
-                        {% if order.endAt is not null %}
-                            <td>{{ order.endAt|date('d/m/Y') }}</td>
-                        {% endif %}
-                        <td>{{ order.state|trans }}</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+            {% include 'DyweeOrderBundle:Fragment:date_panel.html.twig' %}
         </div>
         <div class="col-md-6">
-            <div class="panel panel-default">
-                <div class="panel-heading"><h3 class="panel-title">Paiement</h3></div>
-                <table class="table table-bordered">
-                    <tr>
-                        <th>Total</th>
-                        <th>Number</th>
-                        <th>Email</th>
-                        <th>Actions</th>
-                    </tr>
-
-                    {% if order.payments|length > 0 %}
-                        {% for payment in order.payments %}
-                            <tr>
-                                <td>{{ payment.totalAmount }} {{ payment.currencyCode }}</td>
-                                <td>{{ payment.number }}</td>
-                                <td>{{ payment.clientEmail }}</td>
-                                <td></td>
-                            </tr>
-                        {% endfor %}
-                    {% else %}
-                        <tr>
-                            <td colspan="4">
-                                <span class="label label-danger">Erreur: not payment found</span>
-                            </td>
-                        </tr>
-                    {% endif %}
-
-                </table>
-            </div>
+            {% include 'DyweeOrderBundle:Fragment:payment_panel.html.twig' %}
         </div>
     </div>
 

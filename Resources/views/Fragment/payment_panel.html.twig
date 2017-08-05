@@ -1,0 +1,29 @@
+<div class="panel panel-default">
+    <div class="panel-heading"><h3 class="panel-title">Paiement</h3></div>
+    <table class="table table-bordered">
+        <tr>
+            <th>Total</th>
+            <th>Number</th>
+            <th>Email</th>
+            <th>Actions</th>
+        </tr>
+
+        {% if order.payments|length > 0 %}
+            {% for payment in order.payments %}
+                <tr>
+                    <td>{{ payment.totalAmount }} {{ payment.currencyCode }}</td>
+                    <td>{{ payment.number }}</td>
+                    <td>{{ payment.clientEmail }}</td>
+                    <td></td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="4">
+                    <span class="label label-danger">Erreur: not payment found</span>
+                </td>
+            </tr>
+        {% endif %}
+
+    </table>
+</div>

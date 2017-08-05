@@ -1,0 +1,72 @@
+{% set firstTableColspan = 3 %}{% set lastTableColspan = 1 %}
+{% if order.containsElementReduction() == true %}{% set firstTableColspan = 4 %}{% set lastTableColspan = 2 %}{% endif %}
+
+<div class="panel panel-default">
+    <div class="panel-heading"><h3 class="panel-title">Récapitulatif de la commande <span
+                    class="pull-right">ref: {{ order.reference }}</span></h3></div>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            {#<th>Dates</th>
+            <th>Jours</th>#}
+            <th>Produit</th>
+            <th>Prix unitaire</th>
+            {#<th>Dég.</th>#}
+            <th>Quantité</th>
+            {% if order.containsElementReduction() == true %}
+                <th>Réduction</th>{% endif %}
+            <th>Total</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for orderElement in order.orderElements %}
+            <tr>
+                {#<td>Du {{ orderElement.beginAt|date('d/m/Y') }}<br>Au {{ orderElement.endAt|date('d/m/Y') }}</td>
+                <td>{{ orderElement.duration }}</td>#}
+                <td>{{ orderElement.product.name }}</td>
+                <td>{{ orderElement.unitPrice|number_format(2) }}€</td>
+                <td>{{ orderElement.quantity }}</td>
+                {#<td>{{ orderElement.locationCoeff }}</td>#}
+                {% if order.containsElementReduction() == true %}
+                    <td>
+                        {% if orderElement.discountValue > 0 %}{{ orderElement.discountRate }}%{% endif %}
+                    </td>
+                {% endif %}
+                <td>{{ orderElement.totalPrice|number_format(2) }}€</td>
+            </tr>
+        {% endfor %}
+        <tr class="active">
+            <td colspan="{{ firstTableColspan }}">Prix HTT</td>
+            <td colspan="{{ lastTableColspan }}">{{ order.PriceVatExcl|number_format(2) }}€</td>
+        </tr>
+        {% if order.DiscountValue > 0 %}
+            <tr>
+                <td colspan="{{ firstTableColspan }}">Réduction</td>
+                <td colspan="{{ lastTableColspan }}">- {{ order.discountValue|number_format(2) }}€
+                    ({{ order.discountRate }}% de réduction)
+                </td>
+            </tr>
+        {% endif %}
+        <tr>
+            <td colspan="{{ firstTableColspan }}">TVA</td>
+            <td colspan="{{ lastTableColspan }}">{{ order.vatPrice|number_format(2) }}€ ({{ order.vatRate }}
+                %)
+            </td>
+        </tr>
+        <tr class="active">
+            <td colspan="{{ firstTableColspan }}">Prix TTC</td>
+            <td colspan="{{ lastTableColspan }}">{{ order.PriceVatIncl|number_format(2) }}€</td>
+        </tr>
+        {% if order.shippingCost > 0 %}
+            <tr>
+                <td colspan="{{ firstTableColspan }}">Frais de transport (TTC)</td>
+                <td colspan="{{ lastTableColspan }}">{{ order.deliveryCost|number_format(2) }}€</td>
+            </tr>
+        {% endif %}
+        <tr class="success">
+            <td colspan="{{ firstTableColspan }}">Total TTC</td>
+            <td colspan="{{ lastTableColspan }}">{{ order.totalPrice|number_format(2) }}€</td>
+        </tr>
+        </tbody>
+    </table>
+</div>

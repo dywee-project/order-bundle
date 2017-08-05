@@ -76,3 +76,7 @@ shipmentMethod:
 shipmentRule:
     sidebar:
         table: Liste des règles
+
+address:
+    billing: Adresse de facturation
+    shipping: Adresse de livraison

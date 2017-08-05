@@ -1,0 +1,49 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h2 class="panel-title">Liste des envois</h2>
+    </div>
+    {% if order.getShipments|length > 0 %}
+        <table class="table table-stripped table-hover">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Index</th>
+                <th>date d'envoi</th>
+                <th>Produits</th>
+                <th>Statut</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for shipment in order.getShipments %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ shipment.sendingIndex }}</td>
+                    <td>{{ shipment.departureAt|date('d/m/Y') }}</td>
+                    <td>{{ shipment.countElements }}</td>
+                    <td>{% include 'DyweeOrderBundle:Shipment:state.html.twig' %}</td>
+                    <td>
+                        <div class="btn-group btn-group-xs">
+                            <a href="{{ path('shipment_view', {id: shipment.id, referer: true}) }}"
+                               class="btn btn-default"><i class="faf fa-eye"></i> </a>
+                            <a href="{{ path('shipment_edit', {id: shipment.id, referer: true}) }}"
+                               class="btn btn-default"><i class="faf fa-pencil"></i> </a>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="panel-body">
+            <p>Pas d'envoi trouvé</p>
+        </div>
+    {% endif %}
+
+    {% if admin is defined and admin == true %}
+    <div class="panel-body">
+        <a href="#" class="btn btn-default btn-block disabled"><i class="fa fa-refresh"></i> Recalculer les
+            envois</a>
+    </div>
+    {% endif %}
+</div>

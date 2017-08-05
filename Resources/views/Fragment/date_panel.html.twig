@@ -1,0 +1,25 @@
+<div class="panel panel-default" id="payment">
+    <div class="panel-heading"><h3 class="panel-title">Informations</h3></div>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Date de la commande</th>
+            <th>Date du dernier traitement</th>
+            {% if order.endAt is not null %}
+                <th>Date de retour</th>
+            {% endif %}
+            <th>Statut</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>{{ order.createdAt|date('d/m/Y à H\\hi') }}</td>
+            <td>{{ order.validatedAt|date('d/m/Y à H\\hi') }}</td>
+            {% if order.endAt is not null %}
+                <td>{{ order.endAt|date('d/m/Y') }}</td>
+            {% endif %}
+            <td>{{ order.state|trans }}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
