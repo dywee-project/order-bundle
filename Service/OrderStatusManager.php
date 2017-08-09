@@ -14,6 +14,10 @@ use Payum\Core\Request\GetHumanStatus;
 
 class OrderStatusManager
 {
+    /**
+     * @param BaseOrderInterface $order
+     * @param GetHumanStatus     $status
+     */
     public function changePaymentStatus(BaseOrderInterface $order, GetHumanStatus $status)
     {
         switch (true) {
@@ -37,6 +41,9 @@ class OrderStatusManager
         }
     }
 
+    /**
+     * @param BaseOrderInterface $order
+     */
     private function handleValidPayment(BaseOrderInterface $order)
     {
         if ($order->getState() === BaseOrderInterface::STATE_IN_SESSION) {
