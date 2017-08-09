@@ -31,10 +31,6 @@ invoice_view:
     requirements:
         id: \d+
 
-invoice_user_view:
-    path:     /invoice/view/{invoiceReference}
-    defaults: { _controller: DyweeOrderBundle:Order:invoiceUserView }
-
 order_invoice_download:
     path:     /admin/order/invoice/{idOrder}/download
     defaults: { _controller: DyweeOrderBundle:Order:invoiceDownload }
