@@ -14,12 +14,17 @@
   ],
   "require": {
     "php": ">=7.1.0",
-    "dywee/core-bundle": "0.1",
+    "dywee/core-bundle": "0.1-dev",
     "payum/payum-bundle": "^2.2"
   },
   "autoload": {
     "psr-4": {
       "Dywee\\OrderBundle\\": ""
+    }
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "0.1-dev"
     }
   }
 }
