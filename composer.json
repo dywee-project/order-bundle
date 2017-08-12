@@ -14,8 +14,7 @@
   ],
   "require": {
     "php": ">=7.1.0",
-    "dywee/core-bundle": "dev-master",
-    "genemu/form-bundle": "^3.0@dev",
+    "dywee/core-bundle": "0.1",
     "payum/payum-bundle": "^2.2"
   },
   "autoload": {
