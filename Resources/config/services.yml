@@ -86,7 +86,7 @@ services:
     dywee_order.status_manager:
         class: Dywee\OrderBundle\Service\OrderStatusManager
 
-    dywee_order.virtualization_manager:
+    Dywee\OrderBundle\Service\OrderVirtualizationManager:
         class: Dywee\OrderBundle\Service\OrderVirtualizationManager
 
     dywee_order.payment_validated_listener:
