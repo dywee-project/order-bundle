@@ -3,19 +3,19 @@
 namespace Dywee\OrderBundle\Service;
 
 use Dywee\OrderBundle\Entity\BaseOrder;
-use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 
 class AdminSidebarHandler
 {
-    /** @var Router */
+    /** @var RouterInterface */
     private $router;
 
     /**
      * AdminSidebarHandler constructor.
      *
-     * @param Router $router
+     * @param RouterInterface $router
      */
-    public function __construct(Router $router)
+    public function __construct(RouterInterface $router)
     {
         $this->router = $router;
     }
