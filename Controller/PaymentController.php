@@ -11,6 +11,7 @@ namespace Dywee\OrderBundle\Controller;
 
 use Dywee\OrderBundle\DyweeOrderEvent;
 use Dywee\OrderBundle\Entity\BaseOrderInterface;
+use Dywee\OrderBundle\Entity\Payment;
 use Dywee\OrderBundle\Event\PaymentValidatedEvent;
 use FOS\RestBundle\Controller\Annotations\Route;
 use Payum\Core\Model\PaymentInterface;
@@ -27,9 +28,10 @@ class PaymentController extends Controller
      */
     public function prepareAction()
     {
+        //$gatewayName = 'stripe_checkout';
         $gatewayName = 'offline';
 
-        $storage = $this->get('payum')->getStorage('Dywee\OrderBundle\Entity\Payment');
+        $storage = $this->get('payum')->getStorage(Payment::class);
 
         $order = $this->get('dywee_order_cms.basket_manager')->getBasket();
 

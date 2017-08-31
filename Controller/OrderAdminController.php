@@ -22,16 +22,17 @@ class OrderAdminController extends Controller
         $or = $this->getDoctrine()->getManager()->getRepository('DyweeOrderBundle:BaseOrder');
 
         $os = $or->findBy(
-            array('state' => $state),
-            array('creationDate' => 'desc'),
+            ['state' => $state],
+            ['createdAt' => 'desc'],
             $limit,
             $offset
         );
-        return $this->render('DyweeOrderBundle:Admin:orderTableRaw.html.twig', array('orderList' => $os));
+
+        return $this->render('DyweeOrderBundle:Admin:orderTableRaw.html.twig', ['orderList' => $os]);
     }
 
     public function viewAction(BaseOrder $order)
     {
-        return $this->render('DyweeOrderBundle:Order:view.html.twig', array('order' => $order));
+        return $this->render('DyweeOrderBundle:Order:view.html.twig', ['order' => $order]);
     }
 }
