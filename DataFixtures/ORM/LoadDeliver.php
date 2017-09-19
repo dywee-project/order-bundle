@@ -1,12 +1,14 @@
 <?php
 
-namespace App\DataFixtures\ORM;
+namespace Dywee\OrderBundle\DataFixtures\ORM;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Dywee\OrderBundle\Entity\Deliver;
+use Doctrine\Common\DataFixtures\FixtureInterface;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 
-class LoadDeliver extends AbstractFixture
+class LoadDeliver extends AbstractFixture implements FixtureInterface, OrderedFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
@@ -24,5 +26,10 @@ class LoadDeliver extends AbstractFixture
 
         $this->addReference('deliver-shop', $shop);
         $this->addReference('deliver-mondial-relay', $mondialRelay);
+    }
+
+    public function getOrder()
+    {
+        return 1;
     }
 }

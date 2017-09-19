@@ -1,12 +1,14 @@
 <?php
 
-namespace App\DataFixtures\ORM;
+namespace Dywee\OrderBundle\DataFixtures\ORM;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Dywee\OrderBundle\Entity\ShippingMethod;
+use Doctrine\Common\DataFixtures\FixtureInterface;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 
-class LoadDeliveryMethod extends AbstractFixture
+class LoadDeliveryMethod extends AbstractFixture implements FixtureInterface, OrderedFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
@@ -30,5 +32,10 @@ class LoadDeliveryMethod extends AbstractFixture
         $manager->persist($mondialRelay);
 
         $manager->flush();
+    }
+
+    public function getOrder()
+    {
+        return 2;
     }
 }
