@@ -2,7 +2,7 @@
 
 ##Installing
 
-just run
+Run
 ```bash
 $ composer require dywee/core-bundle
 ```
