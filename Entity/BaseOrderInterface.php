@@ -349,7 +349,7 @@ interface BaseOrderInterface extends PersistableInterface
     /**
      * Set status
      *
-     * @param integer $status
+     * @param string $status
      *
      * @return BaseOrderInterface
      */
@@ -358,7 +358,7 @@ interface BaseOrderInterface extends PersistableInterface
     /**
      * Get state
      *
-     * @return integer
+     * @return string
      * @deprecated use getStatus
      */
     public function getState();
@@ -366,7 +366,7 @@ interface BaseOrderInterface extends PersistableInterface
     /**
      * Get status
      *
-     * @return integer
+     * @return string
      */
     public function getStatus();
 
