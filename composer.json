@@ -15,7 +15,7 @@
   "require": {
     "php": ">=7.1.0",
     "dywee/core-bundle": "dev-master",
-    "payum/payum-bundle": "^2.2"
+    "payum/payum-bundle": "^2.3"
   },
   "autoload": {
     "psr-4": {
