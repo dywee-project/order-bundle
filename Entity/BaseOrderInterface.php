@@ -339,7 +339,7 @@ interface BaseOrderInterface extends PersistableInterface
     /**
      * Set state
      *
-     * @param integer $state
+     * @param string $state
      *
      * @return BaseOrderInterface
      * @deprecated use setStatus
