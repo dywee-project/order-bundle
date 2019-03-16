@@ -2,7 +2,7 @@
 
 namespace Dywee\OrderBundle\Service;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Dywee\AddressBundle\Entity\CountryInterface;
 use Dywee\OrderBundle\Entity\BaseOrder;
 use Dywee\OrderBundle\Entity\BaseOrderInterface;
@@ -13,7 +13,7 @@ use Dywee\OrderCMSBundle\Service\SessionOrderHandler;
 
 class ShippingMethodHandler
 {
-    /** @var EntityManager */
+    /** @var EntityManagerInterface */
     private $em;
 
     /** @var array */
@@ -28,10 +28,10 @@ class ShippingMethodHandler
     /**
      * ShippingMethodHandler constructor.
      *
-     * @param EntityManager       $entityManager
+     * @param EntityManagerInterface       $entityManager
      * @param SessionOrderHandler $sessionOrderHandler
      */
-    public function __construct(EntityManager $entityManager, SessionOrderHandler $sessionOrderHandler)
+    public function __construct(EntityManagerInterface $entityManager, SessionOrderHandler $sessionOrderHandler)
     {
         $this->em = $entityManager;
         $this->shipmentMethodRepository = $this->em->getRepository(ShippingMethodEntity::class);
