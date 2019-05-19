@@ -195,6 +195,4 @@ class OrderDiscount
     {
         return $this->elements->removeElement($element);
     }
-
-
 }

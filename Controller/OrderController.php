@@ -88,13 +88,13 @@ class OrderController extends Controller
         $order = new BaseOrder();
         $order->setIsPriceTTC(/*$this->getParameter('order_bundle_is_price_ttc')*/ true);
 
-        if($type === 'rent')
+        if ($type === 'rent') {
             $order->setType(BaseOrder::TYPE_ONLY_RENT);
+        }
 
         $form = $this->get('form.factory')->create(BaseOrderType::class, $order);
 
-        if($form->handleRequest($request)->isValid())
-        {
+        if ($form->handleRequest($request)->isValid()) {
             $em->persist($order);
             $em->flush();
 
@@ -116,8 +116,7 @@ class OrderController extends Controller
         //Si c'est une commande de vente
         $form = $this->get('form.factory')->create(BaseOrderType::class, $order);
 
-        if($form->handleRequest($request)->isValid())
-        {
+        if ($form->handleRequest($request)->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $order->forcePriceCalculation();
             $em->persist($order);
@@ -160,14 +159,16 @@ class OrderController extends Controller
 
         $reference = $this->get('session')->get('validatedOrderReference');
 
-        if($reference)
-            return $this->render('DyweeOrderBundle:Order:validated.html.twig',
+        if ($reference) {
+            return $this->render(
+                'DyweeOrderBundle:Order:validated.html.twig',
                 array(
                     'order' => $order,
                     'validatedOrderReference' => $reference
                 )
             );
-
-        else throw $this->createNotFoundException('Commande introuvable');
+        } else {
+            throw $this->createNotFoundException('Commande introuvable');
+        }
     }
 }

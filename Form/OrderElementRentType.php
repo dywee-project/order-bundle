@@ -16,13 +16,13 @@ class OrderElementRentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('beginAt',    DateTimeType::class, array(
+            ->add('beginAt', DateTimeType::class, array(
                 'input' => 'datetime',
-                'widget'=> 'single_text'
+                'widget' => 'single_text'
             ))
-            ->add('endAt',    DateTimeType::class, array(
+            ->add('endAt', DateTimeType::class, array(
                 'input' => 'datetime',
-                'widget'=> 'single_text'
+                'widget' => 'single_text'
             ));
         ;
     }

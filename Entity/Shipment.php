@@ -280,8 +280,9 @@ class Shipment
     public function calculWeight()
     {
         $weight = 0;
-        foreach ($this->getShipmentElements() as $shipmentElement)
+        foreach ($this->getShipmentElements() as $shipmentElement) {
             $weight += $shipmentElement->getWeight();
+        }
 
         $this->setWeight($weight);
     }
@@ -385,5 +386,4 @@ class Shipment
         $this->id = null;
         $this->shipmentElements = new ArrayCollection();
     }
-
 }

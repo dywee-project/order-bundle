@@ -25,10 +25,10 @@ class OrderReferenceBuilderType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('prefix',         TextType::class,        array('required' => false))
-            ->add('suffix',         TextType::class,        array('required' => false))
-            ->add('byCountry',      CheckboxType::class,    array('required' => false))
-            ->add('digitNumber',    NumberType::class)
+            ->add('prefix', TextType::class, array('required' => false))
+            ->add('suffix', TextType::class, array('required' => false))
+            ->add('byCountry', CheckboxType::class, array('required' => false))
+            ->add('digitNumber', NumberType::class)
         ;
     }
     

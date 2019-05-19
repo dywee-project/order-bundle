@@ -102,7 +102,7 @@ class OrderElement
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -125,7 +125,7 @@ class OrderElement
     /**
      * Get quantity
      *
-     * @return integer 
+     * @return integer
      */
     public function getQuantity()
     {
@@ -171,7 +171,7 @@ class OrderElement
     /**
      * Get totalPrice
      *
-     * @return float 
+     * @return float
      */
     public function getTotalPrice()
     {
@@ -220,8 +220,9 @@ class OrderElement
 
     public function calculateTotalPrice()
     {
-        if($this->getUnitPrice() > 0 && $this->getQuantity() > 0)
+        if ($this->getUnitPrice() > 0 && $this->getQuantity() > 0) {
             $this->setTotalPrice($this->getUnitPrice() * $this->getQuantity() * $this->getLocationCoeff());
+        }
         return $this;
     }
 
@@ -251,7 +252,7 @@ class OrderElement
     /**
      * Get locationCoeff
      *
-     * @return integer 
+     * @return integer
      */
     public function getLocationCoeff()
     {
@@ -269,9 +270,8 @@ class OrderElement
     {
         $this->discountRate = $discountRate;
 
-        if($this->getTotalPrice() > 0 && $fromValue == false && $discountRate > 0)
-        {
-            $this->setDiscountValue(($this->getTotalPrice()/$this->discountRate), true);
+        if ($this->getTotalPrice() > 0 && $fromValue == false && $discountRate > 0) {
+            $this->setDiscountValue(($this->getTotalPrice() / $this->discountRate), true);
         }
 
         return $this;
@@ -280,7 +280,7 @@ class OrderElement
     /**
      * Get discountRate
      *
-     * @return float 
+     * @return float
      */
     public function getDiscountRate()
     {
@@ -298,12 +298,12 @@ class OrderElement
     {
         $this->discountValue = $discountValue;
 
-        if($this->getTotalPrice() > 0)
-        {
-            if($fromRate == false)
-                $this->setDiscountRate(($this->discountValue/$this->getTotalPrice()), true);
+        if ($this->getTotalPrice() > 0) {
+            if ($fromRate == false) {
+                $this->setDiscountRate(($this->discountValue / $this->getTotalPrice()), true);
+            }
 
-            $this->setTotalPrice(($this->getUnitPrice()*$this->getQuantity()*$this->getLocationCoeff()) - $this->discountRate);
+            $this->setTotalPrice(($this->getUnitPrice() * $this->getQuantity() * $this->getLocationCoeff()) - $this->discountRate);
         }
 
         return $this;
@@ -312,7 +312,7 @@ class OrderElement
     /**
      * Get discountValue
      *
-     * @return float 
+     * @return float
      */
     public function getDiscountValue()
     {
@@ -369,7 +369,7 @@ class OrderElement
     /**
      * Get duration
      *
-     * @return integer 
+     * @return integer
      */
     public function getDuration()
     {
@@ -393,7 +393,7 @@ class OrderElement
     /**
      * Get beginAt
      *
-     * @return \dateTime 
+     * @return \dateTime
      */
     public function getBeginAt()
     {
@@ -417,7 +417,7 @@ class OrderElement
     /**
      * Get endAt
      *
-     * @return \dateTime 
+     * @return \dateTime
      */
     public function getEndAt()
     {
@@ -431,5 +431,4 @@ class OrderElement
             $this->setDuration($i++);
         }
     }
-
 }

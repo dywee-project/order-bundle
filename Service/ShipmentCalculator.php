@@ -54,7 +54,7 @@ class ShipmentCalculator
      */
     public function calculateShipments(BaseOrder $order)
     {
-        if (!$order->mustRecalculShipments()){
+        if (!$order->mustRecalculShipments()) {
             return;
         }
 
@@ -79,8 +79,9 @@ class ShipmentCalculator
                     $shipmentForSubscription->setSendingIndex($i + 1)->addShipmentElement($shipmentElementForSubscription);
 
                     $departure = clone $departureDate;
-                    if ($i > 0)
+                    if ($i > 0) {
                         $departure->modify('+' . $product->getRecurrence() . ' ' . $product->getRecurrenceUnit());
+                    }
 
                     $shipmentForSubscription->setDepartureAt($departure);
 
@@ -91,7 +92,6 @@ class ShipmentCalculator
                     $order->addShipment($shipmentForSubscription);
                 }
             } elseif (!$product instanceof ProductDownloadable) {
-
                 $shipmentElement = new ShipmentElement();
 
                 $shipmentElement->setQuantity($orderElement->getQuantity());
@@ -99,7 +99,6 @@ class ShipmentCalculator
                 $shipmentElement->setWeight($product->getWeight() * $orderElement->getQuantity());
                 $shipment->addShipmentElement($shipmentElement);
             }
-
         }
 
 

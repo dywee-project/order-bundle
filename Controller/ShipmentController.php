@@ -39,9 +39,8 @@ class ShipmentController extends ParentController
 
     public function downloadAction(Shipment $shipment)
     {
-        $fileName = /*'files/sendNotes/*/'envoi_'.$shipment->getId().'.pdf';
-        if (!file_exists($fileName))
-        {
+        $fileName = /*'files/sendNotes/*/'envoi_' . $shipment->getId() . '.pdf';
+        if (!file_exists($fileName)) {
             $note = $this->renderView('DyweeOrderBundle:Shipment:note.html.twig', array('shipment' => $shipment));
 
             return $this->render('DyweeOrderBundle:Shipment:note.html.twig', array('shipment' => $shipment));
@@ -50,11 +49,12 @@ class ShipmentController extends ParentController
 
             $pdfGenerator->generatePDF($note, 'UTF-8');
 
-            return new Response($pdfGenerator->generatePDF($note),
+            return new Response(
+                $pdfGenerator->generatePDF($note),
                 200,
                 array(
                     'Content-Type' => 'application/pdf',
-                    'Content-Disposition' => 'inline; filename="'.$fileName.'"'
+                    'Content-Disposition' => 'inline; filename="' . $fileName . '"'
                 )
             );//*/
 
@@ -94,6 +94,5 @@ class ShipmentController extends ParentController
 
     public function sendAction(Shipment $shipment)
     {
-
     }
 }

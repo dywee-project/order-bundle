@@ -44,6 +44,4 @@ class Payment extends BasePayment
 
         return $this;
     }
-
-
 }

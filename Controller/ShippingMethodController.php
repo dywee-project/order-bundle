@@ -21,8 +21,10 @@ class ShippingMethodController extends Controller
         $dr = $this->getDoctrine()->getManager()->getRepository(ShippingMethod::class);
         $shipmentMethodList = $dr->findAll();
 
-        return $this->render('DyweeOrderBundle:ShippingMethod:table.html.twig',
-            ['shipmentMethods' => $shipmentMethodList]);
+        return $this->render(
+            'DyweeOrderBundle:ShippingMethod:table.html.twig',
+            ['shipmentMethods' => $shipmentMethodList]
+        );
     }
 
     /**
@@ -158,8 +160,6 @@ class ShippingMethodController extends Controller
                                 } else {
                                     $options['24R'] = $mondialRelay24R;
                                 }
-
-
                             } else {
                                 if ($shipmentMethod->getDeliver()->getId() == 2 && $shipmentMethod->getType() == 'HOM') {
                                     $mondialRelayHOM['price'] =
@@ -200,7 +200,6 @@ class ShippingMethodController extends Controller
                     'shippingOptions' => $options,
                     'coeff'           => $totalCoeff,
                 ]));
-
             } else {
                 $response->setContent(json_encode([
                     'Error' => 'Pays invalide',
@@ -211,6 +210,5 @@ class ShippingMethodController extends Controller
 
             return $response;
         }
-
     }
 }

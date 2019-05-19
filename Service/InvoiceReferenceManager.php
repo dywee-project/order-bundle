@@ -114,7 +114,6 @@ class InvoiceReferenceManager
             $entity->setInvoiceReference($reference);
             $entity->justGotInvoice = true;
         }
-
     }
 
     /**

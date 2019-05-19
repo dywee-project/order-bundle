@@ -41,21 +41,17 @@ class OfferController extends Controller
         //$offer->setIsPriceTTC($this->container->getParameter('dywee_order_bundle.isPriceTTC'));
 
         $sellType = $this->container->getParameter('dywee_order_bundle.sellType');
-        if($sellType == 'default')
-        {
+        if ($sellType == 'default') {
             $offer->setSellType(1);
             $form = $this->get('form.factory')->create(new OfferType(), $offer);
             $template = 'DyweeOrderBundle:Offer:add.html.twig';
-        }
-        else if($sellType == 'rent')
-        {
+        } elseif ($sellType == 'rent') {
             $offer->setSellType(2);
             $form = $this->get('form.factory')->create(new OfferRentType(), $offer);
             $template = 'DyweeOrderBundle:Offer:addRent.html.twig';
         }
 
-        if($form->handleRequest($request)->isValid())
-        {
+        if ($form->handleRequest($request)->isValid()) {
             $counter = $this->container->get('dywee_order.counter');
             $reference = $counter->getNextOfferReference();
             $offer->setReference($reference);
@@ -71,21 +67,16 @@ class OfferController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        if($offer->getState() != 2)
-        {
+        if ($offer->getState() != 2) {
             $form = $this->get('form.factory')->create(new OfferType(), $offer);
 
-            if($form->handleRequest($request)->isValid())
-            {
-                if($offer->getState() < 2)
-                {
+            if ($form->handleRequest($request)->isValid()) {
+                if ($offer->getState() < 2) {
                     $em->persist($offer);
                     $em->flush();
 
                     return $this->redirect($this->generateUrl('dywee_offer_view', array('id' => $offer->getId())));
-                }
-                else if($offer->getState() == 2)
-                {
+                } elseif ($offer->getState() == 2) {
                     $order = new BaseOrder();
                     $order->setFromOffer($offer);
 
@@ -111,7 +102,6 @@ class OfferController extends Controller
         $this->get('session')->getFlashBag()->add('success', 'offre bien effacée');
 
         return $this->redirect($this->generateUrl('dywee_offer_table'));
-
     }
 
     public function invoiceDownloadAction(Offer $offer)
@@ -131,25 +121,23 @@ class OfferController extends Controller
         $this->container->get('profiler')->disable();
 
         return $this->render('DyweeOrderBundle:Offer:invoice.html.twig', array('Offer' => $offer));
-
     }
 
     public function confirmationOfferAction(Offer $offer)
     {
         //return $this->render('DyweeOrderBundle:Offer:mail-confirmation.html.twig', array('Offer' => $Offer));
         return $this->render('DyweeOrderBundle:Offer:mail-confirmation2.html.twig');
-
     }
 
     public function printAction(Offer $offer)
     {
-        $name = 'Offre '.$offer->getReference();
+        $name = 'Offre ' . $offer->getReference();
         return new Response(
             $this->get('knp_snappy.pdf')->getOutput($this->generateUrl('dywee_offer_rough', array('id' => $offer->getId()), true)),
             200,
             array(
                 'Content-Type'          => 'application/pdf',
-                'Content-Disposition'   => 'attachment; filename="'.$name.'.pdf"'
+                'Content-Disposition'   => 'attachment; filename="' . $name . '.pdf"'
             )
         );
     }
@@ -164,21 +152,19 @@ class OfferController extends Controller
     public function sendEmailAction(Offer $offer)
     {
         $data = array(
-            'subject'   =>  'Fox Sound - Offre '.$offer->getReference(),
+            'subject'   =>  'Fox Sound - Offre ' . $offer->getReference(),
             'to'        =>  $offer->getAddress()->getEmail(),
             'body'      =>  $this->renderView('DyweeOrderBundle:Offer:mail_body.html.twig', array('offer' => $offer))
         );
 
         $form = $this->createFormBuilder($data)
-                ->add('subject',    'text')
-                ->add('from',       'choice',   array('choices' => array('info@foxsound.be' => 'info@foxsound.be', $this->getUser()->getProfessionalEmail() => $this->getUser()->getProfessionalEmail())))
-                ->add('to',         'email')
-                ->add('body',       'textarea')
-                ->add('send',       'submit')
+                ->add('subject', 'text')
+                ->add('from', 'choice', array('choices' => array('info@foxsound.be' => 'info@foxsound.be', $this->getUser()->getProfessionalEmail() => $this->getUser()->getProfessionalEmail())))
+                ->add('to', 'email')
+                ->add('body', 'textarea')
+                ->add('send', 'submit')
                 ->getForm();
 
         return $this->render('DyweeOrderBundle:Offer:mail_form.html.twig', array('form' => $form->createView()));
-
     }
-
 }

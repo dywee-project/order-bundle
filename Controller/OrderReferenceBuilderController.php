@@ -24,8 +24,7 @@ class OrderReferenceBuilderController extends ParentController
         $orderReferenceBuilder = $orderReferenceBuilderRepository->findById(1);
 
         // Create default builder if not existing
-        if(!$orderReferenceBuilder)
-        {
+        if (!$orderReferenceBuilder) {
             $orderReferenceBuilder = new OrderReferenceBuilder();
             $em->persist($orderReferenceBuilder);
             $em->flush();

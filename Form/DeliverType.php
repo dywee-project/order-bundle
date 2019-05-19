@@ -17,8 +17,8 @@ class DeliverType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name',      TextType::class)
-            ->add('active',    CheckboxType::class, array('required' => false))
+            ->add('name', TextType::class)
+            ->add('active', CheckboxType::class, array('required' => false))
         ;
     }
 

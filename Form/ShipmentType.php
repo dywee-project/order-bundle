@@ -27,7 +27,7 @@ class ShipmentType extends AbstractType
 
         );
         $builder
-            ->add('state',      ChoiceType::class, array('choices' => $choices))
+            ->add('state', ChoiceType::class, array('choices' => $choices))
         ;
     }
 

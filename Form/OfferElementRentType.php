@@ -16,13 +16,13 @@ class OfferElementRentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('beginAt',    DateType::class, array(
+            ->add('beginAt', DateType::class, array(
                 'input' => 'datetime',
-                'widget'=> 'single_text'
+                'widget' => 'single_text'
             ))
-            ->add('endAt',    DateType::class, array(
+            ->add('endAt', DateType::class, array(
                 'input' => 'datetime',
-                'widget'=> 'single_text'
+                'widget' => 'single_text'
             ));
         ;
     }

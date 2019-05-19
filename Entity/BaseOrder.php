@@ -961,7 +961,6 @@ class BaseOrder implements BaseOrderInterface
         }
 
         return $this;
-
     }
 
     /**
@@ -973,7 +972,6 @@ class BaseOrder implements BaseOrderInterface
      */
     public function addProduct(ProductInterface $product, $quantity, $locationCoeff = 1)
     {
-
     }
 
     /**
@@ -1451,6 +1449,4 @@ class BaseOrder implements BaseOrderInterface
 
         return $this;
     }
-
-
 }

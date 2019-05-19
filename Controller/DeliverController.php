@@ -37,7 +37,6 @@ class DeliverController extends Controller
      */
     public function addAction(Request $request)
     {
-
     }
 
     /**
@@ -47,8 +46,7 @@ class DeliverController extends Controller
     {
         $form = $this->createForm(DeliverType::class, $deliver);
 
-        if($form->handleRequest($request)->isValid())
-        {
+        if ($form->handleRequest($request)->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($deliver);
             $em->flush();

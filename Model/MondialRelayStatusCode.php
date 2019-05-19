@@ -18,5 +18,4 @@ class MondialRelayStatusCode
     const CODE_12 = 'status_code.mondial_relay.success';
     const CODE_13 = 'status_code.mondial_relay.success';
     const CODE_14 = 'status_code.mondial_relay.success';
-
 }

@@ -42,14 +42,18 @@ class InvoiceController extends Controller
         */
         $fileName = str_replace(' ', '_', 'files/invoices/' . $order->getInvoiceReference()) . '.pdf';
 
-        if (file_exists($fileName))
+        if (file_exists($fileName)) {
             unlink($fileName);
+        }
 
         if (true) {
-            $bill = $this->renderView('DyweeOrderBundle:Order:invoice.html.twig', [
+            $bill = $this->renderView(
+                'DyweeOrderBundle:Order:invoice.html.twig',
+                [
                 'order' => $order
-            ],
-                true);
+                ],
+                true
+            );
 
             $this->get('knp_snappy.pdf')->generateFromHtml(
                 $bill,

@@ -22,23 +22,23 @@ class ShippingMethodType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name',      TextType::class, array('label' => 'shipmentMethod.form.name'))
-            ->add('deliver',    EntityType::class,          array(
+            ->add('name', TextType::class, array('label' => 'shipmentMethod.form.name'))
+            ->add('deliver', EntityType::class, array(
                 'class'         => Deliver::class,
                 'choice_label'  => 'name',
                 'required'      => true,
                 'label'         => 'shipmentMethod.form.deliver'
             ))
-            ->add('type',       TextType::class, array('required' => false, 'label' => 'shipmentMethod.form.code'))
-            ->add('country',    EntityType::class,          array(
+            ->add('type', TextType::class, array('required' => false, 'label' => 'shipmentMethod.form.code'))
+            ->add('country', EntityType::class, array(
                 'class'         => Country::class,
                 'choice_label'  => 'name',
                 'required'      => false
             ))
-            ->add('price',      MoneyType::class)
+            ->add('price', MoneyType::class)
             ->add('minWeight', NumberType::class, array('required' => false, 'label' => 'shipmentMethod.form.minWeight'))
             ->add('maxWeight', NumberType::class, array('required' => false, 'label' => 'shipmentMethod.form.maxWeight'))
-            ->add('active',    CheckboxType::class, array('required' => false, 'label' => 'shipmentMethod.form.active'))
+            ->add('active', CheckboxType::class, array('required' => false, 'label' => 'shipmentMethod.form.active'))
         ;
     }
 

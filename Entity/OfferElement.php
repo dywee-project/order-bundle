@@ -309,8 +309,9 @@ class OfferElement
         $this->discountValue = $discountValue;
 
         if ($this->getTotalPrice() > 0) {
-            if ($fromRate == false)
+            if ($fromRate == false) {
                 $this->setDiscountRate(($this->discountValue / $this->getTotalPrice()), true);
+            }
 
             $this->calculateTotalPrice();
         }

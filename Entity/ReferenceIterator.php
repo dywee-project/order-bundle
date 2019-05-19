@@ -94,4 +94,3 @@ class ReferenceIterator
         return $this;
     }
 }
-

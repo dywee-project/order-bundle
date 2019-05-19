@@ -11,5 +11,4 @@ class MondialRelayShippingStatus
     const SHIPPING = 'shipping_status.mondial_relay.shipping';
     const ARRIVED = 'shipping_status.mondial_relay.arrived';
     const ERROR = 'shipping_status.mondial_relay.error';
-
 }
