@@ -4,7 +4,7 @@ namespace Dywee\OrderBundle\Controller;
 
 use Dywee\OrderBundle\Entity\Deliver;
 use Dywee\OrderBundle\Form\DeliverType;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,9 +12,9 @@ use Symfony\Component\HttpFoundation\Response;
 class DeliverController extends Controller
 {
     /**
-     * @return Response
-     *
      * @Route(name="deliver_table", path="admin/deliver")
+     *
+     * @return Response
      */
     public function tableAction()
     {

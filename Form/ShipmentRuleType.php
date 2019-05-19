@@ -1,6 +1,6 @@
 <?php
 
-namespace Dywee\OrderBundle\Form;
+namespace Dywee\orderBundle\Form;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;

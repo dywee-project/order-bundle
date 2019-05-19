@@ -6,7 +6,7 @@ use Dywee\OrderBundle\Entity\BaseOrder;
 use Dywee\OrderBundle\Form\BaseOrderRentType;
 use FOS\RestBundle\Controller\Annotations\Get;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 
 class InvoiceController extends Controller

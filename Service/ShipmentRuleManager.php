@@ -2,7 +2,7 @@
 
 namespace Dywee\OrderBundle\Service;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityManager;
 use Dywee\OrderBundle\Entity\BaseOrder;
 use Dywee\OrderBundle\Entity\Shipment;
 use Dywee\OrderBundle\Entity\ShipmentElement;
@@ -19,9 +19,9 @@ class ShipmentRuleManager
     /**
      * ShipmentRuleManager constructor.
      *
-     * @param EntityManagerInterface $em
+     * @param EntityManager $em
      */
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManager $em)
     {
         $this->repository = $em->getRepository(ShipmentRule::class);
     }

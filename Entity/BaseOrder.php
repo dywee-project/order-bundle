@@ -688,7 +688,7 @@ class BaseOrder implements BaseOrderInterface
     /**
      * Set state
      *
-     * @param integer $state
+     * @param string $state
      *
      * @return BaseOrderInterface
      *
@@ -700,7 +700,7 @@ class BaseOrder implements BaseOrderInterface
     }
 
     /**
-     * @param int $status
+     * @param string $status
      *
      * @return $this
      */
@@ -719,7 +719,7 @@ class BaseOrder implements BaseOrderInterface
     /**
      * Get status
      *
-     * @return integer
+     * @return string
      */
     public function getState()
     {
@@ -729,7 +729,7 @@ class BaseOrder implements BaseOrderInterface
     /**
      * Get state
      *
-     * @return integer
+     * @return string
      */
     public function getStatus()
     {

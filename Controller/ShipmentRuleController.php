@@ -4,7 +4,7 @@ namespace Dywee\OrderBundle\Controller;
 
 use Dywee\CoreBundle\Controller\ParentController;
 use Dywee\OrderBundle\Entity\ShipmentRule;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 

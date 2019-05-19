@@ -5,7 +5,7 @@ namespace Dywee\OrderBundle\Controller;
 use Dywee\CoreBundle\Controller\ParentController;
 use Dywee\OrderBundle\Entity\BaseOrder;
 use Dywee\OrderBundle\Entity\Shipment;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
