@@ -13,8 +13,8 @@
     }
   ],
   "require": {
-    "php": ">=7.1.0",
-    "dywee/core-bundle": "dev-master",
+    "php": ">=7.4.0",
+    "dywee/core-bundle": "*",
     "payum/payum-bundle": "^2.3"
   },
   "autoload": {
