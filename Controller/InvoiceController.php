@@ -5,11 +5,12 @@ namespace Dywee\OrderBundle\Controller;
 use Dywee\OrderBundle\Entity\BaseOrder;
 use Dywee\OrderBundle\Form\BaseOrderRentType;
 use FOS\RestBundle\Controller\Annotations\Get;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 
-class InvoiceController extends Controller
+class InvoiceController extends AbstractController
 {
 
     /**

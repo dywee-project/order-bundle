@@ -6,11 +6,12 @@ use Dywee\OrderBundle\Entity\BaseOrder;
 use Dywee\OrderBundle\Entity\Offer;
 use Dywee\OrderBundle\Form\OfferRentType;
 use Dywee\OrderBundle\Form\OfferType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class OfferController extends Controller
+class OfferController extends AbstractController
 {
     public function listAction()
     {

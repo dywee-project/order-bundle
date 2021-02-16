@@ -4,12 +4,13 @@ namespace Dywee\OrderBundle\Controller;
 
 use Dywee\OrderBundle\Entity\Deliver;
 use Dywee\OrderBundle\Form\DeliverType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class DeliverController extends Controller
+class DeliverController extends AbstractController
 {
     /**
      * @Route(name="deliver_table", path="admin/deliver")

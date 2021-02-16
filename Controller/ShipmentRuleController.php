@@ -4,11 +4,12 @@ namespace Dywee\OrderBundle\Controller;
 
 use Dywee\CoreBundle\Controller\ParentController;
 use Dywee\OrderBundle\Entity\ShipmentRule;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class ShipmentRuleController extends ParentController
+class ShipmentRuleController extends AbstractController
 {
     /**
      * @Route(name="shipment_rule_add", path="admin/shipment/rule/add")

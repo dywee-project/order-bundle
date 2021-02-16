@@ -16,11 +16,12 @@ use Dywee\OrderBundle\Event\PaymentValidatedEvent;
 use FOS\RestBundle\Controller\Annotations\Route;
 use Payum\Core\Model\PaymentInterface;
 use Payum\Core\Request\GetHumanStatus;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class PaymentController extends Controller
+class PaymentController extends AbstractController
 {
     /**
      * @Route(path="order/payment/prepare", name="order_payment_prepare")
@@ -90,7 +91,7 @@ class PaymentController extends Controller
 
         $this->get('dywee_order.status_manager')->changePaymentStatus($order, $status);
 
-        $this->get('event_dispatcher')->dispatch(DyweeOrderEvent::PAYMENT_VALIDATED, new PaymentValidatedEvent($order));
+        $this->get('event_dispatcher')->dispatch(new PaymentValidatedEvent($order), DyweeOrderEvent::PAYMENT_VALIDATED);
 
         $em->persist($order);
         $em->flush();

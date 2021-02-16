@@ -3,9 +3,10 @@
 namespace Dywee\OrderBundle\Controller;
 
 use Dywee\OrderBundle\Entity\BaseOrder;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class DashboardController extends Controller
+class DashboardController extends AbstractController
 {
     public function tableAction()
     {

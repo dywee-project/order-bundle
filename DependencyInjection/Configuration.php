@@ -9,8 +9,8 @@ class Configuration implements ConfigurationInterface
 {
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('dywee_order');
+        $treeBuilder = new TreeBuilder('dywee_order');
+        $rootNode = $treeBuilder->getRootNode();
 
         $rootNode
             ->children()

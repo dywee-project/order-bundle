@@ -5,11 +5,12 @@ namespace Dywee\OrderBundle\Controller;
 use Dywee\CoreBundle\Controller\ParentController;
 use Dywee\OrderBundle\Entity\BaseOrder;
 use Dywee\OrderBundle\Entity\Shipment;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class ShipmentController extends ParentController
+class ShipmentController extends AbstractController
 {
     /**
      * @Route(name="shipment_table", path="admin/order/{id}/shipments")

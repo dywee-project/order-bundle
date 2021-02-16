@@ -4,12 +4,13 @@ namespace Dywee\OrderBundle\Controller;
 
 use Dywee\OrderBundle\Entity\ShippingMethod;
 use Dywee\OrderBundle\Form\ShippingMethodType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 
-class ShippingMethodController extends Controller
+class ShippingMethodController extends AbstractController
 {
     /**
      * @Route(name="shipping_method_table", path="admin/shipment/method")
