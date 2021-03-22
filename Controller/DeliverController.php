@@ -46,8 +46,9 @@ class DeliverController extends AbstractController
     public function updateAction(Deliver $deliver, Request $request)
     {
         $form = $this->createForm(DeliverType::class, $deliver);
+        $form->handleRequest($request);
 
-        if ($form->handleRequest($request)->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($deliver);
             $em->flush();

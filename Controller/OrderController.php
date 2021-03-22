@@ -6,6 +6,7 @@ use Dywee\OrderBundle\Entity\BaseOrder;
 use Dywee\OrderBundle\Entity\BaseOrderInterface;
 use Dywee\OrderBundle\Form\BaseOrderType;
 use Dywee\OrderBundle\Form\BaseOrderRentType;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,7 +22,7 @@ class OrderController extends AbstractController
      *
      * @return Response
      */
-    public function tableAction($page, Request $request)
+    public function tableAction($page, Request $request, PaginatorInterface $paginator)
     {
         $or = $this->getDoctrine()->getManager()->getRepository('DyweeOrderBundle:BaseOrder');
 
@@ -42,7 +43,6 @@ class OrderController extends AbstractController
         }
         else */
 
-        $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
             $or->findAllForPagination($request->query->get('state')),
             $request->query->get('page', $page), //page number
@@ -94,8 +94,9 @@ class OrderController extends AbstractController
         }
 
         $form = $this->get('form.factory')->create(BaseOrderType::class, $order);
+        $form->handleRequest($request);
 
-        if ($form->handleRequest($request)->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em->persist($order);
             $em->flush();
 
@@ -116,8 +117,9 @@ class OrderController extends AbstractController
     {
         //Si c'est une commande de vente
         $form = $this->get('form.factory')->create(BaseOrderType::class, $order);
+        $form->handleRequest($request);
 
-        if ($form->handleRequest($request)->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $order->forcePriceCalculation();
             $em->persist($order);

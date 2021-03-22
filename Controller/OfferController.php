@@ -52,7 +52,9 @@ class OfferController extends AbstractController
             $template = 'DyweeOrderBundle:Offer:addRent.html.twig';
         }
 
-        if ($form->handleRequest($request)->isValid()) {
+        $form->handleRequest($request);
+        
+        if ($form->isSubmitted() && $form->isValid()) {
             $counter = $this->container->get('dywee_order.counter');
             $reference = $counter->getNextOfferReference();
             $offer->setReference($reference);
@@ -70,8 +72,9 @@ class OfferController extends AbstractController
 
         if ($offer->getState() != 2) {
             $form = $this->get('form.factory')->create(new OfferType(), $offer);
+            $form->handleRequest($request);
 
-            if ($form->handleRequest($request)->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 if ($offer->getState() < 2) {
                     $em->persist($offer);
                     $em->flush();

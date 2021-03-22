@@ -23,7 +23,7 @@ class ShippingMethodController extends AbstractController
         $shipmentMethodList = $dr->findAll();
 
         return $this->render(
-            'DyweeOrderBundle:ShippingMethod:table.html.twig',
+            '@DyweeOrderBundle/ShippingMethod/table.html.twig',
             ['shipmentMethods' => $shipmentMethodList]
         );
     }
@@ -40,8 +40,9 @@ class ShippingMethodController extends AbstractController
         $shipmentMethod = new ShippingMethod();
 
         $form = $this->createForm(ShippingMethodType::class, $shipmentMethod);
+        $form->handleRequest($request);
 
-        if ($form->handleRequest($request)->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getEntityManager();
             $em->persist($shipmentMethod);
             $em->flush();
@@ -73,8 +74,9 @@ class ShippingMethodController extends AbstractController
     public function updateAction(ShippingMethod $shipmentMethod, Request $request)
     {
         $form = $this->createForm(ShippingMethodType::class, $shipmentMethod);
+        $form->handleRequest($request);
 
-        if ($form->handleRequest($request)->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getEntityManager();
             $em->persist($shipmentMethod);
             $em->flush();
