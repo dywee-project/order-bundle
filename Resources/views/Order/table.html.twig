@@ -1,6 +1,6 @@
 {# Dywee\OrderBundle\Resources\View\Order\table.html.twig #}
 
-{% extends "DyweeOrderBundle::admin.html.twig" %}
+{% extends '@DyweeOrderBundle/admin.html.twig' %}
 
 {% block body %}
 
@@ -46,7 +46,7 @@
                     <h1 class="box-title">Liste des Commandes</h1>
                 </div>
                 {% if pagination.getTotalItemCount > 0 %}
-                    {% include 'DyweeOrderBundle:Order:miniTable.html.twig' %}
+                    {% include '@DyweeOrderBundle/Order/miniTable.html.twig' %}
 
                     <div class="navigation text-center">
                         {{ knp_pagination_render(pagination) }}

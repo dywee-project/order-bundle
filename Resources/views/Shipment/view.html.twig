@@ -1,4 +1,4 @@
-{% extends "DyweeOrderBundle::admin.html.twig" %}
+{% extends '@DyweeOrderBundle/admin.html.twig' %}
 
 {% block body %}
     <div class="action-left">
@@ -77,7 +77,7 @@
                     </tr>
                     <tr>
                         <th>state</th>
-                        <td>{% include 'DyweeOrderBundle:Shipment:state.html.twig' %}
+                        <td>{% include '@DyweeOrderBundle/Shipment/state.html.twig' %}
                         </td>
                     <tbody>
                 </table>

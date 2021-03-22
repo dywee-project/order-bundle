@@ -29,11 +29,11 @@ class OrderAdminController extends AbstractController
             $offset
         );
 
-        return $this->render('DyweeOrderBundle:Admin:orderTableRaw.html.twig', ['orderList' => $os]);
+        return $this->render('@DyweeOrderBundle/Admin/orderTableRaw.html.twig', ['orderList' => $os]);
     }
 
     public function viewAction(BaseOrder $order)
     {
-        return $this->render('DyweeOrderBundle:Order:view.html.twig', ['order' => $order]);
+        return $this->render('@DyweeOrderBundle/Order/view.html.twig', ['order' => $order]);
     }
 }

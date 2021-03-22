@@ -22,7 +22,7 @@ class DeliverController extends AbstractController
         $dr = $this->getDoctrine()->getRepository(Deliver::class);
         $deliverList = $dr->findAll();
 
-        return $this->render('DyweeOrderBundle:Deliver:table.html.twig', array('delivers' => $deliverList));
+        return $this->render('@DyweeOrderBundle/Deliver/table.html.twig', array('delivers' => $deliverList));
     }
 
     /**
@@ -30,7 +30,7 @@ class DeliverController extends AbstractController
      */
     public function viewAction(Deliver $deliver)
     {
-        return $this->render('DyweeOrderBundle:Deliver:view.html.twig', array('deliver' => $deliver));
+        return $this->render('@DyweeOrderBundle/Deliver/view.html.twig', array('deliver' => $deliver));
     }
 
     /**
@@ -55,7 +55,7 @@ class DeliverController extends AbstractController
             return $this->redirectToRoute('deliver_table');
         }
 
-        return $this->render('DyweeOrderBundle:Deliver:edit.html.twig', array('form' => $form->createView()));
+        return $this->render('@DyweeOrderBundle/Deliver/edit.html.twig', array('form' => $form->createView()));
     }
 
     /**

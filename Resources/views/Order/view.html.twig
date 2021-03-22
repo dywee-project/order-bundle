@@ -1,6 +1,6 @@
 {# Dywee\OrderBundle\Resources\View\Order\view.html.twig #}
 
-{% extends "DyweeOrderBundle::admin.html.twig" %}
+{% extends "@DyweeOrderBundle/admin.html.twig" %}
 
 {% block body %}
 
@@ -38,23 +38,23 @@
     {% endif %}
     <div class="row">
         <div class="col-md-8">
-            {% include 'DyweeOrderBundle:Fragment:overview_panel.html.twig' %}
+            {% include '@DyweeOrderBundle/Fragment/overview_panel.html.twig' %}
         </div>
         <div class="col-md-4">
-            {% include 'DyweeOrderBundle:Fragment:shipments_panel.html.twig' with {admin: true} %}
+            {% include '@DyweeOrderBundle/Fragment/shipments_panel.html.twig' with {admin: true} %}
         </div>
     </div>
 
     {% if not order.shippingMessage == '' %}
-        {% include 'DyweeOrderBundle:Fragment:shipping_message_panel.html.twig' %}
+        {% include '@DyweeOrderBundle/Fragment/shipping_message_panel.html.twig' %}
     {% endif %}
 
     <div class="row">
         <div class="col-md-6">
-            {% include 'DyweeOrderBundle:Fragment:date_panel.html.twig' %}
+            {% include '@DyweeOrderBundle/Fragment/date_panel.html.twig' %}
         </div>
         <div class="col-md-6">
-            {% include 'DyweeOrderBundle:Fragment:payment_panel.html.twig' %}
+            {% include '@DyweeOrderBundle/Fragment/payment_panel.html.twig' %}
         </div>
     </div>
 
@@ -64,7 +64,7 @@
                 <div class="panel-heading"><h3 class="panel-title">Adresse de Facturation</h3></div>
                 <div class="panel-body">
                     {% if order.billingAddress is not null %}
-                        {% include 'DyweeAddressBundle:Address:view_wrapped.html.twig' with {address: order.billingAddress} %}
+                        {% include '@DyweeAddressBundle/Address/view_wrapped.html.twig' with {address: order.billingAddress} %}
                         <p><a href="{{ path('address_admin_update', {id: order.billingAddress.id}) }}"
                               class="btn btn-default btn-block"><i class="fa fa-pencil"></i> Modifier</a></p>
                     {% else %}

@@ -1,6 +1,6 @@
 {# Dywee\OrderBundle\Resources\View\Offer\add.html.twig #}
 
-{%  extends "DyweeOrderBundle::admin.html.twig" %}
+{% extends '@DyweeOrderBundle/admin.html.twig' %}
 
 {% block metaTitle %}
     Création d'une offre {{ parent() }}
@@ -9,5 +9,5 @@
 {% block body %}
     <h1>Création d'une offre</h1>
 
-    {%  include "DyweeOrderBundle:Offer:form.html.twig" %}
+    {% include '@DyweeOrderBundle/Offer/form.html.twig' %}
 {% endblock %}

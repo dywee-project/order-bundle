@@ -18,7 +18,7 @@ class InvoiceController extends AbstractController
      */
     public function viewAction(BaseOrder $order)
     {
-        return $this->render('DyweeOrderBundle:Order:invoice.html.twig', [
+        return $this->render('@DyweeOrderBundle/Order/invoice.html.twig', [
             'order' => $order
         ]);
     }

@@ -23,13 +23,13 @@ class DashboardController extends AbstractController
             15/*limit per page*/
         );
 
-        return $this->render('DyweeOrderBundle:Order:miniTable.html.twig', array('pagination' => $pagination));
+        return $this->render('@DyweeOrderBundle/Order/miniTable.html.twig', array('pagination' => $pagination));
     }
 
     public function cardAction()
     {
         $count = $this->getDoctrine()->getManager()->getRepository('DyweeOrderBundle:BaseOrder')->countByState();
 
-        return $this->render('DyweeOrderBundle:Dashboard:card.html.twig', array('count' => $count));
+        return $this->render('@DyweeOrderBundle/Dashboard/card.html.twig', array('count' => $count));
     }
 }

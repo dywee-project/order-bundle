@@ -23,14 +23,14 @@ class OfferController extends AbstractController
         $or = $this->getDoctrine()->getManager()->getRepository('DyweeOrderBundle:Offer');
         $os = $or->findAll();
 
-        return $this->render('DyweeOrderBundle:Offer:table.html.twig', array('offerList' => $os));
+        return $this->render('@DyweeOrderBundle/Offer/table.html.twig', array('offerList' => $os));
     }
 
     public function viewAction(Offer $offer)
     {
         $em = $this->getDoctrine()->getManager();
 
-        return $this->render('DyweeOrderBundle:Offer:view.html.twig', array('offer' => $o));
+        return $this->render('@DyweeOrderBundle/Offer/view.html.twig', array('offer' => $o));
     }
 
     public function addAction(Request $request)
@@ -88,7 +88,7 @@ class OfferController extends AbstractController
                 }
             }
 
-            return $this->render('DyweeOrderBundle:Offer:edit.html.twig', array('offer' => $offer, 'form' => $form->createView()));
+            return $this->render('@DyweeOrderBundle/Offer/edit.html.twig', array('offer' => $offer, 'form' => $form->createView()));
         }
         $this->get('session')->getFlashBag()->add('warning', 'Vous ne pouvez pas modifier une offre acceptée. Essayez de modifier la commande');
         return $this->redirect($this->generateUrl('dywee_offer_table'));
@@ -121,13 +121,13 @@ class OfferController extends AbstractController
     {
         $this->container->get('profiler')->disable();
 
-        return $this->render('DyweeOrderBundle:Offer:invoice.html.twig', array('Offer' => $offer));
+        return $this->render('@DyweeOrderBundle/Offer/invoice.html.twig', array('Offer' => $offer));
     }
 
     public function confirmationOfferAction(Offer $offer)
     {
-        //return $this->render('DyweeOrderBundle:Offer:mail-confirmation.html.twig', array('Offer' => $Offer));
-        return $this->render('DyweeOrderBundle:Offer:mail-confirmation2.html.twig');
+        //return $this->render('@DyweeOrderBundle/Offer/mail-confirmation.html.twig', array('Offer' => $Offer));
+        return $this->render('@DyweeOrderBundle/Offer/mail-confirmation2.html.twig');
     }
 
     public function printAction(Offer $offer)
@@ -147,7 +147,7 @@ class OfferController extends AbstractController
     {
         $this->container->get('profiler')->disable();
 
-        return $this->render('DyweeOrderBundle:Offer:print.html.twig', array('offer' => $offer));
+        return $this->render('@DyweeOrderBundle/Offer/print.html.twig', array('offer' => $offer));
     }
 
     public function sendEmailAction(Offer $offer)
@@ -166,6 +166,6 @@ class OfferController extends AbstractController
                 ->add('send', 'submit')
                 ->getForm();
 
-        return $this->render('DyweeOrderBundle:Offer:mail_form.html.twig', array('form' => $form->createView()));
+        return $this->render('@DyweeOrderBundle/Offer/mail_form.html.twig', array('form' => $form->createView()));
     }
 }

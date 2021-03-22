@@ -1,6 +1,6 @@
 {# Dywee\OrderBundle\Resources\View\Offer\add.html.twig #}
 
-{%  extends "DyweeOrderBundle::admin.html.twig" %}
+{% extends '@DyweeOrderBundle/admin.html.twig' %}
 
 {% block metaTitle %}
     Vision d'une offre {{ parent() }}
@@ -17,7 +17,7 @@
         <h1>Vision d'une offre</h1>
     </div>
 
-    {% include 'DyweeOrderBundle:Offer:offer.html.twig' %}
+    {% include '@DyweeOrderBundle/Offer/offer.html.twig' %}
 
     <script>
         var oldHtml;

@@ -17,7 +17,7 @@ class ShipmentController extends AbstractController
      */
     public function shipmentTableAction(BaseOrder $order)
     {
-        return $this->render('DyweeOrderBundle:Shipment:table.html.twig', array('shipments' => $order->getShipments()));
+        return $this->render('@DyweeOrderBundle/Shipment/table.html.twig', array('shipments' => $order->getShipments()));
     }
 
     /**
@@ -44,7 +44,7 @@ class ShipmentController extends AbstractController
         if (!file_exists($fileName)) {
             $note = $this->renderView('DyweeOrderBundle:Shipment:note.html.twig', array('shipment' => $shipment));
 
-            return $this->render('DyweeOrderBundle:Shipment:note.html.twig', array('shipment' => $shipment));
+            return $this->render('@DyweeOrderBundle/Shipment/note.html.twig', array('shipment' => $shipment));
 
             $pdfGenerator = $this->get('spraed.pdf.generator');
 
@@ -90,7 +90,7 @@ class ShipmentController extends AbstractController
     public function viewNoteAction(Shipment $shipment)
     {
         $this->container->get('profiler')->disable();
-        return $this->render('DyweeOrderBundle:Shipment:note.html.twig', array('shipment' => $shipment));
+        return $this->render('@DyweeOrderBundle/Shipment/note.html.twig', array('shipment' => $shipment));
     }
 
     public function sendAction(Shipment $shipment)

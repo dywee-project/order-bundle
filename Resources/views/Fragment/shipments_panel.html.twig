@@ -21,7 +21,7 @@
                     <td>{{ shipment.sendingIndex }}</td>
                     <td>{{ shipment.departureAt|date('d/m/Y') }}</td>
                     <td>{{ shipment.countElements }}</td>
-                    <td>{% include 'DyweeOrderBundle:Shipment:state.html.twig' %}</td>
+                    <td>{% include '@DyweeOrderBundle/Shipment/state.html.twig' %}</td>
                     <td>
                         <div class="btn-group btn-group-xs">
                             <a href="{{ path('shipment_view', {id: shipment.id, referer: true}) }}"

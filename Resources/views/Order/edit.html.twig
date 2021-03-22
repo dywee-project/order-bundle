@@ -1,6 +1,6 @@
 {# Dywee\OrderBundle\Resources\View\Order\edit.html.twig #}
 
-{%  extends "DyweeOrderBundle::admin.html.twig" %}
+{% extends '@DyweeOrderBundle/admin.html.twig' %}
 
 {% block metaTitle %}
     Modification d'une commande {{ parent() }}
@@ -13,7 +13,7 @@
 {% block body %}
     <h1>Modification de la commande {{ order.reference }}</h1>
 
-    {%  include "DyweeOrderBundle:Order:form.html.twig" %}
+    {% include '@DyweeOrderBundle:Order:form.html.twig' %}
 {% endblock %}
 
 {% block footerJavascript %}

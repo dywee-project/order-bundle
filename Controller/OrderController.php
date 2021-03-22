@@ -59,7 +59,7 @@ class OrderController extends AbstractController
             'states' => array(BaseOrderInterface::STATE_IN_SESSION, BaseOrderInterface::STATE_WAITING, BaseOrderInterface::STATE_IN_PROGRESS, BaseOrderInterface::STATE_FINALIZED),
         );
 
-        return $this->render('DyweeOrderBundle:Order:table.html.twig', $data);
+        return $this->render('@DyweeOrderBundle/Order/table.html.twig', $data);
     }
 
     /**
@@ -70,7 +70,7 @@ class OrderController extends AbstractController
      */
     public function viewAction(BaseOrder $order)
     {
-        return $this->render('DyweeOrderBundle:Order:view.html.twig', array('order' => $order));
+        return $this->render('@DyweeOrderBundle/Order/view.html.twig', array('order' => $order));
     }
 
     /**
@@ -101,7 +101,7 @@ class OrderController extends AbstractController
 
             return $this->redirect($this->generateUrl('order_view', array('id' => $order->getId())));
         }
-        return $this->render('DyweeOrderBundle:Order:add.html.twig', array('form' => $form->createView()));
+        return $this->render('@DyweeOrderBundle/Order/add.html.twig', array('form' => $form->createView()));
     }
 
     /**
@@ -126,7 +126,7 @@ class OrderController extends AbstractController
             return $this->redirect($this->generateUrl('order_view', array('id' => $order->getId())));
         }
 
-        return $this->render('DyweeOrderBundle:Order:edit.html.twig', array('order' => $order, 'form' => $form->createView()));
+        return $this->render('@DyweeOrderBundle/Order/edit.html.twig', array('order' => $order, 'form' => $form->createView()));
     }
 
     /**
