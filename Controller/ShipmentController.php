@@ -5,18 +5,19 @@ namespace Dywee\OrderBundle\Controller;
 use Dywee\CoreBundle\Controller\ParentController;
 use Dywee\OrderBundle\Entity\BaseOrder;
 use Dywee\OrderBundle\Entity\Shipment;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class ShipmentController extends ParentController
+class ShipmentController extends AbstractController
 {
     /**
      * @Route(name="shipment_table", path="admin/order/{id}/shipments")
      */
     public function shipmentTableAction(BaseOrder $order)
     {
-        return $this->render('DyweeOrderBundle:Shipment:table.html.twig', array('shipments' => $order->getShipments()));
+        return $this->render('@DyweeOrderBundle/Shipment/table.html.twig', array('shipments' => $order->getShipments()));
     }
 
     /**
@@ -39,22 +40,22 @@ class ShipmentController extends ParentController
 
     public function downloadAction(Shipment $shipment)
     {
-        $fileName = /*'files/sendNotes/*/'envoi_'.$shipment->getId().'.pdf';
-        if (!file_exists($fileName))
-        {
+        $fileName = /*'files/sendNotes/*/'envoi_' . $shipment->getId() . '.pdf';
+        if (!file_exists($fileName)) {
             $note = $this->renderView('DyweeOrderBundle:Shipment:note.html.twig', array('shipment' => $shipment));
 
-            return $this->render('DyweeOrderBundle:Shipment:note.html.twig', array('shipment' => $shipment));
+            return $this->render('@DyweeOrderBundle/Shipment/note.html.twig', array('shipment' => $shipment));
 
             $pdfGenerator = $this->get('spraed.pdf.generator');
 
             $pdfGenerator->generatePDF($note, 'UTF-8');
 
-            return new Response($pdfGenerator->generatePDF($note),
+            return new Response(
+                $pdfGenerator->generatePDF($note),
                 200,
                 array(
                     'Content-Type' => 'application/pdf',
-                    'Content-Disposition' => 'inline; filename="'.$fileName.'"'
+                    'Content-Disposition' => 'inline; filename="' . $fileName . '"'
                 )
             );//*/
 
@@ -89,11 +90,10 @@ class ShipmentController extends ParentController
     public function viewNoteAction(Shipment $shipment)
     {
         $this->container->get('profiler')->disable();
-        return $this->render('DyweeOrderBundle:Shipment:note.html.twig', array('shipment' => $shipment));
+        return $this->render('@DyweeOrderBundle/Shipment/note.html.twig', array('shipment' => $shipment));
     }
 
     public function sendAction(Shipment $shipment)
     {
-
     }
 }

@@ -4,11 +4,12 @@ namespace Dywee\OrderBundle\Controller;
 
 use Dywee\OrderBundle\Entity\BaseOrder;
 use Dywee\OrderBundle\Entity\BaseOrderInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class OrderAdminController extends Controller
+class OrderAdminController extends AbstractController
 {
     /**
      * @param string $state
@@ -22,16 +23,17 @@ class OrderAdminController extends Controller
         $or = $this->getDoctrine()->getManager()->getRepository('DyweeOrderBundle:BaseOrder');
 
         $os = $or->findBy(
-            array('state' => $state),
-            array('creationDate' => 'desc'),
+            ['state' => $state],
+            ['createdAt' => 'desc'],
             $limit,
             $offset
         );
-        return $this->render('DyweeOrderBundle:Admin:orderTableRaw.html.twig', array('orderList' => $os));
+
+        return $this->render('@DyweeOrderBundle/Admin/orderTableRaw.html.twig', ['orderList' => $os]);
     }
 
     public function viewAction(BaseOrder $order)
     {
-        return $this->render('DyweeOrderBundle:Order:view.html.twig', array('order' => $order));
+        return $this->render('@DyweeOrderBundle/Order/view.html.twig', ['order' => $order]);
     }
 }

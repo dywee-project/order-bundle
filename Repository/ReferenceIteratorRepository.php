@@ -15,9 +15,10 @@ class ReferenceIteratorRepository extends \Doctrine\ORM\EntityRepository
         $qb = $this->createQueryBuilder('ri')
             ->select('ri');
 
-        if($builder->getByCountry())
+        if ($builder->getByCountry()) {
             $qb->where('ri.country = :country')
                 ->setParameter('country', $country);
+        }
 
         return $qb->getQuery()->getResult();
     }

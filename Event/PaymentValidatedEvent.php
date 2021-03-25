@@ -10,7 +10,7 @@ namespace Dywee\OrderBundle\Event;
 
 
 use Dywee\OrderBundle\Entity\BaseOrderInterface;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class PaymentValidatedEvent extends Event
 {

@@ -1,6 +1,6 @@
 {# Dywee\OrderBundle\Resources\View\Order\edit.html.twig #}
 
-{%  extends "DyweeOrderBundle::admin.html.twig" %}
+{% extends '@DyweeOrderBundle/admin.html.twig' %}
 
 {% block metaTitle %}
     Modification des génération de référence facture {{ parent() }}
@@ -14,7 +14,7 @@
                     <h1 class="box-title">Modification des génération de référence facture</h1>
                 </div>
                 <div class="box-body">
-                    {% include "DyweeOrderBundle:OrderReferenceBuilder:form.html.twig" %}
+                    {% include "@DyweeOrderBundle/OrderReferenceBuilder/form.html.twig" %}
                 </div>
             </div>
         </div>

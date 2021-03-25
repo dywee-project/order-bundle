@@ -29,5 +29,4 @@ class AdminDashboardBuilderListener implements EventSubscriberInterface
     {
         $adminDashboardBuilderEvent->addElement($this->orderAdminDashboardHandler->getDashboardElement());
     }
-
 }

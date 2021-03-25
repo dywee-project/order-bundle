@@ -174,7 +174,7 @@ class Offer
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -197,7 +197,7 @@ class Offer
     /**
      * Get priceVatExcl
      *
-     * @return float 
+     * @return float
      */
     public function getPriceVatExcl()
     {
@@ -220,7 +220,7 @@ class Offer
     /**
      * Get deliveryCost
      *
-     * @return float 
+     * @return float
      */
     public function getDeliveryCost()
     {
@@ -243,7 +243,7 @@ class Offer
     /**
      * Get vatRate
      *
-     * @return float 
+     * @return float
      */
     public function getVatRate()
     {
@@ -266,7 +266,7 @@ class Offer
     /**
      * Get vatPrice
      *
-     * @return float 
+     * @return float
      */
     public function getVatPrice()
     {
@@ -289,7 +289,7 @@ class Offer
     /**
      * Get discountRate
      *
-     * @return float 
+     * @return float
      */
     public function getDiscountRate()
     {
@@ -312,7 +312,7 @@ class Offer
     /**
      * Get discountValue
      *
-     * @return float 
+     * @return float
      */
     public function getDiscountValue()
     {
@@ -335,7 +335,7 @@ class Offer
     /**
      * Get priceVatIncl
      *
-     * @return float 
+     * @return float
      */
     public function getPriceVatIncl()
     {
@@ -358,7 +358,7 @@ class Offer
     /**
      * Get totalPrice
      *
-     * @return float 
+     * @return float
      */
     public function getTotalPrice()
     {
@@ -381,7 +381,7 @@ class Offer
     /**
      * Get description
      *
-     * @return string 
+     * @return string
      */
     public function getDescription()
     {
@@ -404,7 +404,7 @@ class Offer
     /**
      * Get createdAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreatedAt()
     {
@@ -427,7 +427,7 @@ class Offer
     /**
      * Get validatedAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getValidatedAt()
     {
@@ -450,7 +450,7 @@ class Offer
     /**
      * Get reference
      *
-     * @return string 
+     * @return string
      */
     public function getReference()
     {
@@ -473,7 +473,7 @@ class Offer
     /**
      * Get state
      *
-     * @return integer 
+     * @return integer
      */
     public function getState()
     {
@@ -539,7 +539,7 @@ class Offer
     /**
      * Get offerElements
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getOfferElements()
     {
@@ -556,28 +556,27 @@ class Offer
         $price = 0;
         $this->setVatRate($this->getAddress()->getCountry()->getVatRate());
         $this->setPriceVatIncl(0);
-        foreach($this->getOfferElements() as $offerElement)
+        foreach ($this->getOfferElements() as $offerElement) {
             $price += $offerElement->getTotalPrice();
-
-
-        if($isTTC)
-        {
-            $this->setPriceVatIncl($price);
-            $this->setPriceVatExcl($price/(1 + $this->getVatRate()/100));
-            $this->setVatPrice($this->getPriceVatIncl()-$this->getPriceVatExcl());
         }
-        else{
+
+
+        if ($isTTC) {
+            $this->setPriceVatIncl($price);
+            $this->setPriceVatExcl($price / (1 + $this->getVatRate() / 100));
+            $this->setVatPrice($this->getPriceVatIncl() - $this->getPriceVatExcl());
+        } else {
             /*$this->setPriceVatExcl($price);
             $this->setVatPrice($this->getPriceVatExcl()*$this->getVatRate()/100);
             $this->setPriceVatIncl($this->getPriceVatExcl()+$this->getVatPrice());*/
         }
 
-        if($this->getDiscountRate() > 0 || $this->getDiscountValue() > 0)
-        {
-            if($this->getDiscountValue() == 0)
-                $this->setDiscountValue($this->getDiscountRate()*$this->getPriceVatExcl()/100);
-            else if($this->getDiscountRate() == 0)
-                $this->setDiscountRate(100*$this->getDiscountValue()/$this->getPriceVatExcl());
+        if ($this->getDiscountRate() > 0 || $this->getDiscountValue() > 0) {
+            if ($this->getDiscountValue() == 0) {
+                $this->setDiscountValue($this->getDiscountRate() * $this->getPriceVatExcl() / 100);
+            } elseif ($this->getDiscountRate() == 0) {
+                $this->setDiscountRate(100 * $this->getDiscountValue() / $this->getPriceVatExcl());
+            }
         }
 
         $this->setTotalPrice($this->getPriceVatIncl() + $this->getDeliveryCost() - $this->getDiscountValue());
@@ -601,7 +600,7 @@ class Offer
     /**
      * Get deliveryMethod
      *
-     * @return string 
+     * @return string
      */
     public function getDeliveryMethod()
     {
@@ -624,7 +623,7 @@ class Offer
     /**
      * Get deliveryInfo
      *
-     * @return string 
+     * @return string
      */
     public function getDeliveryInfo()
     {
@@ -657,8 +656,11 @@ class Offer
 
     public function containsElementReduction()
     {
-        foreach($this->offerElements as $offerElement)
-            if($offerElement->getDiscountValue() > 0)return true;
+        foreach ($this->offerElements as $offerElement) {
+            if ($offerElement->getDiscountValue() > 0) {
+                return true;
+            }
+        }
         return false;
     }
 
@@ -701,7 +703,7 @@ class Offer
     /**
      * Get duration
      *
-     * @return integer 
+     * @return integer
      */
     public function getDuration()
     {

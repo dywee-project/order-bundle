@@ -111,6 +111,6 @@
 <div class="panel panel-default">
     <div class="panel-body text-center">
         <p><small>Offre réalisée par {{ offer.createdBy.firstName|capitalize }} {{ offer.createdBy.lastName|capitalize }} pour LaBelgiqueUneFois.com - Email: info@labelgiqueunefois.com<br>
-                {{ render(controller('DyweeUserBundle:User:list', {type: 'all'})) }}</small></p>
+                {{ render(controller('Dywee\\UserBundle\\Controller\\UserController::listAction', {type: 'all'})) }}</small></p>
     </div>
 </div>

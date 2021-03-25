@@ -48,12 +48,10 @@ class ShipmentRuleManager
 
     protected function reconciliateShipmentElements()
     {
-
     }
 
     protected function ruleOnWeight()
     {
-
     }
 
     /**
@@ -81,12 +79,10 @@ class ShipmentRuleManager
             default:
                 return false;
         }
-
     }
 
     protected function handleWeight()
     {
-
     }
 
 

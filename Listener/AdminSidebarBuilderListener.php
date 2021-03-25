@@ -57,5 +57,4 @@ class AdminSidebarBuilderListener implements EventSubscriberInterface
     {
         return $this->inSidebar;
     }
-
 }

@@ -65,7 +65,7 @@
                         {{ order.paymentState|trans }}
                 </td>#}
                 <td>
-                    {% include 'DyweeOrderBundle:Order:state_label.html.twig' %}
+                    {% include '@DyweeOrderBundle/Order/state_label.html.twig' %}
                 </td>
                 <td>{% if order.isGift == 1 %} <i class="fa fa-gift"></i> {% endif %}</td>
                 <td>{% if order.shippingMessage != '' %} <i class="fa fa-envelope"></i> {% endif %}</td>

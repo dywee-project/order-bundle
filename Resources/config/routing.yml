@@ -1,106 +1,47 @@
-#deprecated
-order_table:
-    path:     /admin/order/table
-    defaults: { _controller: DyweeOrderBundle:Order:table, state: 2, page: 1 }
-
-order_add:
-    path:     /admin/order/add
-    defaults: { _controller: DyweeOrderBundle:Order:add }
-
-order_view:
-    path:     /admin/order/view/{id}
-    defaults: { _controller: DyweeOrderBundle:Order:view }
-    requirements:
-        id: \d+
-
-order_update:
-    path:     /admin/order/update/{id}
-    defaults: { _controller: DyweeOrderBundle:Order:update }
-    requirements:
-            id: \d+
-
-order_delete:
-    path:     /admin/order/delete/{id}
-    defaults: { _controller: DyweeOrderBundle:Order:delete }
-    requirements:
-            id: \d+
-
-invoice_view:
-    path:     /invoice/{id}/view
-    defaults: { _controller: DyweeOrderBundle:Order:invoiceView }
-    requirements:
-        id: \d+
-
-order_invoice_download:
-    path:     /admin/order/invoice/{idOrder}/download
-    defaults: { _controller: DyweeOrderBundle:Order:invoiceDownload }
-    requirements:
-            id: \d+
-
-view_email:
-    path:    /view/email/{idOrder}/{number}
-    defaults: { _controller: DyweeOrderBundle:Order:viewEmail}
-    requirements:
-        number: \d+
-
 offer_table:
     path:     /admin/offer/table
-    defaults: { _controller: DyweeOrderBundle:Offer:table }
+    defaults: { _controller: Dywee\OrderBundle\Controller\OfferController::tableAction }
 
 offer_add:
     path:     /admin/offer/add
-    defaults: { _controller: DyweeOrderBundle:Offer:add }
+    defaults: { _controller: Dywee\OrderBundle\Controller\OfferController::addAction }
 
 offer_view:
     path:     /admin/offer/view/{id}
-    defaults: { _controller: DyweeOrderBundle:Offer:view }
+    defaults: { _controller: Dywee\OrderBundle\Controller\OfferController::viewAction }
     requirements:
         id: \d+
 
 offer_update:
     path:     /admin/offer/update/{id}
-    defaults: { _controller: DyweeOrderBundle:Offer:update }
+    defaults: { _controller: Dywee\OrderBundle\Controller\OfferController::updateAction }
     requirements:
         id: \d+
 
 offer_delete:
     path:     /admin/offer/delete/{id}
-    defaults: { _controller: DyweeOrderBundle:Offer:delete }
+    defaults: { _controller: Dywee\OrderBundle\Controller\OfferController::deleteAction }
     requirements:
             id: \d+
 
-order_export_csv:
-    path:   /admin/order/export/{type}
-    defaults: { _controller: DyweeOrderBundle:Order:exportToCSV, type: all }
-
 offer_send:
     path:     /admin/offer/{id}/send
-    defaults: { _controller: DyweeOrderBundle:Offer:sendEmail }
+    defaults: { _controller: Dywee\OrderBundle\Controller\OfferController::sendEmailAction }
     requirements:
         id: \d+
 
 offer_print:
     path:   /admin/offer/{id}/print
-    defaults: { _controller: DyweeOrderBundle:Offer:print }
+    defaults: { _controller: Dywee\OrderBundle\Controller\OfferController::printAction }
     requirements:
         id: \d+
 
 offer_rough:
     path:   /admin6834/offer/{id}/rough
-    defaults: { _controller: DyweeOrderBundle:Offer:rough }
+    defaults: { _controller: Dywee\OrderBundle\Controller\OfferController::roughAction }
     requirements:
         id: \d+
 
-order_table_current_month:
-    path:     /admin/order/table/current_month/{state}
-    defaults: { _controller: DyweeOrderBundle:Order:currentTable, state: 2 }
-    requirements:
-        state: \d*
-
 order_list:
     path:     /admin/order/list
-    defaults: { _controller: DyweeOrderBundle:OrderAdmin:list }
-
-order_payment_overview:
-    path:     /admin/order/{id}/payment
-    defaults: { _controller: DyweeOrderBundle:OrderAdmin:paymentOverview }
+    defaults: { _controller: Dywee\OrderBundle\Controller\OrderAdminController::listAction }

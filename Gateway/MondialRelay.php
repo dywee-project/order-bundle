@@ -56,8 +56,9 @@ class MondialRelay
                 'COL_Rel' => '006412'
             );
 
-            if ($shippingAddress->getCompany() !== '')
+            if ($shippingAddress->getCompany() !== '') {
                 $param['Dest_Ad2'] = $shippingAddress->getCompany();
+            }
 
             if ($shipment->getShippingMethod()->getType() === '24R') {
                 $relai = explode('-', $order->getDeliveryInfo());
@@ -66,8 +67,9 @@ class MondialRelay
             }
 
             $security = '';
-            foreach ($params as $param)
+            foreach ($params as $param) {
                 $security .= $param;
+            }
             $security .= 'xgG1mpth';
 
             $params['Security'] = strtoupper(md5($security));
@@ -99,7 +101,6 @@ class MondialRelay
                         $this->get('mailer')->send($message);
                     }
                     $shipment->setMailStep(Shipment::MAIL_STEP_SHIPPED);
-
                 }
 
                 $this->em->persist($shipment);
@@ -122,8 +123,9 @@ class MondialRelay
             'Langue' => 'FR'
         );
         $security = '';
-        foreach ($params as $param)
+        foreach ($params as $param) {
             $security .= $param;
+        }
         $security .= 'xgG1mpth';
         $params['Security'] = strtoupper(md5($security));
 
@@ -139,14 +141,12 @@ class MondialRelay
                 if ($shipment->getState() !== 6) {
                     $shipment->setState(6);
                 }
-            } else if ($result['WSI2_TracingColisDetailleResult']['STAT'] === 81) {
+            } elseif ($result['WSI2_TracingColisDetailleResult']['STAT'] === 81) {
                 $shipment->setState(Shipment::STATE_SHIPPING);
-
-            } else if ($result['WSI2_TracingColisDetailleResult']['STAT'] === 82 && $shipment->getState() !== Shipment::STATE_ARRIVED) {
+            } elseif ($result['WSI2_TracingColisDetailleResult']['STAT'] === 82 && $shipment->getState() !== Shipment::STATE_ARRIVED) {
                 $shipment->setState(Shipment::STATE_ARRIVED);
                 if (!$shipment->getMailStep() !== Shipment::MAIL_STEP_ARRIVED) {
                     if ($shipment->getOrder()->isGift() === true) {
-
                         $locale = $shipment->getOrder()->getLocale() ? ($shipment->getOrder()->getLocale() . '.') : '';
                         $emailTemplate5 = 'DyweeOrderBundle:Email:mail-step5.' . $locale . 'html.twig';
 
@@ -167,5 +167,4 @@ class MondialRelay
         $this->em->persist($shipment);
         $this->em->flush();
     }
-
 }

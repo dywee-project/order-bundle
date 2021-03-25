@@ -3,19 +3,19 @@
 namespace Dywee\OrderBundle\Service;
 
 use Dywee\OrderBundle\Entity\BaseOrder;
-use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 
 class AdminSidebarHandler
 {
-    /** @var Router */
+    /** @var RouterInterface */
     private $router;
 
     /**
      * AdminSidebarHandler constructor.
      *
-     * @param Router $router
+     * @param RouterInterface $router
      */
-    public function __construct(Router $router)
+    public function __construct(RouterInterface $router)
     {
         $this->router = $router;
     }
@@ -33,7 +33,7 @@ class AdminSidebarHandler
                 [
                     'icon'  => 'fa fa-list-alt',
                     'label' => 'order.sidebar.table',
-                    'route' => $this->router->generate('order_table', ['state' => BaseOrder::STATE_IN_PROGRESS])
+                    'route' => $this->router->generate('order_adminList', ['state' => BaseOrder::STATE_IN_PROGRESS])
                 ],
                 [
                     'icon'  => 'fa fa-cogs',

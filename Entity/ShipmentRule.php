@@ -180,6 +180,4 @@ class ShipmentRule
         $this->value = $value;
         return $this;
     }
-
 }
-

@@ -5,11 +5,12 @@ namespace Dywee\OrderBundle\Controller;
 use Dywee\OrderBundle\Entity\BaseOrder;
 use Dywee\OrderBundle\Form\BaseOrderRentType;
 use FOS\RestBundle\Controller\Annotations\Get;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 
-class InvoiceController extends Controller
+class InvoiceController extends AbstractController
 {
 
     /**
@@ -17,7 +18,7 @@ class InvoiceController extends Controller
      */
     public function viewAction(BaseOrder $order)
     {
-        return $this->render('DyweeOrderBundle:Order:invoice.html.twig', [
+        return $this->render('@DyweeOrderBundle/Order/invoice.html.twig', [
             'order' => $order
         ]);
     }
@@ -42,14 +43,18 @@ class InvoiceController extends Controller
         */
         $fileName = str_replace(' ', '_', 'files/invoices/' . $order->getInvoiceReference()) . '.pdf';
 
-        if (file_exists($fileName))
+        if (file_exists($fileName)) {
             unlink($fileName);
+        }
 
         if (true) {
-            $bill = $this->renderView('DyweeOrderBundle:Order:invoice.html.twig', [
+            $bill = $this->renderView(
+                'DyweeOrderBundle:Order:invoice.html.twig',
+                [
                 'order' => $order
-            ],
-                true);
+                ],
+                true
+            );
 
             $this->get('knp_snappy.pdf')->generateFromHtml(
                 $bill,

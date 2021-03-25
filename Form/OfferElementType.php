@@ -18,7 +18,7 @@ class OfferElementType extends AbstractType
     {
         $builder
             ->add('quantity', NumberType::class, array('empty_data' => 1))
-            ->add('product',    EntityType::class,   array(
+            ->add('product', EntityType::class, array(
                 'class'     => 'DyweeProductBundle:Product',
                 'property'  => 'name'
             ))

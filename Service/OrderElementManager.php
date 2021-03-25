@@ -56,7 +56,7 @@ class OrderElementManager
     {
         if (!$quantity) {
             $this->addProduct($order, $product, -1 * $this->countProductQuantity($order, $product));
-        } elseif($quantity < 0) {
+        } elseif ($quantity < 0) {
             $this->addProduct($order, $product, $quantity);
         } else {
             $this->addProduct($order, $product, -1 * $quantity);

@@ -3,10 +3,10 @@
 namespace Dywee\OrderBundle\Controller;
 
 use Dywee\OrderBundle\Entity\BaseOrder;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
-class DashboardController extends Controller
+class DashboardController extends AbstractController
 {
     public function tableAction()
     {
@@ -23,13 +23,13 @@ class DashboardController extends Controller
             15/*limit per page*/
         );
 
-        return $this->render('DyweeOrderBundle:Order:miniTable.html.twig', array('pagination' => $pagination));
+        return $this->render('@DyweeOrderBundle/Order/miniTable.html.twig', array('pagination' => $pagination));
     }
 
     public function cardAction()
     {
         $count = $this->getDoctrine()->getManager()->getRepository('DyweeOrderBundle:BaseOrder')->countByState();
 
-        return $this->render('DyweeOrderBundle:Dashboard:card.html.twig', array('count' => $count));
+        return $this->render('@DyweeOrderBundle/Dashboard/card.html.twig', array('count' => $count));
     }
 }

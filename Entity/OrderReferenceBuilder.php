@@ -173,4 +173,3 @@ class OrderReferenceBuilder
         return $this->digitNumber;
     }
 }
-

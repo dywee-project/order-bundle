@@ -23,18 +23,18 @@ class OfferType extends AbstractType
         $builder
             ->add('discountRate')
             ->add('discountValue')
-            ->add('description',        TextareaType::class,     array('required' => false))
-            ->add('state',              ChoiceType::class,       array('choices' => array(0 => 'Annulée', 1 => 'Proposée', 2 => 'Validée')))
-            ->add('address',            EntityType::class,       array('class' => 'DyweeAddressBundle:Address', 'property' => 'formValue'))
-            ->add('offerElements',      CollectionType::class,   array(
+            ->add('description', TextareaType::class, array('required' => false))
+            ->add('state', ChoiceType::class, array('choices' => array(0 => 'Annulée', 1 => 'Proposée', 2 => 'Validée')))
+            ->add('address', EntityType::class, array('class' => 'DyweeAddressBundle:Address', 'property' => 'formValue'))
+            ->add('offerElements', CollectionType::class, array(
                 'entry_type'        => OfferElementType::class,
                 'allow_add'         => true,
                 'allow_delete'      => true,
                 'by_reference'      => false
             ))
-            ->add('deliver',            'entity',       array('class' => Deliver::class, 'property' => 'name'))
+            ->add('deliver', 'entity', array('class' => Deliver::class, 'property' => 'name'))
             ->add('deliveryCost')
-            ->add('save',               'submit')
+            ->add('save', 'submit')
         ;
     }
     

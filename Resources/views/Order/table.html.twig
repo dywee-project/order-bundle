@@ -1,6 +1,6 @@
 {# Dywee\OrderBundle\Resources\View\Order\table.html.twig #}
 
-{% extends "DyweeOrderBundle::admin.html.twig" %}
+{% extends '@DyweeOrderBundle/admin.html.twig' %}
 
 {% block body %}
 
@@ -34,19 +34,19 @@
                             </button>
                             <ul class="dropdown-menu dropdown-menu-right" role="menu">
                                 {% for element in states %}
-                                    <li><a href="{{ path('order_table', {state: element}) }}">{{ element|trans }}</a>
+                                    <li><a href="{{ path('order_adminList', {state: element}) }}">{{ element|trans }}</a>
                                     </li>
                                 {% endfor %}
                                 <li class="divider"></li>
-                                <li><a href="{{ path('order_table') }}">{{ 'order.noFilter'|trans }}</a></li>
-                                {#<li><a href="{{ path('order_table_current_month') }}">Mois courant</a></li>#}
+                                <li><a href="{{ path('order_adminList') }}">{{ 'order.noFilter'|trans }}</a></li>
+                                {#<li><a href="{{ path('order_adminList_current_month') }}">Mois courant</a></li>#}
                             </ul>
                         </div>
                     </div>
                     <h1 class="box-title">Liste des Commandes</h1>
                 </div>
                 {% if pagination.getTotalItemCount > 0 %}
-                    {% include 'DyweeOrderBundle:Order:miniTable.html.twig' %}
+                    {% include '@DyweeOrderBundle/Order/miniTable.html.twig' %}
 
                     <div class="navigation text-center">
                         {{ knp_pagination_render(pagination) }}

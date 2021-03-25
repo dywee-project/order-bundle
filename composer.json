@@ -13,9 +13,9 @@
     }
   ],
   "require": {
-    "php": ">=7.1.0",
-    "dywee/core-bundle": "0.1-dev",
-    "payum/payum-bundle": "^2.2"
+    "php": ">=7.4|^8.0",
+    "dywee/core-bundle": "*",
+    "payum/payum-bundle": "^2.4"
   },
   "autoload": {
     "psr-4": {
@@ -24,7 +24,7 @@
   },
   "extra": {
     "branch-alias": {
-      "dev-master": "0.1-dev"
+      "dev-master": "1.0-dev"
     }
   }
 }

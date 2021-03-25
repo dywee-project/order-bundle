@@ -11,15 +11,17 @@ namespace Dywee\OrderBundle\Controller;
 
 use Dywee\OrderBundle\DyweeOrderEvent;
 use Dywee\OrderBundle\Entity\BaseOrderInterface;
+use Dywee\OrderBundle\Entity\Payment;
 use Dywee\OrderBundle\Event\PaymentValidatedEvent;
 use FOS\RestBundle\Controller\Annotations\Route;
 use Payum\Core\Model\PaymentInterface;
 use Payum\Core\Request\GetHumanStatus;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class PaymentController extends Controller
+class PaymentController extends AbstractController
 {
     /**
      * @Route(path="order/payment/prepare", name="order_payment_prepare")
@@ -27,9 +29,10 @@ class PaymentController extends Controller
      */
     public function prepareAction()
     {
+        //$gatewayName = 'stripe_checkout';
         $gatewayName = 'offline';
 
-        $storage = $this->get('payum')->getStorage('Dywee\OrderBundle\Entity\Payment');
+        $storage = $this->get('payum')->getStorage(Payment::class);
 
         $order = $this->get('dywee_order_cms.basket_manager')->getBasket();
 
@@ -88,7 +91,7 @@ class PaymentController extends Controller
 
         $this->get('dywee_order.status_manager')->changePaymentStatus($order, $status);
 
-        $this->get('event_dispatcher')->dispatch(DyweeOrderEvent::PAYMENT_VALIDATED, new PaymentValidatedEvent($order));
+        $this->get('event_dispatcher')->dispatch(new PaymentValidatedEvent($order), DyweeOrderEvent::PAYMENT_VALIDATED);
 
         $em->persist($order);
         $em->flush();

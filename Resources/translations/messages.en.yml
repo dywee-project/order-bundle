@@ -1,0 +1,82 @@
+order:
+    state:
+        session: In session
+        cancelled: Cancelled
+        waiting: Waiting
+        in_progress: In progress
+        finalized: Finalized
+        returning: Returning
+        returned: Returned
+
+        ready_shipping: Ready for shipping
+        in_shipping: In shipping
+
+        customer_error: Error (customer)
+        seller_customer: Error (seller)
+        error: Error
+
+    dashboard:
+        table: Last orders
+
+    type:
+        buy: Buy
+        rent: Rent
+        both: Buy & Rent
+    
+    sidebar:
+        label: Order Management
+        table: Order list
+        invoice: Invoice management
+
+    noOrder: No order
+
+order_payment:
+    state:
+        waiting: Waiting payment
+        waiting_validation: Waiting payment validation
+        validated: Payment validated
+        refund: Refunded
+        partially_paid: Partially paid
+        authorized: Authorized
+        cancelled: Cancelled
+
+shipment:
+    sidebar:
+        label: Shipment management
+        table: Shipping method list
+
+    all_country: All country
+    no_weight_limit: No weight limit
+
+    active: Active
+    inactive: Inactive
+
+    state:
+        not_prepared: Non prepared
+        preparing: In preparation
+        waiting: Waiting
+        shipping: Shipping
+        shipped: Shipped
+        waiting_customer: Waiting delivery
+        returned: Returned
+
+deliver:
+    sidebar:
+        table: Deliver list
+
+shipmentMethod:
+    form:
+        name: Name
+        deliver: Deliver
+        code: Code for delivery
+        minWeight: Minimum weight
+        maxWeight: Maximum weight
+        active: Active
+
+shipmentRule:
+    sidebar:
+        table: Shipping rule list
+
+address:
+    billing: Billing Address
+    shipping: SHipping address

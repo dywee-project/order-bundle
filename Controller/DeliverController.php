@@ -4,24 +4,25 @@ namespace Dywee\OrderBundle\Controller;
 
 use Dywee\OrderBundle\Entity\Deliver;
 use Dywee\OrderBundle\Form\DeliverType;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class DeliverController extends Controller
+class DeliverController extends AbstractController
 {
     /**
-     * @return Response
-     *
      * @Route(name="deliver_table", path="admin/deliver")
+     *
+     * @return Response
      */
     public function tableAction()
     {
         $dr = $this->getDoctrine()->getRepository(Deliver::class);
         $deliverList = $dr->findAll();
 
-        return $this->render('DyweeOrderBundle:Deliver:table.html.twig', array('delivers' => $deliverList));
+        return $this->render('@DyweeOrderBundle/Deliver/table.html.twig', array('delivers' => $deliverList));
     }
 
     /**
@@ -29,7 +30,7 @@ class DeliverController extends Controller
      */
     public function viewAction(Deliver $deliver)
     {
-        return $this->render('DyweeOrderBundle:Deliver:view.html.twig', array('deliver' => $deliver));
+        return $this->render('@DyweeOrderBundle/Deliver/view.html.twig', array('deliver' => $deliver));
     }
 
     /**
@@ -37,7 +38,6 @@ class DeliverController extends Controller
      */
     public function addAction(Request $request)
     {
-
     }
 
     /**
@@ -46,9 +46,9 @@ class DeliverController extends Controller
     public function updateAction(Deliver $deliver, Request $request)
     {
         $form = $this->createForm(DeliverType::class, $deliver);
+        $form->handleRequest($request);
 
-        if($form->handleRequest($request)->isValid())
-        {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($deliver);
             $em->flush();
@@ -56,7 +56,7 @@ class DeliverController extends Controller
             return $this->redirectToRoute('deliver_table');
         }
 
-        return $this->render('DyweeOrderBundle:Deliver:edit.html.twig', array('form' => $form->createView()));
+        return $this->render('@DyweeOrderBundle/Deliver/edit.html.twig', array('form' => $form->createView()));
     }
 
     /**

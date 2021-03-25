@@ -1,22 +1,14 @@
 <?php
 
-namespace AppBundle\DataFixtures\ORM;
+namespace Dywee\OrderBundle\DataFixtures\ORM;
 
-use CompositionBundle\Entity\MusicKey;
-use CompositionBundle\Entity\TimeSignature;
-use CompositionBundle\Entity\Track;
 use Doctrine\Common\DataFixtures\AbstractFixture;
-use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use Dywee\OrderBundle\Entity\Deliver;
 use Dywee\OrderBundle\Entity\ShippingMethod;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Doctrine\Common\DataFixtures\FixtureInterface;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 
-class LoadDeliveryMethod extends AbstractFixture
+class LoadDeliveryMethod extends AbstractFixture implements FixtureInterface, OrderedFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
@@ -40,5 +32,10 @@ class LoadDeliveryMethod extends AbstractFixture
         $manager->persist($mondialRelay);
 
         $manager->flush();
+    }
+
+    public function getOrder()
+    {
+        return 2;
     }
 }

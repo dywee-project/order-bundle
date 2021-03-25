@@ -39,33 +39,33 @@ class BaseOrderType extends AbstractType
         $builder
             //->add('discountRate')
             //->add('discountValue')
-            ->add('description',        TextareaType::class,     array('required' => false))
-            ->add('state',              ChoiceType::class,   array(
+            ->add('description', TextareaType::class, array('required' => false))
+            ->add('state', ChoiceType::class, array(
                 'choices' => $choices
             ))
-            ->add('billingAddress',     EntityType::class, array(
+            ->add('billingAddress', EntityType::class, array(
                 'class' => 'DyweeAddressBundle:Address',
                 'required' => false,
             ))
-            ->add('shippingAddress',    EntityType::class, array(
+            ->add('shippingAddress', EntityType::class, array(
                 'class' => 'DyweeAddressBundle:Address',
                 'required' => false,
             ))
-            ->add('orderElements',      CollectionType::class,   array(
+            ->add('orderElements', CollectionType::class, array(
                 'entry_type'          => OrderElementType::class,
                 'allow_add'     => true,
                 'allow_delete'  => true,
                 'by_reference'  => false
             ))
-            ->add('orderRentElements',      CollectionType::class,   array(
+            ->add('orderRentElements', CollectionType::class, array(
                 'entry_type'          => OrderElementRentType::class,
                 'allow_add'     => true,
                 'allow_delete'  => true,
                 'by_reference'  => false
             ))
-            ->add('beginAt',            DateType::class, array('required' => false, 'widget' => 'single_text'))
-            ->add('endAt',              DateType::class, array('required' => false, 'widget' => 'single_text'))
-            ->add('shippingMethod',     EntityType::class, array(
+            ->add('beginAt', DateType::class, array('required' => false, 'widget' => 'single_text'))
+            ->add('endAt', DateType::class, array('required' => false, 'widget' => 'single_text'))
+            ->add('shippingMethod', EntityType::class, array(
                 'class' => ShippingMethod::class,
                 'choice_label' => 'name'
             ))

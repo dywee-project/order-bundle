@@ -1,6 +1,6 @@
 {# Dywee\OrderBundle\Resources\View\Offer\addRent.html.twig #}
 
-{%  extends "DyweeOrderBundle::admin.html.twig" %}
+{% extends '@DyweeOrderBundle/admin.html.twig' %}
 
 {% block metaTitle %}
     Création d'une offre de location {{ parent() }}
@@ -9,5 +9,5 @@
 {% block body %}
     <h1>Création d'une offre de location</h1>
 
-    {%  include "DyweeOrderBundle:Offer:formRent.html.twig" %}
+    {% include '@DyweeOrderBundle/Offer/formRent.html.twig' %}
 {% endblock %}

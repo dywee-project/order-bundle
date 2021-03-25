@@ -20,7 +20,7 @@ class OrderElementType extends AbstractType
     {
         $builder
             ->add('quantity', null, array('empty_data' => 1))
-            ->add('product',    EntityType::class,   array(
+            ->add('product', EntityType::class, array(
                 'class'     => 'DyweeProductBundle:Product',
                 'choice_label'  => 'completeName',
             ));

@@ -22,8 +22,7 @@ class BaseOrderRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('o');
 
-        if($state)
-        {
+        if ($state) {
             $qb->where('o.state = :state');
             $qb->setParameter('state', $state);
         }
@@ -83,11 +82,9 @@ class BaseOrderRepository extends EntityRepository
         $month = $today['mon'];
         $year = $today['year'];
 
-        if($month == 'previous')
-        {
+        if ($month == 'previous') {
             $month--;
-            if($month == 0)
-            {
+            if ($month == 0) {
                 $month = 12;
                 $year--;
             }

@@ -1,12 +1,11 @@
-$(document).ready(function() {
+$(document).ready(function () {
     
     let type = {buy: true, rent: true};
     let oldType = {buy: true, rent: false};
 
     function prepareTableForElement()
     {
-        if(type.rent)
-        {
+        if (type.rent) {
             $("#base_order_orderElements thead tr td:eq(1)").after('<td>Date d\'enlèvement</td><td>Date de retour</td>');
             $("#offerElementsContainer tr td:eq(1)").after('<td></td><td></td>');
         }
@@ -23,13 +22,13 @@ $(document).ready(function() {
     //$("#orderElement-wrapper").append($addRentLink);
 
     // On ajoute un nouveau champ à chaque clic sur le lien d'ajout.
-    $addLink.click(function(e) {
+    $addLink.click(function (e) {
         addElement($container);
         e.preventDefault(); // évite qu'un # apparaisse dans l'URL
         return false;
     });
 
-    $addRentLink.click(function(e) {
+    $addRentLink.click(function (e) {
         addRentableElement($container);
         e.preventDefault(); // évite qu'un # apparaisse dans l'URL
         return false;
@@ -43,7 +42,7 @@ $(document).ready(function() {
         addElement($container);
     } else {
         // Pour chaque catégorie déjà existante, on ajoute un lien de suppression
-        $('#offerElementsContainer').children('tr').each(function() {
+        $('#offerElementsContainer').children('tr').each(function () {
             addDeleteLink($(this));
         });
     }
@@ -52,7 +51,8 @@ $(document).ready(function() {
 
 
     // La fonction qui ajoute un formulaire Categorie
-    function addElement($container) {
+    function addElement($container)
+    {
         console.log($container);
         // Dans le contenu de l'attribut « data-prototype », on remplace :
         // - le texte "__name__label__" qu'il contient par le label du champ
@@ -68,7 +68,7 @@ $(document).ready(function() {
 
         //On convertit le select en select2
         //console.log()
-        $("#dywee_orderbundle_baseorder_orderElements_"+index+"_product").select2();
+        $("#dywee_orderbundle_baseorder_orderElements_" + index + "_product").select2();
 
         // Enfin, on incrémente le compteur pour que le prochain ajout se fasse avec un autre numéro
         index++;
@@ -87,14 +87,15 @@ $(document).ready(function() {
 
         //On convertit le select en select2
         //console.log()
-        $("#dywee_orderbundle_baseorder_orderElements_"+index+"_product").select2();
+        $("#dywee_orderbundle_baseorder_orderElements_" + index + "_product").select2();
 
         // Enfin, on incrémente le compteur pour que le prochain ajout se fasse avec un autre numéro
         index++;
     }
 
     // La fonction qui ajoute un lien de suppression d'une catégorie
-    function addDeleteLink($prototype) {
+    function addDeleteLink($prototype)
+    {
         // Création du lien
         $deleteLink = $('<a href="#" class="btn btn-danger">Supprimer</a>');
 
@@ -106,7 +107,7 @@ $(document).ready(function() {
         $prototype.append($actionCell);
 
         // Ajout du listener sur le clic du lien
-        $deleteLink.click(function(e) {
+        $deleteLink.click(function (e) {
             $prototype.remove();
             e.preventDefault(); // évite qu'un # apparaisse dans l'URL
             return false;
